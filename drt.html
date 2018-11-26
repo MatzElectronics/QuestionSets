@@ -26,6 +26,7 @@
         font-size: 1.8em;
         text-align: center;
       }
+      /*
       h3 {
         margin: 0px 40px 10px 40px;
         color: #ddd;
@@ -33,6 +34,7 @@
         font-weight: 300;
         text-align: center;
       }
+      */
       #screen {
         margin: 20px 40px 20px 40px;
         height: 35px;
@@ -438,7 +440,7 @@
 
     </script>
   </head>
-  <body>
+  <body><table border="0"><tr><td>
     <h3>Distance, speed, and time practice problems</h3>
     Helpful formulas:<br><em>
     distance = speed &times; time<br>
@@ -470,7 +472,7 @@
       currentProblem = x;
       document.getElementById('question').innerHTML = x.problem;
     </script>
-
+    </td><td>
     <div id="calculator">
       <div id="calcBody">
         <div id="screen">
@@ -499,5 +501,6 @@
         </div>
       </div>
     </div>
+    </td></tr></table>
   </body>
 </html>
