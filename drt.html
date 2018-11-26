@@ -304,6 +304,8 @@
           document.getElementById('codeZ').innerHTML = sc
           currentProblem = mathProblem();
           document.getElementById('question').innerHTML = currentProblem.problem;
+          document.getElementById('tryagain').innerHTML = 'Correct!';
+          document.getElementById('guessNumber').value = '';
         } else {
           document.getElementById('tryagain').innerHTML = 'Incorrect, try again.';
         }
