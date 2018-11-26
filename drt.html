@@ -1,0 +1,306 @@
+<html>
+  <head>
+    <script>
+    var currentProblem = {
+      problem: '',
+      answerNumber: 0,
+      answerUnit: ''
+    }
+
+    var dstStrings = [
+      '(n) went (s) for (t). How for did (n) go?',
+      '(n) traveled (d) in (t).  How fast was (n) going?',
+      'How long did it take (n) to go (d) if (n) was traveling (s)?'
+    ]
+
+    var drtUnits = [
+      ['meters', 'miles', 'kilometers'],
+      ['m/s', 'mph', 'km/h'],
+      ['seconds', 'hours', 'hours']
+    ]
+
+    var names = [
+      'James',
+      'John',
+      'Robert',
+      'Michael',
+      'William',
+      'David',
+      'Richard',
+      'Joseph',
+      'Thomas',
+      'Charles',
+      'Christopher',
+      'Daniel',
+      'Matthew',
+      'Anthony',
+      'Donald',
+      'Mark',
+      'Paul',
+      'Steven',
+      'Andrew',
+      'Kenneth',
+      'George',
+      'Joshua',
+      'Kevin',
+      'Brian',
+      'Edward',
+      'Ronald',
+      'Timothy',
+      'Jason',
+      'Jeffrey',
+      'Ryan',
+      'Jacob',
+      'Gary',
+      'Nicholas',
+      'Eric',
+      'Stephen',
+      'Jonathan',
+      'Larry',
+      'Justin',
+      'Scott',
+      'Brandon',
+      'Frank',
+      'Benjamin',
+      'Gregory',
+      'Raymond',
+      'Samuel',
+      'Patrick',
+      'Alexander',
+      'Jack',
+      'Dennis',
+      'Jerry',
+      'Tyler',
+      'Aaron',
+      'Henry',
+      'Jose',
+      'Douglas',
+      'Peter',
+      'Adam',
+      'Nathan',
+      'Zachary',
+      'Walter',
+      'Kyle',
+      'Harold',
+      'Carl',
+      'Jeremy',
+      'Gerald',
+      'Keith',
+      'Roger',
+      'Arthur',
+      'Terry',
+      'Lawrence',
+      'Sean',
+      'Christian',
+      'Ethan',
+      'Austin',
+      'Joe',
+      'Albert',
+      'Jesse',
+      'Willie',
+      'Billy',
+      'Bryan',
+      'Bruce',
+      'Noah',
+      'Jordan',
+      'Dylan',
+      'Ralph',
+      'Roy',
+      'Alan',
+      'Wayne',
+      'Eugene',
+      'Juan',
+      'Gabriel',
+      'Louis',
+      'Russell',
+      'Randy',
+      'Vincent',
+      'Philip',
+      'Logan',
+      'Bobby',
+      'Harry',
+      'Johnny',
+      'Mary',
+      'Patricia',
+      'Jennifer',
+      'Linda',
+      'Elizabeth',
+      'Barbara',
+      'Susan',
+      'Jessica',
+      'Sarah',
+      'Margaret',
+      'Karen',
+      'Nancy',
+      'Lisa',
+      'Betty',
+      'Dorothy',
+      'Sandra',
+      'Ashley',
+      'Kimberly',
+      'Donna',
+      'Emily',
+      'Carol',
+      'Michelle',
+      'Amanda',
+      'Melissa',
+      'Deborah',
+      'Stephanie',
+      'Rebecca',
+      'Laura',
+      'Helen',
+      'Sharon',
+      'Cynthia',
+      'Kathleen',
+      'Amy',
+      'Shirley',
+      'Angela',
+      'Anna',
+      'Ruth',
+      'Brenda',
+      'Pamela',
+      'Nicole',
+      'Katherine',
+      'Samantha',
+      'Christine',
+      'Catherine',
+      'Virginia',
+      'Debra',
+      'Rachel',
+      'Janet',
+      'Emma',
+      'Carolyn',
+      'Maria',
+      'Heather',
+      'Diane',
+      'Julie',
+      'Joyce',
+      'Evelyn',
+      'Joan',
+      'Victoria',
+      'Kelly',
+      'Christina',
+      'Lauren',
+      'Frances',
+      'Martha',
+      'Judith',
+      'Cheryl',
+      'Megan',
+      'Andrea',
+      'Olivia',
+      'Ann',
+      'Jean',
+      'Alice',
+      'Jacqueline',
+      'Hannah',
+      'Doris',
+      'Kathryn',
+      'Gloria',
+      'Teresa',
+      'Sara',
+        'Janice',
+        'Marie',
+        'Julia',
+        'Grace',
+        'Judy',
+        'Theresa',
+        'Madison',
+        'Beverly',
+        'Denise',
+        'Marilyn',
+        'Amber',
+        'Danielle',
+        'Rose',
+        'Brittany',
+        'Diana',
+        'Abigail',
+        'Natalie',
+        'Jane',
+        'Lori',
+        'Alexis',
+        'Tiffany',
+        'Kayla'
+      ]
+
+      function checkAnswer() {
+        var a = parseInt(document.getElementById('guessNumber').value);
+        var u = document.getElementById('guessUnit').value;
+        var z = parseInt(document.getElementById('score').innerHTML);
+        if (a == currentProblem.answerNumber && u == currentProblem.answerUnit) {
+          z++;
+          document.getElementById('score').innerHTML = z;
+          currentProblem = mathProblem();
+          document.getElementById('question').innerHTML = currentProblem.problem;
+        } else {
+          document.getElementById('tryagain').innerHTML = 'Incorrect, try again.';
+        }
+        if (u !== currentProblem.answerUnit) {
+          document.getElementById('guessUnit').value = ' ';
+        }
+      }
+
+      function skipAnswer() {
+      document.getElementById('guessNumber').value = '';
+        currentProblem = mathProblem();
+        document.getElementById('question').innerHTML = currentProblem.problem;
+        document.getElementById('tryagain').innerHTML = '&nbsp;';
+        document.getElementById('guessUnit').value = ' ';
+      }
+
+      function randomName() {
+        var n = Math.floor(Math.random() * names.length);
+        return names[n];
+      }
+
+      function mathProblem() {
+        var m = randomName();
+        var n = Math.floor(Math.random() * 3);
+        var o = Math.floor(Math.random() * 3);
+        var s = dstStrings[n];
+        var p = [];
+        p[2] = Math.floor((Math.random() * 24) + 2);
+        p[1] = Math.floor((Math.random() * 100) + 2);
+        p[0] = p[2] * p[1];
+
+        var pStr = s.replace(/\(n\)/g, m)
+          .replace(/\(s\)/g, p[1] + ' ' + drtUnits[1][o])
+          .replace(/\(t\)/g, p[2] + ' ' + drtUnits[2][o])
+          .replace(/\(d\)/g, p[0] + ' ' + drtUnits[0][o])
+        return {
+          problem: pStr,
+          answerNumber: p[n],
+          answerUnit: drtUnits[n][o]
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <h2>
+      Score: <span id="score">0
+    </span></h2>
+    <br>
+    <div id="question"></div><br>
+    <div id="tryagain" style="font-size:12px;color:#aa0000;">&nbsp;</div>
+    <input type="text" id="guessNumber" onFocus="document.getElementById('tryagain').innerHTML='&nbsp;';" />
+    <select id="guessUnit">
+    <option value="meters"> </option>
+    <option value="meters">meters</option>
+    <option value="miles">miles</option>
+    <option value="kilometers">kilometers</option>
+    <option value="m/s">m/s</option>
+    <option value="mph">mph</option>
+    <option value="km/h">km/h</option>
+    <option value="seconds">seconds</option>
+    <option value="hours">hours</option>
+    </select>
+    <button id="check" onclick="checkAnswer()">check answer</button><br>
+    <button id="skip" onclick="skipAnswer()">skip</button><br><br><br>
+    <script>
+      var x = mathProblem();
+      currentProblem = x;
+      document.getElementById('question').innerHTML = x.problem;
+    </script>
+    <iframe height="320" width="240" style="border:none;" src="http://www.uize.com/widgets/calculator/web.html">
+    </iframe>
+  </body>
+</html>
