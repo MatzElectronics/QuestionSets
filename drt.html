@@ -297,6 +297,11 @@
         if (a == currentProblem.answerNumber && u == currentProblem.answerUnit) {
           z++;
           document.getElementById('score').innerHTML = z;
+
+          var tt = btoa(z << 4 | (Math.floor(Math.random() * 16)) | (Math.floor(Math.random() * 16)) << 16); 
+          var sc = '<a href="https://docs.google.com/forms/d/e/1FAIpQLScmfbs8w_VWMQML4z3EIAqgTfFuklcQMKK3nFjjPrpgSotO-g/viewform?usp=pp_url&entry.1270571468=' + tt + '">Turn in score</a>';
+
+          document.getElementById('codeZ').innerHTML = sc
           currentProblem = mathProblem();
           document.getElementById('question').innerHTML = currentProblem.problem;
         } else {
@@ -439,6 +444,7 @@
     time = distance &div; speed</em><hr>
     <h2>
       Score: <span id="score">0
+    </span> - <span id="codeZ">
     </span></h2>
     <br>
     <div id="question"></div><br>
