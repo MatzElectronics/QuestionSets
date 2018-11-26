@@ -1,5 +1,73 @@
 <html>
   <head>
+    <script
+  src="https://code.jquery.com/jquery-3.3.1.min.js"
+  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  crossorigin="anonymous"></script>
+    <style>
+      body {
+        padding: 50px;
+      }
+
+      #calcBody {
+        background-color: #eee;
+        height: 322px;
+        width: 280px;
+        padding-top: 1px;
+        margin: auto;
+        border: 1px solid #888;
+      }
+      h1, h3, #screen {
+        font-family: sans-serif;
+      }
+      h1 {
+        margin: 0px 40px 0px 40px;
+        color: #ddd;
+        font-size: 1.8em;
+        text-align: center;
+      }
+      h3 {
+        margin: 0px 40px 10px 40px;
+        color: #ddd;
+        font-size: 0.8em;
+        font-weight: 300;
+        text-align: center;
+      }
+      #screen {
+        margin: 20px 40px 20px 40px;
+        height: 35px;
+        background: #ddd;
+        border-radius: 0px;
+        box-shadow: 1px 1px 1px #555 inset;
+      }
+      #screen p {
+        position: relative;
+        top: 2px;
+        margin: 5px;
+        text-align: right;
+        font-size: 1.4em;
+        overflow: hidden;
+
+      }
+      #buttonPad {
+        -webkit-column-count: 4;
+        -moz-column-count: 4;
+        column-count: 4;
+        width: 240px;
+        margin: auto;
+      }
+      .btn {
+        background: #ddd;
+        height: 35px;
+        width: 50px;
+        margin: 5px 0 5px 0;
+        border-radius: 3px;
+        font-size: 1.1em;
+      }
+      #plus {
+        height: 80px;
+      }
+    </style>
     <script>
     var currentProblem = {
       problem: '',
@@ -272,6 +340,95 @@
           answerUnit: drtUnits[n][o]
         }
       }
+      
+      $(document).ready(function() {
+        var currentNum = '';
+        var total = 0;
+        var operation = '';
+        console.log(typeof(total));
+
+        function updateDisplay(disp) {
+          console.log('Display updating: '+disp);
+          $('p').text(disp);
+        }
+
+        function opPush(op) {
+          console.log('Operand pushed');
+          if (op === 'percent') {
+            var currentNumInt = Number(currentNum);
+            currentNumInt= currentNumInt / 100;
+            currentNum = currentNumInt;
+            updateDisplay(currentNumInt);
+          } else {
+            console.log('else run');
+            if (op !== 'ce') {
+              var currentNumInt = Number(currentNum);
+              if (currentNumInt) {
+                switch (operation) {
+                  case '':
+                    total = currentNumInt;
+                    break;
+                  case 'divide':
+                    total = total / currentNumInt;
+                    break;
+                  case 'times':
+                    total = total * currentNumInt;
+                    break;
+                  case 'minus':
+                    total = total - currentNumInt;
+                    break;
+                  case 'plus':
+                    total = total + currentNumInt;
+                    break;
+                  case 'equals':
+                    break;
+                }
+              }
+              if (op === 'ca') {
+                console.log('CA');
+                total = 0;
+                op = '';
+              }
+              console.log('Total = '+total);
+              operation = op;
+            }
+            updateDisplay(total);
+            currentNum = '';
+          }
+        }
+
+        function numPush(num) {
+          console.log('Number pushed: '+num);
+          currentNum += num;
+          if (currentNum === '.') {
+            currentNum = '0.';
+          }
+          updateDisplay(currentNum);
+        }
+
+        function buttonPush(btn) {
+          console.log('btn = '+btn);
+          if (btn === 'decimal') {
+            numPush('.');
+          } else if (isNaN(btn)) {
+            opPush(btn);
+          } else {
+            numPush(btn);
+          }
+        }
+
+        // superfluous?
+        function updateTotal(op,num) {
+        }
+
+
+        $('button').click(function() {
+          var btn = $(this).attr("id");
+          console.log('Button pushed: '+btn);
+          buttonPush(btn);
+        });
+      })
+
     </script>
   </head>
   <body>
@@ -305,7 +462,34 @@
       currentProblem = x;
       document.getElementById('question').innerHTML = x.problem;
     </script>
-    <iframe height="320" width="240" style="border:none;" src="http://www.uize.com/widgets/calculator/web.html">
-    </iframe>
+
+    <div id="calculator">
+      <div id="calcBody">
+        <div id="screen">
+          <p>0</p>
+        </div>
+        <div id="buttonPad">
+          <button id="ca" class="btn">CA</button>
+          <button id="7" class="btn">7</button>
+          <button id="4" class="btn">4</button>
+          <button id="1" class="btn">1</button>
+          <button id="0" class="btn">0</button>
+          <button id="ce" class="btn">CE</button>
+          <button id="8" class="btn">8</button>
+          <button id="5" class="btn">5</button>
+          <button id="2" class="btn">2</button>
+          <button id="decimal" class="btn">.</button>
+          <button id="percent" class="btn">%</button>
+          <button id="9" class="btn">9</button>
+          <button id="6" class="btn">6</button>
+          <button id="3" class="btn">3</button>
+          <button id="equals" class="btn">=</button>
+          <button id="divide" class="btn">/</button>
+          <button id="times" class="btn">x</button>
+          <button id="minus" class="btn">-</button>
+          <button id="plus" class="btn">+</button>
+        </div>
+      </div>
+    </div>
   </body>
 </html>
