@@ -336,7 +336,7 @@
       function mathProblem() {
         var m = randomName();
         var n = Math.floor(Math.random() * 3);
-        var o = Math.floor(Math.random() * 3);
+        var o = 0;
         var s = dstStrings[n];
         var p = [];
         p[2] = Math.floor((Math.random() * 24) + 2);
@@ -451,9 +451,9 @@
     <input type="text" id="guessNumber" onFocus="document.getElementById('tryagain').innerHTML='&nbsp;';" />
     <select id="guessUnit">
     <option>--choose a unit--</option>
-    <option value="Newtons">Newtons (kg*m/s^2)</option>
-    <option value="kilograms">kilograms (kg)</option>
-    <option value="meters per second squared">m/s^2</option>
+    <option value="kg*m/s&sup2;">kg*m/s&sup2; (Newtons)</option>
+    <option value="kg">kg (kilograms)</option>
+    <option value="m/s&sup2;">m/s&sup2;</option>
     </select>
     <button id="check" onclick="checkAnswer()">check answer</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     <button id="skip" onclick="skipAnswer()">skip</button><br><br><br>
