@@ -321,6 +321,7 @@
         if (u !== currentProblem.answerUnit) {
           document.getElementById('guessUnit').value = ' ';
         }
+              console.log(currentProblem);
       }
       function skipAnswer() {
       document.getElementById('guessNumber').value = '';
@@ -352,19 +353,19 @@
           answerUnit: drtUnits[n][o]
         }
       }
-      console.log(drtUnits[n][o]);
+
       
       $(document).ready(function() {
         var currentNum = '';
         var total = 0;
         var operation = '';
-        console.log(typeof(total));
+        //console.log(typeof(total));
         function updateDisplay(disp) {
-          console.log('Display updating: '+disp);
+          //console.log('Display updating: '+disp);
           $('p').text(disp);
         }
         function opPush(op) {
-          console.log('Operand pushed');
+          //console.log('Operand pushed');
           if (op === 'percent') {
             var currentNumInt = Number(currentNum);
             currentNumInt= currentNumInt / 100;
@@ -396,11 +397,11 @@
                 }
               }
               if (op === 'ca') {
-                console.log('CA');
+                //console.log('CA');
                 total = 0;
                 op = '';
               }
-              console.log('Total = '+total);
+              //console.log('Total = '+total);
               operation = op;
             }
             updateDisplay(total);
@@ -408,7 +409,7 @@
           }
         }
         function numPush(num) {
-          console.log('Number pushed: '+num);
+          //console.log('Number pushed: '+num);
           currentNum += num;
           if (currentNum === '.') {
             currentNum = '0.';
@@ -416,7 +417,7 @@
           updateDisplay(currentNum);
         }
         function buttonPush(btn) {
-          console.log('btn = '+btn);
+          //console.log('btn = '+btn);
           if (btn === 'decimal') {
             numPush('.');
           } else if (isNaN(btn)) {
@@ -430,7 +431,7 @@
         }
         $('button').click(function() {
           var btn = $(this).attr("id");
-          console.log('Button pushed: '+btn);
+          //console.log('Button pushed: '+btn);
           buttonPush(btn);
         });
       })
