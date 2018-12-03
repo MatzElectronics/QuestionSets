@@ -318,11 +318,11 @@
         } else {
           document.getElementById('tryagain').innerHTML = 'Incorrect, try again.';
         }
+        console.log(document.getElementById('guessUnit').value);
         if (u !== currentProblem.answerUnit) {
           document.getElementById('guessUnit').value = ' ';
         }
               console.log(currentProblem.answerUnit);
-        console.log(document.getElementById('guessUnit').value);
       }
       function skipAnswer() {
       document.getElementById('guessNumber').value = '';
