@@ -1,0 +1,349 @@
+<html>
+<head>
+<style>
+
+      @import url(https://fonts.googleapis.com/css?family=Roboto);
+      body,
+      input,
+      select,
+      textarea,
+      body * {
+        font-family: 'Roboto', sans-serif;
+        box-sizing: border-box;
+      }
+      
+      body {
+        padding: 50px;
+        background: url('yellowPolyBkg.jpg');
+      }
+      .infoText {
+        color: #ccc;
+        font-size: 0.8em;
+      }
+
+
+      #qField {
+        padding: 20px;
+        background: #fff;
+        border-radius: 5px;
+      }
+
+.rulerText {
+  fill: black;
+  font-family: monospace;
+  font-size: 12px;
+}
+
+.ruler_rotate0 {
+  -webkit-transform: rotateZ(0deg);
+  /* Safari */
+  transform: rotateZ(0deg);
+  /* Standard syntax */
+}
+
+.ruler_rotate90 {
+  -webkit-transform: rotateZ(90deg);
+  /* Safari */
+  transform: rotateZ(90deg);
+  /* Standard syntax */
+}
+
+.ruler_rotate180 {
+  -webkit-transform: rotateZ(180deg);
+  /* Safari */
+  transform: rotateZ(180deg);
+  /* Standard syntax */
+}
+
+.ruler_rotate270 {
+  -webkit-transform: rotateZ(270deg);
+  /* Safari */
+  transform: rotateZ(270deg);
+  /* Standard syntax */
+}
+
+.draggable {
+  position: absolute;
+  z-index: 9;
+  background-color: #f1f1f1;
+  /* border: 1px solid #d3d3d3; */
+  text-align: center;
+}
+
+.ruler {
+  padding: 0px;
+  cursor: move;
+  /* z-index: 10; */
+  background-color: rgba(240, 240, 240, .9);
+}
+
+.toy_image {
+  margin: 10px;
+  border-left: 2px black solid;
+  border-bottom: 2px black solid;
+  padding-top: 30px;
+}
+
+#theObject {
+  /* margin-bottom:-6px; */
+}
+
+</style>
+<script>
+var currentProblem = {};
+var divRot = 0;
+
+function rotRuler() {
+var v = parseInt(document.getElementById('theRuler').style.transform);
+v += 90;
+document.getElementById('theRuler').style.transform = 'rotateZ(' + v + 'deg)';
+//document.getElementById('theRuler').style['-webkit-transform'] = 'rotateZ(' + v + 'deg)';
+}
+
+
+
+function generateToy() {
+  var p = [
+    [80, 90],
+    [30, 60],
+    [30, 120],
+    [80, 150],
+    [130, 120],
+    [130, 60],
+    [80, 30]
+  ]
+
+  var o = 1.75 * Math.random() + 0.75;
+  var mmp = [600, 600, 0];
+  for (var idx = 0; idx < p.length; idx++) {
+
+    var s = Math.random() * 30;
+    var t = 2 * 3.141592 * Math.random();
+    p[idx][0] += s * Math.sin(t);
+    p[idx][1] += s * Math.cos(t);
+    p[idx][0] = Math.round(o * p[idx][0]);
+    p[idx][1] = Math.round(o * p[idx][1]);
+    if (p[idx][0] < mmp[0]) mmp[0] = p[idx][0];
+    if (p[idx][1] < mmp[1]) mmp[1] = p[idx][1];
+    if (p[idx][1] > mmp[2]) mmp[2] = p[idx][1];
+  }
+
+  for (idx = 0; idx < p.length; idx++) {
+    p[idx][0] -= mmp[0];
+    p[idx][1] -= mmp[1];
+    p[idx][1] = mmp[2] - mmp[1] - p[idx][1];
+  }
+
+		mmp = [0,0];
+   for (idx = 0; idx < p.length; idx++) {
+    if (p[idx][0] > mmp[0]) mmp[0] = p[idx][0];
+    if (p[idx][1] > mmp[1]) mmp[1] = p[idx][1];
+}
+
+  var elm = null;
+  
+  for (idx = 0; idx < 5; idx++) {
+  elm = document.getElementById('t' + idx);
+    elm.setAttribute('d', 'M' + p[0].join(',') + ' L' + p[idx + 1].join(',') + ' ' + p[idx + 2].join(','));
+  }
+  elm = document.getElementById('t5');
+  elm.setAttribute('d', 'M' + p[0].join(',') + ' L' + p[6].join(',') + ' ' + p[1].join(','));
+  //document.getElementById('result').innerHTML = p.toString();
+  
+ document.getElementById('theObject').setAttribute('height',mmp[1]);
+  document.getElementById('theObject').setAttribute('width',mmp[0]);
+  
+  document.getElementById('theObject').setAttribute('viewBox', "0 0 " + mmp[0] + " " + mmp[1]);
+  
+  //document.getElementById('result').style.height= (mmp[1] + 30);
+  document.getElementById('result').style.width= (mmp[0] + 30);
+  
+  
+  //document.getElementById('theSize').innerHTML = (mmp[0] * 15/48) + ',' + (mmp[1] * 15/48);
+
+  var rr = Math.random();
+  currentProblem.unit = (rr >= 0.5 ? 'mm' : 'cm');
+  currentProblem.height = (mmp[1] * 15/48);
+  currentProblem.width = (mmp[0] * 15/48);
+
+  document.getElementById('toyUnits').innerHTML = currentProblem.unit;
+
+}
+
+
+function rRuler(theDiv) {
+
+var element = document.getElementById(theDiv);
+element.classList.remove("ruler_rotate" + divRot);
+    divRot += 90;
+    if (divRot > 270) divRot -= 360;
+    
+    element.classList.add("ruler_rotate" + divRot);
+} 
+
+
+
+function checkAnswer() {
+        console.log(currentProblem);
+        var aw = parseFloat(document.getElementById('guessWidth').value) * (currentProblem.unit === 'cm' ? 10 : 1);
+        var ah = parseFloat(document.getElementById('guessHeight').value) * (currentProblem.unit === 'cm' ? 10 : 1);
+
+        var z = parseInt(document.getElementById('score').innerHTML);
+
+	var awDiff = Math.abs(aw - currentProblem.width);	
+	var ahDiff = Math.abs(ah - currentProblem.height);
+
+        if (awDiff < 1 && ahDiff < 1) {
+          z++;
+          document.getElementById('score').innerHTML = z;
+          var tt = btoa(z << 4 | (Math.floor(Math.random() * 16)) | (Math.floor(Math.random() * 16)) << 16);
+          var sc = '<a href="https://docs.google.com/forms/d/e/1FAIpQLScmfbs8w_VWMQML4z3EIAqgTfFuklcQMKK3nFjjPrpgSotO-g/viewform?usp=pp_url&entry.1270571468=' + tt + '">Turn in score</a>';
+          document.getElementById('codeZ').innerHTML = sc
+          generateToy();
+          document.getElementById('tryagain').innerHTML = 'Correct!';
+          document.getElementById('guessWidth').value = '';
+          document.getElementById('guessHeight').value = '';
+        } else {
+          document.getElementById('tryagain').innerHTML = 'Incorrect, try again.';
+        }
+
+        if (awDiff >= 1) {
+          document.getElementById('guessWidth').value = '';
+        }
+        if (ahDiff >= 1) {
+          document.getElementById('guessHeight').value = '';
+        }
+      }
+
+      function skipAnswer() {
+        document.getElementById('guessWidth').value = '';
+        document.getElementById('guessHeight').value = '';
+        generateToy();
+        document.getElementById('tryagain').innerHTML = '&nbsp;';
+      }
+
+
+</script>
+</head>
+<body>
+<div id="qField">
+      <h3>Measurement Practice</h3>
+      <hr>
+	
+      <h2>Score: <span id="score">0
+    </span> - <span id="codeZ">
+    </span></h2>
+ 
+
+
+<div id="result" class="toy_image">
+  <svg id="theObject">
+    <path id="t0" d="M0,0" fill="#777" stroke-width=".5" stroke="#777"/>
+    <path id="t1" d="M0,0" fill="#888" stroke-width=".5" stroke="#888"/>
+    <path id="t2" d="M0,0" fill="#999" stroke-width=".5" stroke="#999"/>
+    <path id="t3" d="M0,0" fill="#aaa" stroke-width=".5" stroke="#aaa"/>
+    <path id="t4" d="M0,0" fill="#999" stroke-width=".5" stroke="#999"/>
+    <path id="t5" d="M0,0" fill="#888" stroke-width=".5" stroke="#888"/>
+  </svg>
+</div>
+
+
+
+<div id="theSize"></div>
+
+
+     <br>
+      Find the height and width of the object above in <b><span id="toyUnits">cm</span></b><br>
+<table border=0><tr><td>Width: </td><td><input type="text" id="guessWidth" onFocus="document.getElementById('tryagain').innerHTML='&nbsp;';" /></td></tr>
+<tr><td>Height: </td><td><input type="text" id="guessHeight" onFocus="document.getElementById('tryagain').innerHTML='&nbsp;';" /></td></tr>
+</table>
+
+      <div id="tryagain" style="font-size:12px;color:#aa0000;">&nbsp;</div>
+      <button id="check" onclick="checkAnswer()">check answer</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <button id="skip" onclick="skipAnswer()">skip</button><br>
+      <br><br>
+      <script>
+        generateToy();
+      </script>
+
+
+
+<button onclick="rRuler('theRuler');">
+Ruler &#8635;
+</button>
+
+<div class="draggable ruler" id="theRuler">
+  <svg height="45" width="494">
+  <path d="M7,0 l0,30 m4,-30 l0,15 m4,-15 l0,15 m4,-15 l0,15 m4,-15 l0,22 m4,-22 l0,15 m4,-15 l0,15 m4,-15 l0,15 m4,-15 l0,30  m4,-30 l0,15 m4,-15 l0,15 m4,-15 l0,15 m4,-15 l0,22 m4,-22 l0,15 m4,-15 l0,15 m4,-15 l0,15 m4,-15 l0,30 m4,-30 l0,15 m4,-15 l0,15 m4,-15 l0,15 m4,-15 l0,22 m4,-22 l0,15 m4,-15 l0,15 m4,-15 l0,15 m4,-15 l0,30 m4,-30 l0,15 m4,-15 l0,15 m4,-15 l0,15 m4,-15 l0,22 m4,-22 l0,15 m4,-15 l0,15 m4,-15 l0,15 m4,-15 l0,30 m4,-30 l0,15 m4,-15 l0,15 m4,-15 l0,15 m4,-15 l0,22 m4,-22 l0,15 m4,-15 l0,15 m4,-15 l0,15 m4,-15 l0,30 m4,-30 l0,15 m4,-15 l0,15 m4,-15 l0,15 m4,-15 l0,22 m4,-22 l0,15 m4,-15 l0,15 m4,-15 l0,15 m4,-15 l0,30 m4,-30 l0,15 m4,-15 l0,15 m4,-15 l0,15 m4,-15 l0,22 m4,-22 l0,15 m4,-15 l0,15 m4,-15 l0,15 m4,-15 l0,30 m4,-30 l0,15 m4,-15 l0,15 m4,-15 l0,15 m4,-15 l0,22 m4,-22 l0,15 m4,-15 l0,15 m4,-15 l0,15 m4,-15 l0,30 m4,-30 l0,15 m4,-15 l0,15 m4,-15 l0,15 m4,-15 l0,22 m4,-22 l0,15 m4,-15 l0,15 m4,-15 l0,15 m4,-15 l0,30 m4,-30 l0,15 m4,-15 l0,15 m4,-15 l0,15 m4,-15 l0,22 m4,-22 l0,15 m4,-15 l0,15 m4,-15 l0,15 m4,-15 l0,30 m4,-30 l0,15 m4,-15 l0,15 m4,-15 l0,15 m4,-15 l0,22 m4,-22 l0,15 m4,-15 l0,15 m4,-15 l0,15 m4,-15 l0,30 m4,-30 l0,15 m4,-15 l0,15 m4,-15 l0,15 m4,-15 l0,22 m4,-22 l0,15 m4,-15 l0,15 m4,-15 l0,15 m4,-15 l0,30 m4,-30 l0,15 m4,-15 l0,15 m4,-15 l0,15 m4,-15 l0,22 m4,-22 l0,15 m4,-15 l0,15 m4,-15 l0,15 m4,-15 l0,30 m4,-30 l0,15 m4,-15 l0,15 m4,-15 l0,15 m4,-15 l0,22 m4,-22 l0,15 m4,-15 l0,15 m4,-15 l0,15 m4,-15 l0,30 m4,-30 l0,15 m4,-15 l0,15 m4,-15 l0,15 m4,-15 l0,22 m4,-22 l0,15 m4,-15 l0,15 m4,-15 l0,15 m4,-15 l0,30" stroke="black" stroke-width="1"/>
+  <text x="3.5" y="42" class="rulerText">0cm</text>
+  <text x="35.5" y="42" class="rulerText">1</text>
+  <text x="67.5" y="42" class="rulerText">2</text>
+  <text x="99.5" y="42" class="rulerText">3</text>
+  <text x="131.5" y="42" class="rulerText">4</text>
+  <text x="163.5" y="42" class="rulerText">5</text>
+  <text x="195.5" y="42" class="rulerText">6</text>
+  <text x="227.5" y="42" class="rulerText">7</text>
+  <text x="259.5" y="42" class="rulerText">8</text>
+  <text x="291.5" y="42" class="rulerText">9</text>
+  <text x="320" y="42" class="rulerText">10</text>
+  <text x="352" y="42" class="rulerText">11</text>
+  <text x="384" y="42" class="rulerText">12</text>
+  <text x="416" y="42" class="rulerText">13</text>
+  <text x="448" y="42" class="rulerText">14</text>
+  <text x="480" y="42" class="rulerText">15</text>
+</svg>
+</div>
+
+
+
+<script>
+dragElement(document.getElementById('theRuler'));
+
+function dragElement(elmnt) {
+  var pos1 = 0,
+    pos2 = 0,
+    pos3 = 0,
+    pos4 = 0;
+  if (document.getElementById(elmnt.id)) {
+    // if present, the header is where you move the DIV from:
+    document.getElementById(elmnt.id).onmousedown = dragMouseDown;
+  } else {
+    // otherwise, move the DIV from anywhere inside the DIV: 
+    elmnt.onmousedown = dragMouseDown;
+  }
+
+  function dragMouseDown(e) {
+    e = e || window.event;
+    e.preventDefault();
+    // get the mouse cursor position at startup:
+    pos3 = e.clientX;
+    pos4 = e.clientY;
+    document.onmouseup = closeDragElement;
+    // call a function whenever the cursor moves:
+    document.onmousemove = elementDrag;
+  }
+
+  function elementDrag(e) {
+    e = e || window.event;
+    e.preventDefault();
+    // calculate the new cursor position:
+    pos1 = pos3 - e.clientX;
+    pos2 = pos4 - e.clientY;
+    pos3 = e.clientX;
+    pos4 = e.clientY;
+    // set the element's new position:
+    elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
+    elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+  }
+
+  function closeDragElement() {
+    // stop moving when mouse button is released:
+    document.onmouseup = null;
+    document.onmousemove = null;
+  }
+}
+generateToy();
+</script>
+</div>
+</body>
+</html>
