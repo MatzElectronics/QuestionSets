@@ -95,12 +95,12 @@
         // find impulse
         'An object\'s collision with a target took (3) seconds, and the object experienced (2) N of force.  What was the impulse of the collision?',
         // find momentum
-        'A (0) kg object (1) m/s toward a target.  What is the object\'s momentum?'
+        'A (0) kg object is moving (1) m/s toward a target.  What is the object\'s momentum?'
       ]
 
       var problem_2_strings = [
         // find velocity (1)
-        'If the object\'s speed was (1) m/s, how much mass did the object have?',
+        'If the object\'s velocity was (1) m/s, how much mass did the object have?',
         // find mass (0)
         'If the object\'s mass was (0) kg, how fast was the object moving before the collision?',
         // find time (3)
@@ -289,12 +289,14 @@
   <tr>
     <td>
       <h3>Momentum and Impulse practice problems</h3>
-      Helpful formulas:<br><em>
-    momentum = mass &times; velocity<br>
-    impulse = force &times; time<br>
+      Helpful formulas:<br>
+      <table border=0 cellpadding=3><tr>
+        <td><em>momentum = impulse</em></td>
+    <td><em>momentum = mass &times; velocity<br>mass = momentum &div; velocity<br>velocity = momentum &div mass</em></td>
+    <td><em>impulse = force &times; time<br>force = impulse &div; time<br>time = impulse &div; force</td></tr></table>
     <br>
     
-    momentum = impulse<br></em>
+    <br></em>
       <hr>
       <h2>
         Score: <span id="score">0
