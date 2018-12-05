@@ -1,0 +1,357 @@
+<html>
+  <head>
+    <script
+  src="https://code.jquery.com/jquery-3.3.1.min.js"
+  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  crossorigin="anonymous"></script>
+    <style>
+      @import url(https://fonts.googleapis.com/css?family=Roboto);
+      body,
+      input,
+      select,
+      textarea,
+      body * {
+        font-family: 'Roboto', sans-serif;
+        box-sizing: border-box;
+      }
+      body::after, body::before,
+      input::after,
+      input::before,
+      select::after,
+      select::before,
+      textarea::after,
+      textarea::before,
+      body *::after,
+      body *::before {
+        box-sizing: border-box;
+      }
+      
+      body {
+        padding: 50px;
+        background: url('greenPolyBkg.jpg');
+      }
+      .infoText {
+        color: #ccc;
+        font-size: 0.8em;
+      }
+
+      #calcBody {
+        display: none;
+        
+        background-color: #eee;
+        height: 322px;
+        width: 280px;
+        padding-top: 1px;
+        margin: auto;
+        border: 1px solid #888;
+      }
+      table {
+        padding: 20px;
+        background: #fff;
+        border-radius: 5px;
+      }
+      h1 {
+        margin: 0px 40px 0px 40px;
+        color: #ddd;
+        font-size: 1.8em;
+        text-align: center;
+      }
+      #screen {
+        margin: 20px 40px 20px 40px;
+        height: 35px;
+        background: #ddd;
+        border-radius: 0px;
+        box-shadow: 1px 1px 1px #555 inset;
+      }
+      #screen p {
+        position: relative;
+        top: 2px;
+        margin: 5px;
+        text-align: right;
+        font-size: 1.4em;
+        overflow: hidden;
+      }
+      #buttonPad {
+        -webkit-column-count: 4;
+        -moz-column-count: 4;
+        column-count: 4;
+        width: 240px;
+        margin: auto;
+      }
+      .btn {
+        background: #ddd;
+        height: 35px;
+        width: 50px;
+        margin: 5px 0 5px 0;
+        border-radius: 3px;
+        font-size: 1.1em;
+      }
+      #plus {
+        height: 80px;
+      }
+    </style>
+    <script>
+      var problem_1_strings = [
+        // find impulse
+        'An object\'s collision with a target took (3) seconds, and the object experienced (2) N of force.  What was the impulse of the collision?',
+        // find momentum
+        'A (0) kg object (1) m/s toward a target.  What is the object\'s momentum?'
+      ]
+
+      var problem_2_strings = [
+        // find velocity (1)
+        'If the object\'s speed was (1) m/s, how much mass did the object have?',
+        // find mass (0)
+        'If the object\'s mass was (0) kg, how fast was the object moving before the collision?',
+        // find time (3)
+        'If the collision lasted (3) seconds, how much force was experienced by the object?',
+        // find force (2)
+        'If the object experienced (2) N of force, how long did the collision last?'
+      ]
+
+      var mi_units = [
+        'kg',
+        'm/s',
+        'kg*m/s\u00b2',
+        's'
+      ]
+
+      function mathProblem() {
+        var p = [];
+        p[1] = Math.floor((Math.random() * 24) + 2);
+        p[0] = Math.floor((Math.random() * 100) + 2);
+        p[4] = p[0] * p[1];
+
+        var tt = getFactors(p[4]);
+
+        p[3] = tt[tt.length - 1];
+        p[2] = Math.round(p[4] / p[3]);
+
+        var r = Math.floor(Math.random() * 4);
+
+
+        return {
+          prob1: problem_1_strings[Math.floor(r / 2)].replace(/\(([0-9])\)/g, function(m, n) {
+            return p[n]
+          }),
+          prob2: problem_2_strings[r].replace(/\(([0-9])\)/g, function(m, n) {
+            return p[n]
+          }),
+          answerNumber: p[r],
+          answerUnit: mi_units[r],
+          answerMomentum: p[4]
+        }
+      }
+
+      var currentProblem = mathProblem();
+
+      function checkAnswer() {
+        console.log(currentProblem);
+        var a1 = parseInt(document.getElementById('guessMomentum').value);
+        var a = parseFloat(document.getElementById('guessNumber').value);
+        a = Math.round(a, 2);
+        var u = document.getElementById('guessUnit').value;
+        var z = parseInt(document.getElementById('score').innerHTML);
+        if (a == currentProblem.answerNumber && u == currentProblem.answerUnit && a1 == currentProblem.answerMomentum) {
+          z++;
+          document.getElementById('score').innerHTML = z;
+          var tt = btoa(z << 4 | (Math.floor(Math.random() * 16)) | (Math.floor(Math.random() * 16)) << 16);
+          var sc = '<a href="https://docs.google.com/forms/d/e/1FAIpQLScmfbs8w_VWMQML4z3EIAqgTfFuklcQMKK3nFjjPrpgSotO-g/viewform?usp=pp_url&entry.1270571468=' + tt + '">Turn in score</a>';
+          document.getElementById('codeZ').innerHTML = sc
+          currentProblem = mathProblem();
+          document.getElementById('question').innerHTML = currentProblem.prob1;
+          document.getElementById('question2').innerHTML = currentProblem.prob2;
+          document.getElementById('tryagain').innerHTML = 'Correct!';
+          document.getElementById('guessNumber').value = '';
+        } else {
+          document.getElementById('tryagain').innerHTML = 'Incorrect, try again.';
+        }
+
+        if (u !== currentProblem.answerUnit) {
+          document.getElementById('guessUnit').value = ' ';
+        }
+        if (a !== currentProblem.answerNumber) {
+          document.getElementById('guessNumber').value = '';
+        }
+        if (a1 !== currentProblem.answerMomentum) {
+          document.getElementById('guessMomentum').value = '';
+        }
+      }
+
+      function skipAnswer() {
+        document.getElementById('guessNumber').value = '';
+        document.getElementById('guessMomentum').value = '';
+        currentProblem = mathProblem();
+        document.getElementById('question').innerHTML = currentProblem.prob1;
+        document.getElementById('question2').innerHTML = currentProblem.prob2;
+        document.getElementById('tryagain').innerHTML = '&nbsp;';
+        document.getElementById('guessUnit').value = ' ';
+      }
+
+      function getFactors(num) {
+        const isEven = num % 2 === 0;
+        let inc = isEven ? 1 : 2;
+        let factors = [num];
+
+        for (let curFactor = isEven ? 2 : 3; Math.pow(curFactor, 2) <= num; curFactor += inc) {
+          if (num % curFactor !== 0) continue;
+          if (curFactor > 2) factors.push(curFactor / 100);
+          let compliment = num / curFactor;
+          if (compliment !== curFactor && compliment > 2) factors.push(compliment / 100);
+        }
+
+        return factors;
+      }
+      
+      $(document).ready(function() {
+        var currentNum = '';
+        var total = 0;
+        var operation = '';
+        //console.log(typeof(total));
+        function updateDisplay(disp) {
+          //console.log('Display updating: '+disp);
+          $('p').text(disp);
+        }
+        function opPush(op) {
+          //console.log('Operand pushed');
+          if (op === 'percent') {
+            var currentNumInt = Number(currentNum);
+            currentNumInt= currentNumInt / 100;
+            currentNum = currentNumInt;
+            updateDisplay(currentNumInt);
+          } else {
+            console.log('else run');
+            if (op !== 'ce') {
+              var currentNumInt = Number(currentNum);
+              if (currentNumInt) {
+                switch (operation) {
+                  case '':
+                    total = currentNumInt;
+                    break;
+                  case 'divide':
+                    total = total / currentNumInt;
+                    break;
+                  case 'times':
+                    total = total * currentNumInt;
+                    break;
+                  case 'minus':
+                    total = total - currentNumInt;
+                    break;
+                  case 'plus':
+                    total = total + currentNumInt;
+                    break;
+                  case 'equals':
+                    break;
+                }
+              }
+              if (op === 'ca') {
+                //console.log('CA');
+                total = 0;
+                op = '';
+              }
+              //console.log('Total = '+total);
+              operation = op;
+            }
+            updateDisplay(total);
+            currentNum = '';
+          }
+        }
+        function numPush(num) {
+          //console.log('Number pushed: '+num);
+          currentNum += num;
+          if (currentNum === '.') {
+            currentNum = '0.';
+          }
+          updateDisplay(currentNum);
+        }
+        function buttonPush(btn) {
+          //console.log('btn = '+btn);
+          if (btn === 'decimal') {
+            numPush('.');
+          } else if (isNaN(btn)) {
+            opPush(btn);
+          } else {
+            numPush(btn);
+          }
+        }
+        // superfluous?
+        function updateTotal(op,num) {
+        }
+        $('button').click(function() {
+          var btn = $(this).attr("id");
+          //console.log('Button pushed: '+btn);
+          buttonPush(btn);
+        });
+      })
+    </script>
+  </head>
+  <body><table border="0">
+  <tr>
+    <td>
+      <h3>Momentum and Impulse practice problems</h3>
+      Helpful formulas:<br><em>
+    momentum = mass &times; velocity<br>
+    impulse = force &times; time<br>
+    <br>
+    
+    momentum = impulse<br></em>
+      <hr>
+      <h2>
+        Score: <span id="score">0
+    </span> - <span id="codeZ">
+    </span></h2>
+      <br>
+      <span class="infoText">First, find:</span>
+      <div id="question"></div><input type="text" id="guessMomentum" onFocus="document.getElementById('tryagain').innerHTML='&nbsp;';" /> kg*m/s<br><br><span class="infoText">Using the information from above:</span>
+      <div id="question2"></div>
+      <input type="text" id="guessNumber" onFocus="document.getElementById('tryagain').innerHTML='&nbsp;';" />
+      <select id="guessUnit">
+    <option value=" ">--choose a unit--</option>
+    <option value="kg*m/s&sup2;">kg*m/s&sup2; (Newtons)</option>
+    <option value="kg">kg (kilograms)</option>
+    <option value="m/s">m/s</option>
+    <option value="s">s (seconds)</option>
+    </select><br><br>
+      <div id="tryagain" style="font-size:12px;color:#aa0000;">&nbsp;</div>
+      <button id="check" onclick="checkAnswer()">check answer</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <button id="skip" onclick="skipAnswer()">skip</button><br>
+      <br><br>
+      <script>
+        var x = mathProblem();
+        currentProblem = x;
+        document.getElementById('question').innerHTML = x.prob1;
+        document.getElementById('question2').innerHTML = x.prob2;
+
+      </script>
+    </td><td>
+    <div id="calculator">
+      <div id="calcBody">
+        <div id="screen">
+          <p>0</p>
+        </div>
+        <div id="buttonPad">
+          <button id="ca" class="btn">CA</button>
+          <button id="7" class="btn">7</button>
+          <button id="4" class="btn">4</button>
+          <button id="1" class="btn">1</button>
+          <button id="0" class="btn">0</button>
+          <button id="ce" class="btn">CE</button>
+          <button id="8" class="btn">8</button>
+          <button id="5" class="btn">5</button>
+          <button id="2" class="btn">2</button>
+          <button id="decimal" class="btn">.</button>
+          <button id="percent" class="btn">%</button>
+          <button id="9" class="btn">9</button>
+          <button id="6" class="btn">6</button>
+          <button id="3" class="btn">3</button>
+          <button id="equals" class="btn">=</button>
+          <button id="divide" class="btn">&div;</button>
+          <button id="times" class="btn">x</button>
+          <button id="minus" class="btn">-</button>
+          <button id="plus" class="btn">+</button>
+        </div>
+      </div>
+    </div>
+    </td></tr></table>
+  </body>
+</html>
