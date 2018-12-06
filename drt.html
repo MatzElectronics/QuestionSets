@@ -343,8 +343,6 @@ function getScoreString(score) {
         if (a == currentProblem.answerNumber && u == currentProblem.answerUnit) {
           z++;
           document.getElementById('score').innerHTML = z;
-
-          document.getElementById('score').innerHTML = z;
           var sc = '<a href="https://docs.google.com/forms/d/e/1FAIpQLScmfbs8w_VWMQML4z3EIAqgTfFuklcQMKK3nFjjPrpgSotO-g/viewform?usp=pp_url&entry.901367584=' + getURLParameter('teacher') + '&entry.1270571468=' + encodeURI(getScoreString(z)) + '">Turn in score</a>';
 
           document.getElementById('codeZ').innerHTML = sc
