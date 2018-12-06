@@ -303,7 +303,39 @@
         'Alexis',
         'Tiffany',
         'Kayla'
-      ]
+      ];
+    
+        function getURLParameter(name) {
+    return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(window.location.search) || [null, ''])[1].replace(/\+/g, '%20')) || null;
+}
+	
+function getScoreString(score) {
+	var e = '@';
+  if (score > 62) {
+    e = String.fromCharCode(score + 2);
+    score -= 62;
+  }
+  if (score > 62) {
+    score = 62;
+  }
+  var p = Math.floor(Math.random() * 8) + 1;
+  var s = '';
+  s += String.fromCharCode(p + 64);
+  for (var i = 1; i < 12; i++) {
+    if (i === p) {
+      s+= String.fromCharCode(score + 64);
+    } else {
+      var c = String.fromCharCode(Math.floor(Math.random() * 62) + 64);
+      s += c
+    }
+  }
+  s += e;
+  s += String.fromCharCode(Math.floor(Math.random() * 62) + 64);
+  return s + ' - Measure Distance';
+}
+          
+ 
+    
       function checkAnswer() {
         var a = parseInt(document.getElementById('guessNumber').value);
         var u = document.getElementById('guessUnit').value;
@@ -311,8 +343,7 @@
         if (a == currentProblem.answerNumber && u == currentProblem.answerUnit) {
           z++;
           document.getElementById('score').innerHTML = z;
-          var tt = btoa(z << 4 | (Math.floor(Math.random() * 16)) | (Math.floor(Math.random() * 16)) << 16); 
-          var sc = '<a href="https://docs.google.com/forms/d/e/1FAIpQLScmfbs8w_VWMQML4z3EIAqgTfFuklcQMKK3nFjjPrpgSotO-g/viewform?usp=pp_url&entry.1270571468=' + tt + '">Turn in score</a>';
+          var sc = '<a href="https://docs.google.com/forms/d/e/1FAIpQLScmfbs8w_VWMQML4z3EIAqgTfFuklcQMKK3nFjjPrpgSotO-g/viewform?usp=pp_url&entry.901367584=' + getURLParameter('teacher') + '&entry.1270571468=' + encodeURI(getScoreString(z)) + '">Turn in score</a>';
           document.getElementById('codeZ').innerHTML = sc
           currentProblem = mathProblem();
           document.getElementById('question').innerHTML = currentProblem.problem;
