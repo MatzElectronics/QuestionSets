@@ -34,12 +34,14 @@
 
 var endPos = 700;
 var theAccel = 0.15;
+var theInterval = 10;
 var theTime = -5;
 
 function setFinish() {
   endPos = Math.floor(Math.random() * 250 + 500);
   document.getElementById('finishLine').transform.baseVal.getItem(0).setTranslate(endPos, 0);
   theAccel = Math.random() * 0.15 + 0.05;
+  theInterval = Math.random() * 35 + 20
   theTime = -5;
 }
 
@@ -61,7 +63,7 @@ function startCar(ac, ep) {
       if (carPos > 700) {
       clearInterval(mover);
        setTimeout(function() {document.getElementById('car').transform.baseVal.getItem(0).setTranslate(0, 0);},1000); }
-    }, 30);
+    }, theInterval);
 }
 
 
