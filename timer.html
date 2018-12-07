@@ -91,7 +91,7 @@ function getScoreString(score) {
   }
   s += e;
   s += String.fromCharCode(Math.floor(Math.random() * 62) + 64);
-  return s + ' - Distance, Rate, Time';
+  return s + ' - Stopwatch';
 }
           
 
@@ -151,9 +151,9 @@ function checkAnswer() {
 
 
 
-     <br>
+     <table border=0><tr><td>
       Use a stopwatch to time how long it takes the car to cross the finish line.<br>
-	Use the &quot;Go!&quot; button to start the car.<br><br>
+	     Use the &quot;Go!&quot; button to start the car.</td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button id="carGo" onclick="startCar(theAccel, endPos);">Go!</button></td></tr></table><br>
 Time: </td><td><input type="text" id="guessWidth" onFocus="document.getElementById('tryagain').innerHTML='&nbsp;';" size="5"/> seconds<br><br>
 
       <div id="tryagain" style="font-size:12px;color:#aa0000;">&nbsp;</div>
@@ -165,7 +165,7 @@ Time: </td><td><input type="text" id="guessWidth" onFocus="document.getElementBy
 
 
 
-<button id="carGo" onclick="startCar(theAccel, endPos);">Go!</button>
+
 
 <button id="setup" onclick="setFinish();" style="display:none;">Setup
 </button>
