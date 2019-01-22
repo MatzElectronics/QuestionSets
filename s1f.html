@@ -59,6 +59,11 @@ td {
 </head>
 
 <body>
+    First Name<br>
+  <input type="text" id="firstname"><br>
+  Last Name<br>
+  <input type="text" id="lastname"><br>
+  <hr>
 <div style="position:relative;">
   Semester 1 Final - Units 1, 2, &amp; 3
   <br> Unit 1 - HS-PS2-1 Analyze data to support the claim that Newton’s second law of motion describes the mathematical relationship among the net force on a macroscopic object, its mass, and its acceleration.
@@ -318,11 +323,8 @@ Drag forces and objects from the grey boxes on the right into the empty box on t
 </div>
 
 
-<form action="https://pcssem1final-8616.restdb.io/rest/sem1final/?key=5c46a9998932456b8145553a" method="post">
-  testing 7<br>
-  <input type="text" id="sendit" value="">
-  <input type="submit" value="Submit">
-  </form>
+
+
 
 <script>
 var svg = document.getElementById('graphingBlock');
@@ -425,11 +427,11 @@ function sendResponse(val) {
       "x-apikey": '7cbc66150eef334530abbeb675b86357bc8a9',
       "content-type": "application/json"
     },
-    "data": '{"response": "' + btoa(JSON.stringify(q[val])) + '"}',
+    "data": '{"name": "' + $('#lastname').value + ', ' + $('#firstname').value + '", "question": "' + val + '", "response": "' + btoa(JSON.stringify(q[val])) + '"}',
     "processData": false
   }
   console.log(ajaxSettings);
-  $.ajax(ajaxSettings).done(function(stuff) {console.log(stuff)}).fail(function(stuff) {console.log(stuff)});
+  $.ajax(ajaxSettings);
   
 }
 
