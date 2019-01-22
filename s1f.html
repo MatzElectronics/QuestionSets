@@ -319,7 +319,7 @@ Drag forces and objects from the grey boxes on the right into the empty box on t
 
 
 <form action="https://pcssem1final-8616.restdb.io/rest/sem1final/?key=5c46a9998932456b8145553a" method="post">
-  testing 2<br>
+  testing 3<br>
   <input type="text" id="sendit" value="">
   <input type="submit" value="Submit">
   </form>
@@ -422,10 +422,10 @@ function sendResponse(val) {
     "url": "https://pcssem1final-8616.restdb.io/rest/sem1final",
     "method": "POST",
     "headers": {
-      "x-apikey": 5c46a9998932456b8145553a,
+      "x-apikey": '5c46a9998932456b8145553a',
       "content-type": "application/json"
     },
-    "data": {"response": JSON.stringify(q[val])}
+    "data": {"response": JSON.stringify(q[val])},
     "processData": false
   });
   
