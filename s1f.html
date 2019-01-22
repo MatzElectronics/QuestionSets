@@ -319,7 +319,7 @@ Drag forces and objects from the grey boxes on the right into the empty box on t
 
 
 <form action="https://pcssem1final-8616.restdb.io/rest/sem1final/?key=5c46a9998932456b8145553a" method="post">
-  testing 5<br>
+  testing 6<br>
   <input type="text" id="sendit" value="">
   <input type="submit" value="Submit">
   </form>
@@ -416,7 +416,7 @@ function sendResponse(val) {
   //document.getElementById('sendit').name="response";
   //document.getElementById('sendit').value=JSON.stringify(q[val]);
   
-  $.ajax({
+  ajaxSettings = {
     "async": true,
     "crossDomain": true,
     "url": "https://pcssem1final-8616.restdb.io/rest/sem1final",
@@ -427,7 +427,9 @@ function sendResponse(val) {
     },
     "data": '{"response": btoa(JSON.stringify(q[val]))}',
     "processData": false
-  });
+  }
+  console.log(ajaxSettings);
+  $.ajax(ajaxSettings).done(function(stuff) {console.log(stuff)}).fail(function(stuff) {console.log(stuff)});
   
 }
 
