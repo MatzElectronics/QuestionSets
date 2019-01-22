@@ -409,7 +409,7 @@ function dragElement(elmnt) {
 }
 
 function sendResponse() {
-  $.post("https://crossorigin.me/https://pcssem1final-8616.restdb.io/rest/sem1final/?key=5c46a9998932456b8145553a", {
+  $.post("https://cors-anywhere.herokuapp.com/https://pcssem1final-8616.restdb.io/rest/sem1final/?key=5c46a9998932456b8145553a", {
     "responses": q
   }, function(data, status) {
     alert("Data: " + data + "\nStatus: " + status);
