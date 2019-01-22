@@ -319,7 +319,7 @@ Drag forces and objects from the grey boxes on the right into the empty box on t
 
 
 <form action="https://pcssem1final-8616.restdb.io/rest/sem1final/?key=5c46a9998932456b8145553a" method="post">
-  testing 1<br>
+  testing 2<br>
   <input type="text" id="sendit" value="">
   <input type="submit" value="Submit">
   </form>
@@ -413,18 +413,22 @@ function dragElement(elmnt) {
 }
 
 function sendResponse(val) {
-  document.getElementById('sendit').name="response";
-  document.getElementById('sendit').value=JSON.stringify(q[val]);
-  /*
+  //document.getElementById('sendit').name="response";
+  //document.getElementById('sendit').value=JSON.stringify(q[val]);
+  
   $.ajax({
-    method: 'GET',
-    url: "https://pcssem1final-8616.restdb.io/rest/sem1final/?key=5c46a9998932456b8145553a&resp" + val + "=" + JSON.stringify(q[val]),
-    dataType: 'jsonp', //change the datatype to 'jsonp' works in most cases
-    success: (res) => {
-     console.log(res);
-    }
+    "async": true,
+    "crossDomain": true,
+    "url": "https://pcssem1final-8616.restdb.io/rest/sem1final",
+    "method": "POST",
+    "headers": {
+      "x-apikey": 5c46a9998932456b8145553a,
+      "content-type": "application/json"
+    },
+    "data": {"response": JSON.stringify(q[val])}
+    "processData": false
   });
-  */
+  
 }
 
 
