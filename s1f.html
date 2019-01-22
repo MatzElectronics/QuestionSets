@@ -124,7 +124,13 @@ window.onbeforeunload = function(e) {
 </head>
 
 <body>
-<div class="whitebkg" style="overflow-y:scroll;height:550px;width:750px">
+<div class="whitebkg" style="overflow-y:scroll;height:150px;width:750px;" id="start">
+<input type="text" id="lock"/>
+<button onclick="if (document.getElementById('lock').value===btoa('per1!')) {document.getElementById('start').style.display='none';document.getElementById('theTest').style.display='block';} else {document.getElementById('lock').value='';}">Go</button>
+<script>console.log(btoa('per1!'));</script>
+</div>
+
+<div class="whitebkg" style="overflow-y:scroll;height:550px;width:750px;display:none;" id="theTest";>
 <div style="position:relative;">
 <table><tr><td>First Name</td><td> &nbsp;Last Name</td></tr>
 <tr><td><input type="text" id="firstname"></td><td> &nbsp;<input type="text" id="lastname"></td></tr></table>
@@ -573,11 +579,11 @@ function dragElement(elmnt) {
 
 function sendResponse(val, ob) {
 
-  studentName = document.getElementById("lastname").value + ", " + document.getElementById("firstname").value;
+  studentName = document.getElementById('lock').value + ", " + document.getElementById("lastname").value + ", " + document.getElementById("firstname").value;
 
 turnedIn += Math.round(Math.pow(2,val));
 
-  if (studentName.length < 5) {
+  if (studentName.length < 14) {
 	alert('Enter your name at the top of the page before submitting any responses!');
   } else {
   ob.style.backgroundColor = '#4caf50'
