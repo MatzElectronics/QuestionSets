@@ -318,7 +318,10 @@ Drag forces and objects from the grey boxes on the right into the empty box on t
 </div>
 
 
-
+<form action="https://pcssem1final-8616.restdb.io/rest/sem1final/?key=5c46a9998932456b8145553a" method="post">
+  <input type="text" id="sendit" value="">
+  <input type="submit" value="Submit">
+  </form>
 
 <script>
 var svg = document.getElementById('graphingBlock');
@@ -409,6 +412,9 @@ function dragElement(elmnt) {
 }
 
 function sendResponse(val) {
+  document.getElementById('sendit').name="resp" + val;
+  document.getElementById('sendit').value=JSON.stringify(q[val]);
+  /*
   $.ajax({
     method: 'GET',
     url: "https://pcssem1final-8616.restdb.io/rest/sem1final/?key=5c46a9998932456b8145553a&resp" + val + "=" + JSON.stringify(q[val]),
@@ -417,6 +423,7 @@ function sendResponse(val) {
      console.log(res);
     }
   });
+  */
 }
 
 
