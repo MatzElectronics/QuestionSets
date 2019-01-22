@@ -115,6 +115,7 @@ button:hover {
 </style>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script>
+	var turnedIn = 0;
 window.onbeforeunload = function(e) {
   if(turnedIn >= 255) return;
   else return "You are not finished, are you sure you want leave?";
@@ -494,7 +495,6 @@ That's it, you're finished!</span>
 var svg = document.getElementById('graphingBlock');
 var pt = svg.createSVGPoint(); // Created once for document
 var q = [{}, {}, {}, {}, {}, {}, {}, {}];
-var turnedIn = 0;
 
 function setCoords(evt) {
   pt.x = evt.clientX;
