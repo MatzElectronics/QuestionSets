@@ -2,43 +2,80 @@
 <title>PCS Semester 1 Final</title>
 <head>
 <style>
+     @import url(https://fonts.googleapis.com/css?family=Roboto);
+      body,
+      input,
+      select,
+      textarea,
+      body * {
+        font-family: 'Roboto', sans-serif;
+        box-sizing: border-box;
+      }
+      body::after, body::before,
+      input::after,
+      input::before,
+      select::after,
+      select::before,
+      textarea::after,
+      textarea::before,
+      body *::after,
+      body *::before {
+        box-sizing: border-box;
+      }
+      
+      body {
+        padding: 50px;
+        background: url('polyBkgBlue.svg');
+      }
 
-body {
-  font-family: sans-serif;
+.formula {
+ display:inline-block;
+padding:6px;
+width:75%;
+align:center;
+border-radius:5px;
+ background: #ccc;
+text-align:center;
 }
+
+.hdr {
+ display:inline-block;
+padding:6px;
+width:100%;
+align:center;
+border-radius:5px;
+ background: #555;
+color:white;
+text-align:center;
+}
+
 
 svg {
   fill: white;
   background: none;
 }
-
 table {
   border-collapse: collapse;
 }
-
-td {
+.d-td {
   padding: 3px 10px;
   font-size: 12px;
   text-align: center;
   border: 1px dashed #ccc;
 }
-
 .gLabel {
   fill: black;
   font-family: sans-serif;
   font-size: 10px;
 }
-
 .gLabelItalic {
   font-style: italic;
 }
-
 .gLabelSub {
   fill: black;
   font-family: sans-serif;
   font-size: 8px;
 }
-
 .forceArrow {
   position: absolute;
   cursor: move;
@@ -46,30 +83,58 @@ td {
   height: 100px;
   width: 15px;
 }
-
 .clearfix:after {
   content: "";
   display: table;
   clear: both;
 }
+.whitebkg {
+  background: white;
+  border-radius: 10px;
+  padding: 10px;
+  
+}
+
+button {
+  background-color: #008CBA; /* Blue */
+  border: none;
+  border-radius:5px;
+  color: white;
+  padding: 5px 10px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 13px;
+}
+
+button:hover {
+  box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+}
 
 
 </style>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script>
+window.onbeforeunload = function(e) {
+  if(turnedIn >= 255) return;
+  else return "You are not finished, are you sure you want leave?";
+}
+</script>
 </head>
 
 <body>
-    First Name<br>
-  <input type="text" id="firstname"><br>
-  Last Name<br>
-  <input type="text" id="lastname"><br>
-  <hr>
+<div class="whitebkg" style="overflow-y:scroll;height:550px;width:750px">
 <div style="position:relative;">
-  Semester 1 Final - Units 1, 2, &amp; 3
-  <br> Unit 1 - HS-PS2-1 Analyze data to support the claim that Newton’s second law of motion describes the mathematical relationship among the net force on a macroscopic object, its mass, and its acceleration.
-  <br> Newton’s Second Law of Motion: Acceleration is produced when a net force acts on a mass. The greater the mass (of the object being accelerated) the greater the amount of force needed (to accelerate the object).
-  <br> F= ma
-  <br> 1. Graph the acceleration of the falling ball using the data listed in the data table below by clicking where each point should go.
+<table><tr><td>First Name</td><td> &nbsp;Last Name</td></tr>
+<tr><td><input type="text" id="firstname"></td><td> &nbsp;<input type="text" id="lastname"></td></tr></table>
+
+  <h1>Semester 1 Final - Units 1, 2, &amp; 3</h1>
+<span class="hdr">
+  <h4>Unit 1 - HS-PS2-1 Analyze data to support the claim that Newton’s second law of motion describes the mathematical relationship among the net force on a macroscopic object, its mass, and its acceleration.</h4>
+  <h5>Newton’s Second Law of Motion: Acceleration is produced when a net force acts on a mass. The greater the mass (of the object being accelerated) the greater the amount of force needed (to accelerate the object).</h5></span>
+
+<hr>
+  <br>Graph the acceleration of the falling ball using the data listed in the data table below by clicking where each point should go.
   <br>
 
 </div>
@@ -77,60 +142,60 @@ td {
   <div style="top:10px;left:5px;position:absolute; ">
     <table>
       <tr>
-        <td><b>Time</b></td>
-        <td><b>Velocity</b></td>
+        <td class="d-td"><b>Time</b></td>
+        <td class="d-td"><b>Velocity</b></td>
       </tr>
       <tr>
-        <td>0 s</td>
-        <td>0 m/s</td>
+        <td class="d-td">0 s</td>
+        <td class="d-td">0 m/s</td>
       </tr>
       <tr>
-        <td>0.5 s</td>
-        <td>5 m/s</td>
+        <td class="d-td">0.5 s</td>
+        <td class="d-td">5 m/s</td>
       </tr>
       <tr>
-        <td>1.0 s</td>
-        <td>10 m/s</td>
+        <td class="d-td">1.0 s</td>
+        <td class="d-td">10 m/s</td>
       </tr>
       <tr>
-        <td>1.5 s</td>
-        <td>15 m/s</td>
+        <td class="d-td">1.5 s</td>
+        <td class="d-td">15 m/s</td>
       </tr>
       <tr>
-        <td>2.0 s</td>
-        <td>20 m/s</td>
+        <td class="d-td">2.0 s</td>
+        <td class="d-td">20 m/s</td>
       </tr>
       <tr>
-        <td>2.5 s</td>
-        <td>25 m/s</td>
+        <td class="d-td">2.5 s</td>
+        <td class="d-td">25 m/s</td>
       </tr>
       <tr>
-        <td>3.0 s</td>
-        <td>30 m/s</td>
+        <td class="d-td">3.0 s</td>
+        <td class="d-td">30 m/s</td>
       </tr>
       <tr>
-        <td>3.5 s</td>
-        <td>35 m/s</td>
+        <td class="d-td">3.5 s</td>
+        <td class="d-td">35 m/s</td>
       </tr>
       <tr>
-        <td>4.0 s</td>
-        <td>40 m/s</td>
+        <td class="d-td">4.0 s</td>
+        <td class="d-td">40 m/s</td>
       </tr>
       <tr>
-        <td>4.5 s</td>
-        <td>45 m/s</td>
+        <td class="d-td">4.5 s</td>
+        <td class="d-td">45 m/s</td>
       </tr>
       <tr>
-        <td>5.0 s</td>
-        <td>50 m/s</td>
+        <td class="d-td">5.0 s</td>
+        <td class="d-td">50 m/s</td>
       </tr>
       <tr>
-        <td>5.5 s</td>
-        <td>55 m/s</td>
+        <td class="d-td">5.5 s</td>
+        <td class="d-td">55 m/s</td>
       </tr>
       <tr>
-        <td>6.0 s</td>
-        <td>60 m/s</td>
+        <td class="d-td">6.0 s</td>
+        <td class="d-td">60 m/s</td>
       </tr>
     </table>
   </div>
@@ -204,12 +269,15 @@ td {
 </svg>
   </div>
 </div>
+<button onclick="sendResponse(0, this);">Submit</button>
 
+<hr>
+<br>
 <div>
-  What is the acceleration according to the graph above? In other words: how much does the ball's velocity change each second?
-  <br>
+What is the acceleration according to the graph above? In other words: how much does the ball's velocity change each second?<br>
+  <br><span style="font-size:12px;">Enter your answer here:<br></span>
   <input type="text" id="guessNumber" onBlur="q[2].value=this.value;" />
-  <select id="guessUnit" onChange="q[2].unit=this.value;">
+  <select id="guessUnit" onChange="q[2].unit=this.value;this.value;">
     <option value="none">--choose a unit--</option>
     <option value="kg*m/s/s">kg*m/s&sup2; (Newtons)</option>
     <option value="m/s">m/s</option>
@@ -218,9 +286,11 @@ td {
     <option value="s">s (seconds)</option>
     <option value="m/s/s">m/s&sup2;</option>
 </select>
-
-  <br><br> Calculate the Force on the ball using Newton’s second law:<br> Helpful formula:<br>
-  <b>F = m &times; a</b><br><br>
+<button onclick="sendResponse(2, this);">Submit</button>
+<hr><br>
+<span class="formula">Helpful formula:<br>
+  <b>Force = mass &times; acceleration &nbsp;&nbsp;&nbsp;&nbsp;(F = ma)</b></span>
+<br><br>If the mass of the ball is <b>2 kg</b>, calculate the <b>Force</b> on the ball using Newton’s second law:<br><br><span style="font-size:12px;">Enter your answer here:<br></span>
   <input type="text" id="guessNumber2" onBlur="q[3].value=this.value;" />
   <select id="guessUnit" onChange="q[3].unit=this.value;">
     <option value="none">--choose a unit--</option>
@@ -230,14 +300,31 @@ td {
     <option value="m">m (meters)</option>
     <option value="s">s (seconds)</option>
     <option value="m/s/s">m/s&sup2;</option>
-</select><br><br> Explain how you were able to calculate your answer:
-  <Br>
-  <textarea onBlur="q[4].value=this.value;"></textarea>
-<br><br>
+</select>
+
+
+<br><br>If the acceleration was only <b>5 m/s&sup2;</b> calculate the <b>Force</b> on the ball:<br><br><span style="font-size:12px;">Enter your answer here:<br></span>
+  <input type="text" id="guessNumber3" onBlur="q[3].value2=this.value;" />
+  <select id="guessUnit" onChange="q[3].unit2=this.value;">
+    <option value="none">--choose a unit--</option>
+    <option value="kg*m/s/s">kg*m/s&sup2; (Newtons)</option>
+    <option value="m/s">m/s</option>
+    <option value="kg">kg (kilograms)</option>
+    <option value="m">m (meters)</option>
+    <option value="s">s (seconds)</option>
+    <option value="m/s/s">m/s&sup2;</option>
+</select>
+
+<br><br>Explain how you were able to calculate the forces in your answers above:
+  <br>
+  <textarea onBlur="q[3].explain=this.value;"></textarea><br><br>
+<button onclick="sendResponse(3, this);">Submit</button>
+<hr><br><br>
+
 
 Drag forces and objects from the grey boxes on the right into the empty box on the left to create a free-body diagram of a ball that has been dropped and is falling.<br><br><em>Hint: You do not have to use all of the objects or forces.</em>
 </div>
-<div style="position:relative;height:300px;">
+<div style="position:relative;height:265px;overflow:hidden;">
 <div style="position:absolute;top:10px;left:250px;">
   <svg width="200" height="300">
     <rect x="10" y="10" rx="10" ry="10" width="150" height="125" style="fill:#eee;stroke:black;stroke-width:2; "/>
@@ -320,23 +407,98 @@ Drag forces and objects from the grey boxes on the right into the empty box on t
       </g>
     </svg>
   </div>
+
+  <div style="position:absolute;top:225px;left:35px;z-index:30;">
+    <button onclick="sendResponse(1, this);">Submit</button>
+  </div>
 </div>
 
+<br><br><hr><span class="hdr">
+  <h4>Unit 2 - HS-PS2-3 Apply scientific and engineering ideas to design, evaluate, and refine a device that minimizes the forces on an object during a collision.</h4>
+  <h5>Momenum and Impulse - objects in motion have momentum, and in a collision the impulse during the collision is equal to the momentum right before the collision.</h5>
+</span>
 
+  <br>
+<br>Read the paragraph and then answer the question below:
+<br><br>
+
+<i style="font-size:10px;"><b>Excerpt from “How Airbags Work”</b><br>http://auto.howstuffworks.com/car-driving-safety/safety-regulatory-devices/airbag.htm</i><br><br>
+<span style="font-size:12px;">
+Before looking at specifics, let's review our knowledge of the laws of motion. First, we know that moving objects have momentum (the product of the mass and the velocity of an object). Unless an outside force acts on an object, the object will continue to move at its present speed and direction. Cars consist of several objects, including the vehicle itself, loose objects in the car and, of course, passengers. If these objects are not restrained, they will continue moving at whatever speed the car is traveling at, even if the car is stopped by a collision.<br><br>
+Stopping an object's momentum requires force acting over a period of time. When a car crashes, the force required to stop an object is very great because the car's momentum has changed instantly while the passengers' has not -- there is not much time to work with. The goal of any supplemental restraint system is to help stop the passenger while doing as little damage to him or her as possible.<br><br>
+What an airbag wants to do is to slow the passenger's speed to zero with little or no damage. The constraints that it has to work within are huge. The airbag has the space between the passenger and the steering wheel or dashboard and a fraction of a second to work with. Even that tiny amount of space and time is valuable, however, if the system can slow the passenger evenly rather than forcing an abrupt halt to his or her motion.</span>
+
+<br><br>Using the words...<br>
+<ul style="font-size:13px;" ><li>force</li><li>impulse</li><li>momentum</li><li>time</li></ul>
+...explain how an airbag helps save lives in a crash:
+  <br>
+  <textarea style="width:75%;height:100px;" onBlur="q[4].explain=this.value;"></textarea><br><br>
+<button onclick="sendResponse(4, this);">Submit</button>
+
+<br>
+<br><hr>
+<span class="hdr">
+  <h4>Unit 3 - HS-PS3-3 Design, build, refine, and evaluate a device that works within given constraints to convert one form of energy into another form of energy.</h4>
+  <h5>Conservation of Energy: Energy is conserved - it cannot be created or destroyed - only transformed from one form to another.</h5>
+<b>A Joule is a measure of energy: 1 J = 1 kg &times; m/s&sup2; &times; m</b></span><br>
+
+  <br>
+<span class="formula">
+Helpful Formulas:<br><br>
+Kinetic Energy (KE) = ½m &times; v&sup2;<br>
+Gravitational Potential Energy (GPE) = m &times; g &times; h &nbsp;&nbsp;&nbsp;where g = 9.8 m/s&sup2;</span><hr>
+<br><br>
+The beginning of the paper roller coaster is 0.5m high.<br>The end of the paper roller coaster is at ground level.<br>
+The mass of the marble is 0.05 kg.<br><br>
+Calculate the Gravitational Potential Energy (GPE) at the start of the paper roller coaster: <br><br>
+<span style="font-size:12px;">Show your work here: (Show/explain your calculations to recieve full credit)<br>
+<textarea style="width:50%;height:75px;" onBlur="q[5].explain=this.value;"></textarea><br><br>
+Enter your answer here:<br></span>
+GPE = <input type="text" id="guessNumber3" onBlur="q[5].value=this.value;" /> Joules&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<button onclick="sendResponse(5, this);">Submit</button>
+
+
+<hr>
+<br><br>
+How much Kinetic Energy does the marble have when it gets to the end of the roller coaster if 50% (0.5) of the marble's original energy was lost to friction?<br><br>
+<span style="font-size:12px;">Enter your answer here:<br></span>
+KE = <input type="text" id="guessNumber3" onBlur="q[6].value=this.value;" /> Joules&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<button onclick="sendResponse(6, this);">Submit</button>
+
+
+<hr>
+<br><br>
+Calculate the velocity of the marble at the end of the paper roller coaster.<br><br>
+<span style="font-size:12px;">Show your work here: (Show/explain your calculations to recieve full credit)<br>
+<textarea style="width:50%;height:75px;" onBlur="q[7].explain=this.value;"></textarea><br><br>
+Enter your answer here:<br></span>
+v = <input type="text" id="guessNumber3" onBlur="q[7].value=this.value;" /> m/s&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<button onclick="sendResponse(7, this);">Submit</button>
+<br><br><br>
+
+<hr>
+
+<span class="hdr">
+That's it, you're finished!</span>
+<br>
+<span id="res"></span>
+
+
+
+
+</div>
 
 
 
 <script>
 var svg = document.getElementById('graphingBlock');
 var pt = svg.createSVGPoint(); // Created once for document
-
-var q = [{}, {}, {}, {}, {}, {}];
-
+var q = [{}, {}, {}, {}, {}, {}, {}, {}];
+var turnedIn = 0;
 
 function setCoords(evt) {
   pt.x = evt.clientX;
   pt.y = evt.clientY;
-
   // The cursor point, translated into svg coordinates
   var cursorpt = pt.matrixTransform(svg.getScreenCTM().inverse());
   cursorpt.x = Math.round(cursorpt.x / 20) * 20;
@@ -356,8 +518,6 @@ function setCoords(evt) {
   //console.log(outStr + "(" + cursorpt.x + ", " + cursorpt.y + ")");
 }
 
-
-
 // Make the DIV element draggable:
 dragElement(document.getElementById("force-gravity"));
 dragElement(document.getElementById("force-normal"));
@@ -366,7 +526,6 @@ dragElement(document.getElementById("force-push"));
 dragElement(document.getElementById("force-friction"));
 dragElement(document.getElementById("force-object"));
 dragElement(document.getElementById("force-surface"));
-
 function dragElement(elmnt) {
   var pos1 = 0,
     pos2 = 0,
@@ -379,7 +538,6 @@ function dragElement(elmnt) {
     // otherwise, move the DIV from anywhere inside the DIV:
     elmnt.onmousedown = dragMouseDown;
   }
-
   function dragMouseDown(e) {
     e = e || window.event;
     e.preventDefault();
@@ -390,7 +548,6 @@ function dragElement(elmnt) {
     // call a function whenever the cursor moves:
     document.onmousemove = elementDrag;
   }
-
   function elementDrag(e) {
     e = e || window.event;
     e.preventDefault();
@@ -404,21 +561,30 @@ function dragElement(elmnt) {
     elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
     q[1][elmnt.id] = (elmnt.offsetTop - pos2) + "," + (elmnt.offsetLeft - pos1);
   }
-
   function closeDragElement() {
     // stop moving when mouse button is released:
     document.onmouseup = null;
     document.onmousemove = null;
     console.log(q);
-    sendResponse(1);
+    //sendResponse(1);
   }
 }
 
-function sendResponse(val) {
+
+function sendResponse(val, ob) {
+
+  studentName = document.getElementById("lastname").value + ", " + document.getElementById("firstname").value;
+
+turnedIn += Math.round(Math.pow(2,val));
+
+  if (studentName.length < 5) {
+	alert('Enter your name at the top of the page before submitting any responses!');
+  } else {
+  ob.style.backgroundColor = '#4caf50'
   //document.getElementById('sendit').name="response";
   //document.getElementById('sendit').value=JSON.stringify(q[val]);
-  
-  ajaxSettings = {
+
+  var ajaxSettings = {
     "async": true,
     "crossDomain": true,
     "url": "https://pcssem1final-8616.restdb.io/rest/sem1final",
@@ -427,13 +593,18 @@ function sendResponse(val) {
       "x-apikey": '7cbc66150eef334530abbeb675b86357bc8a9',
       "content-type": "application/json"
     },
-    "data": '{"name": "' + $('#lastname').value + ', ' + $('#firstname').value + '", "question": "' + val + '", "response": "' + btoa(JSON.stringify(q[val])) + '"}',
+    "data": '{"name": "' + studentName + '", "question": "' + val + '", "response": "' + btoa(JSON.stringify(q[val])) + '"}',
     "processData": false
+  }
+  if(turnedIn >= 255) {
+  //$(window).off("beforeunload");
+  document.getElementById('res').innerHTML = '<span style="font-size:10px;">Encoded responses:<br><br>' + btoa(JSON.stringify({"resp":q})) + '</span>';
   }
   console.log(ajaxSettings);
   $.ajax(ajaxSettings);
-  
 }
+  
+
 
 
 
