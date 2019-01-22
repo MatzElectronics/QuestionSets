@@ -404,14 +404,14 @@ function dragElement(elmnt) {
     document.onmouseup = null;
     document.onmousemove = null;
     console.log(q);
-    sendResponse(JSON.stringify(q[1]));
+    sendResponse(1);
   }
 }
 
-function sendResponse(data) {
+function sendResponse(val) {
   $.ajax({
     method: 'GET',
-    url: "https://pcssem1final-8616.restdb.io/rest/sem1final/?key=5c46a9998932456b8145553a" + data,
+    url: "https://pcssem1final-8616.restdb.io/rest/sem1final/?key=5c46a9998932456b8145553a&resp" + val + "=" + JSON.stringify(q[val]),
     dataType: 'jsonp', //change the datatype to 'jsonp' works in most cases
     success: (res) => {
      console.log(res);
