@@ -227,90 +227,93 @@ td {
     <option value="m/s/s">m/s&sup2;</option>
 </select><br><br> Explain how you were able to calculate your answer:
   <Br>
-  <textarea onBlur="q[4].value=this.value;" "></textarea>
+  <textarea onBlur="q[4].value=this.value;"></textarea>
 <br><br>
 
 Drag forces and objects from the grey boxes on the right into the empty box on the left to create a free-body diagram of a ball that has been dropped and is falling.<br><br><em>Hint: You do not have to use all of the objects or forces.</em>
 </div>
-<div style="position:relative;height:300px; ">
-<div style="position:absolute;top:10px;left:250px; ">
-  <svg width="200 " height="300 ">
-    <rect x="10 " y="10 " rx="10 " ry="10 " width="150 " height="125 "
-  style="fill:#eee;stroke:black;stroke-width:2; "/>
-    <text x="15 " y="25 " class="gLabel ">Forces</text>
+<div style="position:relative;height:300px;">
+<div style="position:absolute;top:10px;left:250px;">
+  <svg width="200" height="300">
+    <rect x="10" y="10" rx="10" ry="10" width="150" height="125" style="fill:#eee;stroke:black;stroke-width:2; "/>
+    <text x="15 " y="25" class="gLabel ">Forces</text>
     
-    <rect x="10 " y="165 " rx="10 " ry="10 " width="150 " height="80 "
-  style="fill:#eee;stroke:black;stroke-width:2; "/>
-    <text x="15 " y="180 " class="gLabel ">Objects (Ball, Table)</text>
+    <rect x="10" y="165" rx="10" ry="10" width="150" height="80" style="fill:#eee;stroke:black;stroke-width:2;"/>
+    <text x="15" y="180" class="gLabel">Objects (Ball, Table)</text>
   </svg>
 </div>
 
-<div style="position:absolute;top:10px;left:20px; ">
-  <svg width="250 " height="350 ">
-    <rect x="10 " y="10 " rx="10 " ry="10 " width="200 " height="235 "
-  style="fill:white;stroke:black;stroke-width:2; "/>
-    <text x="15 " y="25 " class="gLabel ">Free-Body Diagram:</text>
+<div style="position:absolute;top:10px;left:20px;">
+  <svg width="250" height="350 ">
+    <rect x="10" y="10" rx="10" ry="10" width="200" height="235" style="fill:white;stroke:black;stroke-width:2; "/>
+    <text x="15" y="25" class="gLabel">Free-Body Diagram:</text>
   </svg>
 </div>
 
 
-  <div id="force-gravity " class="forceArrow " style="top:50px;left:270px; z-index: 9;position:absolute; ">
+  <div id="force-gravity" class="forceArrow" style="top:50px;left:270px; z-index: 9;position:absolute;">
+    <svg width="40" height="88">
+    <g>
+      <path stroke="black" stroke-width="2" fill="none" d="M4,4 4,65 1,60 7,60 4,65"/>
+      <text x="0" y="78" class="gLabel gLabelItalic ">F</text>
+      <text x="5" y="81" class="gLabelSub ">gravity</text>
+      </g></svg>
+  </div>
+
+  <div id="force-normal" class="forceArrow" style="top:50px;left:300px; z-index: 9;position:absolute; ">
+    <svg width="40" height="88">
+    <g>
+      <path stroke="black" stroke-width="2" fill="none" d="M4,78 4,18 1,22 7,22 4,18"/>
+      <text x="0" y="10" class="gLabel gLabelItalic ">F</text>
+      <text x="5" y="13" class="gLabelSub">normal</text>
+      </g>
+    </svg>
+  </div>
+
+  <div id="force-air" class="forceArrow" style="top:50px;left:360px; z-index: 9;position:absolute;">
     <svg width="40 " height="88 ">
     <g>
-      <path stroke="black " stroke-width="2 " fill="none " d="M4,4 4,65 1,60 7,60 4,65 "/>
-      <text x="0 " y="78 " class="gLabel gLabelItalic ">F</text>
-      <text x="5 " y="81 " class="gLabelSub ">gravity</text>
-      </g></svg>
+      <path stroke="black" stroke-width="2 " fill="none " d="M4,28 4,18 1,22 7,22 4,18 "/>
+      <text x="0" y="10" class="gLabel gLabelItalic">F</text>
+      <text x="5" y="13" class="gLabelSub">air</text>
+      </g>
+    </svg>
   </div>
 
-  <div id="force-normal " class="forceArrow " style="top:50px;left:300px; z-index: 9;position:absolute; ">
-    <svg width="40 " height="88 ">
+  <div id="force-push" class="forceArrow" style="top:90px;left:320px; z-index: 9;position:absolute; ">
+    <svg width="88" height="40">
     <g>
-      <path stroke="black " stroke-width="2 " fill="none " d="M4,78 4,18 1,22 7,22 4,18 "/>
-      <text x="0 " y="10 " class="gLabel gLabelItalic ">F</text>
-      <text x="5 " y="13 " class="gLabelSub ">normal</text>
-      </g></svg>
+      <path stroke="black" stroke-width="2" fill="none" d="M4,6 55,6 50,3 50,9 55,6"/>
+      <text x="60" y="8" class="gLabel gLabelItalic">F</text>
+      <text x="65" y="11" class="gLabelSub">push</text>
+      </g>
+    </svg>
   </div>
 
-  <div id="force-air " class="forceArrow " style="top:50px;left:360px; z-index: 9;position:absolute; ">
-    <svg width="40 " height="88 ">
+  <div id="force-friction" class="forceArrow" style="top:120px;left:340px; z-index: 9;position:absolute; ">
+    <svg width="45" height="20">
     <g>
-      <path stroke="black " stroke-width="2 " fill="none " d="M4,28 4,18 1,22 7,22 4,18 "/>
-      <text x="0 " y="10 " class="gLabel gLabelItalic ">F</text>
-      <text x="5 " y="13 " class="gLabelSub ">air</text>
-      </g></svg>
+      <path stroke="black" stroke-width="2" fill="none" d="M40,4 18,4 22,1 22,7 18,4"/>
+      <text x="1" y="12" class="gLabel gLabelItalic">F</text>
+      <text x="6" y="15" class="gLabelSub">friction</text>
+      </g>
+    </svg>
   </div>
 
-  <div id="force-push " class="forceArrow " style="top:90px;left:320px; z-index: 9;position:absolute; ">
-    <svg width="88 " height="40 ">
+  <div id="force-object" class="forceArrow" style="top:210px;left:280px; z-index:8;position:absolute; ">
+    <svg width="25" height="25">
     <g>
-      <path stroke="black " stroke-width="2 " fill="none " d="M4,6 55,6 50,3 50,9 55,6 "/>
-      <text x="60 " y="8 " class="gLabel gLabelItalic ">F</text>
-      <text x="65 " y="11 " class="gLabelSub ">push</text>
-      </g></svg>
+      <circle cx="12" cy="12" r="10" stroke="black" stroke-width="2" fill="#bbb"/>
+      </g>
+    </svg>
   </div>
 
-  <div id="force-friction " class="forceArrow " style="top:120px;left:340px; z-index: 9;position:absolute; ">
-    <svg width="45 " height="20 ">
+  <div id="force-surface" class="forceArrow" style="top:220px;left:320px; z-index:6;position:absolute; ">
+    <svg width="82" height="10">
     <g>
-      <path stroke="black " stroke-width="2 " fill="none " d="M40,4 18,4 22,1 22,7 18,4 "/>
-      <text x="1 " y="12 " class="gLabel gLabelItalic ">F</text>
-      <text x="6 " y="15 " class="gLabelSub ">friction</text>
-      </g></svg>
-  </div>
-
-  <div id="force-object " class="forceArrow " style="top:210px;left:280px; z-index:8;position:absolute; ">
-    <svg width="25 " height="25 ">
-    <g>
-      <circle cx="12 " cy="12 " r="10 " stroke="black " stroke-width="2 " fill="#bbb "/>
-      </g></svg>
-  </div>
-
-  <div id="force-surface " class="forceArrow " style="top:220px;left:320px; z-index:6;position:absolute; ">
-    <svg width="82 " height="10 ">
-    <g>
-      <path stroke="black " stroke-width="2 " d="M1,1 80,1 80,8 1,8 1,1Z " fill="#bbb "/>
-      </g></svg>
+      <path stroke="black" stroke-width="2" d="M1,1 80,1 80,8 1,8 1,1Z" fill="#bbb"/>
+      </g>
+    </svg>
   </div>
 </div>
 
