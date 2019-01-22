@@ -404,15 +404,18 @@ function dragElement(elmnt) {
     document.onmouseup = null;
     document.onmousemove = null;
     console.log(q);
-    sendResponse();
+    sendResponse(JSON.stringify(q[1]));
   }
 }
 
-function sendResponse() {
-  $.post("https://cors-anywhere.herokuapp.com/https://pcssem1final-8616.restdb.io/rest/sem1final/?key=5c46a9998932456b8145553a", {
-    "responses": q
-  }, function(data, status) {
-    alert("Data: " + data + "\nStatus: " + status);
+function sendResponse(data) {
+  $.ajax({
+    method: 'GET',
+    url: "https://pcssem1final-8616.restdb.io/rest/sem1final/?key=5c46a9998932456b8145553a" + data,
+    dataType: 'jsonp', //change the datatype to 'jsonp' works in most cases
+    success: (res) => {
+     console.log(res);
+    }
   });
 }
 
