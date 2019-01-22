@@ -1,0 +1,420 @@
+<html>
+<title>PCS Semester 1 Final</title>
+<head>
+<style>
+
+body {
+  font-family: sans-serif;
+}
+
+svg {
+  fill: white;
+  background: none;
+}
+
+table {
+  border-collapse: collapse;
+}
+
+td {
+  padding: 3px 10px;
+  font-size: 12px;
+  text-align: center;
+  border: 1px dashed #ccc;
+}
+
+.gLabel {
+  fill: black;
+  font-family: sans-serif;
+  font-size: 10px;
+}
+
+.gLabelItalic {
+  font-style: italic;
+}
+
+.gLabelSub {
+  fill: black;
+  font-family: sans-serif;
+  font-size: 8px;
+}
+
+.forceArrow {
+  position: absolute;
+  cursor: move;
+  text-align: center;
+  height: 100px;
+  width: 15px;
+}
+
+.clearfix:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+
+</style>
+
+</head>
+
+<body>
+<div style="position:relative;">
+  Semester 1 Final - Units 1, 2, &amp; 3
+  <br> Unit 1 - HS-PS2-1 Analyze data to support the claim that Newton’s second law of motion describes the mathematical relationship among the net force on a macroscopic object, its mass, and its acceleration.
+  <br> Newton’s Second Law of Motion: Acceleration is produced when a net force acts on a mass. The greater the mass (of the object being accelerated) the greater the amount of force needed (to accelerate the object).
+  <br> F= ma
+  <br> 1. Graph the acceleration of the falling ball using the data listed in the data table below by clicking where each point should go.
+  <br>
+
+</div>
+<div style="position:relative;height:350px;">
+  <div style="top:10px;left:5px;position:absolute; ">
+    <table>
+      <tr>
+        <td><b>Time</b></td>
+        <td><b>Velocity</b></td>
+      </tr>
+      <tr>
+        <td>0 s</td>
+        <td>0 m/s</td>
+      </tr>
+      <tr>
+        <td>0.5 s</td>
+        <td>5 m/s</td>
+      </tr>
+      <tr>
+        <td>1.0 s</td>
+        <td>10 m/s</td>
+      </tr>
+      <tr>
+        <td>1.5 s</td>
+        <td>15 m/s</td>
+      </tr>
+      <tr>
+        <td>2.0 s</td>
+        <td>20 m/s</td>
+      </tr>
+      <tr>
+        <td>2.5 s</td>
+        <td>25 m/s</td>
+      </tr>
+      <tr>
+        <td>3.0 s</td>
+        <td>30 m/s</td>
+      </tr>
+      <tr>
+        <td>3.5 s</td>
+        <td>35 m/s</td>
+      </tr>
+      <tr>
+        <td>4.0 s</td>
+        <td>40 m/s</td>
+      </tr>
+      <tr>
+        <td>4.5 s</td>
+        <td>45 m/s</td>
+      </tr>
+      <tr>
+        <td>5.0 s</td>
+        <td>50 m/s</td>
+      </tr>
+      <tr>
+        <td>5.5 s</td>
+        <td>55 m/s</td>
+      </tr>
+      <tr>
+        <td>6.0 s</td>
+        <td>60 m/s</td>
+      </tr>
+    </table>
+  </div>
+  <div style="top:10px;left:150px;position:absolute; ">
+    <svg width="300" height="300" id="graphingBlock" onclick="setCoords(evt)">
+    <g>
+      <text x="0" y="116" class="gLabel gLabelItalic">Velocity</text>
+      <text x="10" y="125" class="gLabel gLabelItalic">(m/s)</text>
+      <text x="150" y="290" class="gLabel gLabelItalic">Time (s)</text>
+      <path d=" 
+      M40,20 40,260
+      M60,20 60,260
+      M80,20 80,260
+      M100,20 100,260
+      M120,20 120,260
+      M140,20 140,260
+      M160,20 160,260
+      M180,20 180,260
+      M200,20 200,260
+      M220,20 220,260
+      M240,20 240,260
+      M260,20 260,260
+      M280,20 280,260
+      M40,20 280,20
+      M40,40 280,40
+      M40,60 280,60
+      M40,80 280,80
+      M40,100 280,100
+      M40,120 280,120
+      M40,140 280,140
+      M40,160 280,160
+      M40,180 280,180
+      M40,200 280,200
+      M40,220 280,220
+      M40,240 280,240
+      M40,260 280,260
+      " stroke="#999" stroke-width="1" stroke-dasharray="1.5,3.5"/>
+    </g>
+    <g>
+      <circle fill="#0cc" cx="40" cy="260" r="4" id="circ40"/>
+      <circle fill="#0cc" cx="60" cy="260" r="4" id="circ60"/>
+      <circle fill="#0cc" cx="80" cy="260" r="4" id="circ80"/>
+      <circle fill="#0cc" cx="100" cy="260" r="4" id="circ100"/>
+      <circle fill="#0cc" cx="120" cy="260" r="4" id="circ120"/>
+      <circle fill="#0cc" cx="140" cy="260" r="4" id="circ140"/>
+      <circle fill="#0cc" cx="160" cy="260" r="4" id="circ160"/>
+      <circle fill="#0cc" cx="180" cy="260" r="4" id="circ180"/>
+      <circle fill="#0cc" cx="200" cy="260" r="4" id="circ200"/>
+      <circle fill="#0cc" cx="220" cy="260" r="4" id="circ220"/>
+      <circle fill="#0cc" cx="240" cy="260" r="4" id="circ240"/>
+      <circle fill="#0cc" cx="260" cy="260" r="4" id="circ260"/>
+      <circle fill="#0cc" cx="280" cy="260" r="4" id="circ280"/>
+    </g>
+    <path stroke="#0cc" stroke-width="2" d="M40,260 280,260" id="gLine" fill="none"/>
+    
+    <text x="21" y="23" class="gLabel">60</text>
+    <text x="21" y="63" class="gLabel">50</text>
+    <text x="21" y="103" class="gLabel">40</text>
+    <text x="21" y="143" class="gLabel">30</text>
+    <text x="21" y="183" class="gLabel">20</text>
+    <text x="21" y="223" class="gLabel">10</text>
+    <text x="26" y="263" class="gLabel">0</text>
+
+    <text y="279" x="38" class="gLabel">0</text>
+    <text y="279" x="78" class="gLabel">1</text>
+    <text y="279" x="118" class="gLabel">2</text>
+    <text y="279" x="158" class="gLabel">3</text>
+    <text y="279" x="198" class="gLabel">4</text>
+    <text y="279" x="238" class="gLabel">5</text>
+    <text y="279" x="278" class="gLabel">6</text>
+</svg>
+  </div>
+</div>
+
+<div>
+  What is the acceleration according to the graph above? In other words: how much does the ball's velocity change each second?
+  <br>
+  <input type="text" id="guessNumber" onBlur="q[2].value=this.value;" />
+  <select id="guessUnit" onChange="q[2].unit=this.value;">
+    <option value="none">--choose a unit--</option>
+    <option value="kg*m/s/s">kg*m/s&sup2; (Newtons)</option>
+    <option value="m/s">m/s</option>
+    <option value="kg">kg (kilograms)</option>
+    <option value="m">m (meters)</option>
+    <option value="s">s (seconds)</option>
+    <option value="m/s/s">m/s&sup2;</option>
+</select>
+
+  <br><br> Calculate the Force on the ball using Newton’s second law:<br> Helpful formula:<br>
+  <b>F = m &times; a</b><br><br>
+  <input type="text" id="guessNumber2" onBlur="q[3].value=this.value;" />
+  <select id="guessUnit" onChange="q[3].unit=this.value;">
+    <option value="none">--choose a unit--</option>
+    <option value="kg*m/s/s">kg*m/s&sup2; (Newtons)</option>
+    <option value="m/s">m/s</option>
+    <option value="kg">kg (kilograms)</option>
+    <option value="m">m (meters)</option>
+    <option value="s">s (seconds)</option>
+    <option value="m/s/s">m/s&sup2;</option>
+</select><br><br> Explain how you were able to calculate your answer:
+  <Br>
+  <textarea onBlur="q[4].value=this.value;" "></textarea>
+<br><br>
+
+Drag forces and objects from the grey boxes on the right into the empty box on the left to create a free-body diagram of a ball that has been dropped and is falling.<br><br><em>Hint: You do not have to use all of the objects or forces.</em>
+</div>
+<div style="position:relative;height:300px; ">
+<div style="position:absolute;top:10px;left:250px; ">
+  <svg width="200 " height="300 ">
+    <rect x="10 " y="10 " rx="10 " ry="10 " width="150 " height="125 "
+  style="fill:#eee;stroke:black;stroke-width:2; "/>
+    <text x="15 " y="25 " class="gLabel ">Forces</text>
+    
+    <rect x="10 " y="165 " rx="10 " ry="10 " width="150 " height="80 "
+  style="fill:#eee;stroke:black;stroke-width:2; "/>
+    <text x="15 " y="180 " class="gLabel ">Objects (Ball, Table)</text>
+  </svg>
+</div>
+
+<div style="position:absolute;top:10px;left:20px; ">
+  <svg width="250 " height="350 ">
+    <rect x="10 " y="10 " rx="10 " ry="10 " width="200 " height="235 "
+  style="fill:white;stroke:black;stroke-width:2; "/>
+    <text x="15 " y="25 " class="gLabel ">Free-Body Diagram:</text>
+  </svg>
+</div>
+
+
+  <div id="force-gravity " class="forceArrow " style="top:50px;left:270px; z-index: 9;position:absolute; ">
+    <svg width="40 " height="88 ">
+    <g>
+      <path stroke="black " stroke-width="2 " fill="none " d="M4,4 4,65 1,60 7,60 4,65 "/>
+      <text x="0 " y="78 " class="gLabel gLabelItalic ">F</text>
+      <text x="5 " y="81 " class="gLabelSub ">gravity</text>
+      </g></svg>
+  </div>
+
+  <div id="force-normal " class="forceArrow " style="top:50px;left:300px; z-index: 9;position:absolute; ">
+    <svg width="40 " height="88 ">
+    <g>
+      <path stroke="black " stroke-width="2 " fill="none " d="M4,78 4,18 1,22 7,22 4,18 "/>
+      <text x="0 " y="10 " class="gLabel gLabelItalic ">F</text>
+      <text x="5 " y="13 " class="gLabelSub ">normal</text>
+      </g></svg>
+  </div>
+
+  <div id="force-air " class="forceArrow " style="top:50px;left:360px; z-index: 9;position:absolute; ">
+    <svg width="40 " height="88 ">
+    <g>
+      <path stroke="black " stroke-width="2 " fill="none " d="M4,28 4,18 1,22 7,22 4,18 "/>
+      <text x="0 " y="10 " class="gLabel gLabelItalic ">F</text>
+      <text x="5 " y="13 " class="gLabelSub ">air</text>
+      </g></svg>
+  </div>
+
+  <div id="force-push " class="forceArrow " style="top:90px;left:320px; z-index: 9;position:absolute; ">
+    <svg width="88 " height="40 ">
+    <g>
+      <path stroke="black " stroke-width="2 " fill="none " d="M4,6 55,6 50,3 50,9 55,6 "/>
+      <text x="60 " y="8 " class="gLabel gLabelItalic ">F</text>
+      <text x="65 " y="11 " class="gLabelSub ">push</text>
+      </g></svg>
+  </div>
+
+  <div id="force-friction " class="forceArrow " style="top:120px;left:340px; z-index: 9;position:absolute; ">
+    <svg width="45 " height="20 ">
+    <g>
+      <path stroke="black " stroke-width="2 " fill="none " d="M40,4 18,4 22,1 22,7 18,4 "/>
+      <text x="1 " y="12 " class="gLabel gLabelItalic ">F</text>
+      <text x="6 " y="15 " class="gLabelSub ">friction</text>
+      </g></svg>
+  </div>
+
+  <div id="force-object " class="forceArrow " style="top:210px;left:280px; z-index:8;position:absolute; ">
+    <svg width="25 " height="25 ">
+    <g>
+      <circle cx="12 " cy="12 " r="10 " stroke="black " stroke-width="2 " fill="#bbb "/>
+      </g></svg>
+  </div>
+
+  <div id="force-surface " class="forceArrow " style="top:220px;left:320px; z-index:6;position:absolute; ">
+    <svg width="82 " height="10 ">
+    <g>
+      <path stroke="black " stroke-width="2 " d="M1,1 80,1 80,8 1,8 1,1Z " fill="#bbb "/>
+      </g></svg>
+  </div>
+</div>
+
+
+
+
+<script>
+var svg = document.getElementById('graphingBlock');
+var pt = svg.createSVGPoint(); // Created once for document
+
+var q = [{}, {}, {}, {}, {}, {}];
+
+
+function setCoords(evt) {
+  pt.x = evt.clientX;
+  pt.y = evt.clientY;
+
+  // The cursor point, translated into svg coordinates
+  var cursorpt = pt.matrixTransform(svg.getScreenCTM().inverse());
+  cursorpt.x = Math.round(cursorpt.x / 20) * 20;
+  cursorpt.y = Math.round(cursorpt.y / 5) * 5;
+  cursorpt.y = cursorpt.y < 0 ? 0 : cursorpt.y;
+  cursorpt.y = cursorpt.y > 260 ? 260 : cursorpt.y;
+  var thePt = document.getElementById('circ' + cursorpt.x);
+  thePt.setAttribute('cy', cursorpt.y);
+  var outStr = 'M';
+  for (var t = 40; t < 290; t += 20) {
+    thePt = document.getElementById('circ' + t);
+    outStr += thePt.getAttribute('cx') + ',' + thePt.getAttribute('cy') + ' ';
+  }
+  thePt = document.getElementById('gLine');
+  thePt.setAttribute('d', outStr);
+  q[0].line = outStr;
+  //console.log(outStr + "(" + cursorpt.x + ", " + cursorpt.y + ")");
+}
+
+
+
+// Make the DIV element draggable:
+dragElement(document.getElementById("force-gravity"));
+dragElement(document.getElementById("force-normal"));
+dragElement(document.getElementById("force-air"));
+dragElement(document.getElementById("force-push"));
+dragElement(document.getElementById("force-friction"));
+dragElement(document.getElementById("force-object"));
+dragElement(document.getElementById("force-surface"));
+
+function dragElement(elmnt) {
+  var pos1 = 0,
+    pos2 = 0,
+    pos3 = 0,
+    pos4 = 0;
+  if (document.getElementById(elmnt.id)) {
+    // if present, the header is where you move the DIV from:
+    document.getElementById(elmnt.id).onmousedown = dragMouseDown;
+  } else {
+    // otherwise, move the DIV from anywhere inside the DIV:
+    elmnt.onmousedown = dragMouseDown;
+  }
+
+  function dragMouseDown(e) {
+    e = e || window.event;
+    e.preventDefault();
+    // get the mouse cursor position at startup:
+    pos3 = e.clientX;
+    pos4 = e.clientY;
+    document.onmouseup = closeDragElement;
+    // call a function whenever the cursor moves:
+    document.onmousemove = elementDrag;
+  }
+
+  function elementDrag(e) {
+    e = e || window.event;
+    e.preventDefault();
+    // calculate the new cursor position:
+    pos1 = pos3 - e.clientX;
+    pos2 = pos4 - e.clientY;
+    pos3 = e.clientX;
+    pos4 = e.clientY;
+    // set the element's new position:
+    elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
+    elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+    q[1][elmnt.id] = (elmnt.offsetTop - pos2) + "," + (elmnt.offsetLeft - pos1);
+  }
+
+  function closeDragElement() {
+    // stop moving when mouse button is released:
+    document.onmouseup = null;
+    document.onmousemove = null;
+    console.log(q);
+    sendResponse();
+  }
+}
+
+function sendResponse() {
+  $.post("https://pcssem1final-8616.restdb.io/rest/sem1final/?key=5c46a9998932456b8145553a&resp=" + JSON.stringify({
+    "responses": q
+  }), function(data, status) {
+    alert("Data: " + data + "\nStatus: " + status);
+  });
+}
+
+
+
+<script>
+</body>
+</html>
