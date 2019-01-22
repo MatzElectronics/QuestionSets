@@ -412,7 +412,7 @@ function dragElement(elmnt) {
 }
 
 function sendResponse(val) {
-  document.getElementById('sendit').name="resp" + val;
+  document.getElementById('sendit').name="response";
   document.getElementById('sendit').value=JSON.stringify(q[val]);
   /*
   $.ajax({
