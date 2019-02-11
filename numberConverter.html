@@ -79,11 +79,11 @@ function updateAll(type, obj) {
     } else if (type === 'bin') {
       val = parseInt(obj.value, 2);
       id_dec.value = val.toString(10);
-      id_hex.value = val.toString(16);
+      id_hex.value = val.toString(16).toUpperCase();
     } else if (type === 'asc') {
       val = obj.value.charCodeAt(0);
       id_dec.value = val.toString(10);
-      id_hex.value = val.toString(16);
+      id_hex.value = val.toString(16).toUpperCase();
       id_bin.value = (val <= 255 ? zeros[val.toString(2).length] : '') + val.toString(2);
     }
     if (type !== 'asc') {
