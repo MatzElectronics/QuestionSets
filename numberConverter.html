@@ -1,0 +1,129 @@
+<html>
+  <head>
+	  <title>Number Converter</title>
+
+    <style>
+      @import url(https://fonts.googleapis.com/css?family=Roboto);
+      body,
+      input,
+      select,
+      textarea,
+      body * {
+        font-family: 'Roboto', sans-serif;
+        box-sizing: border-box;
+      }
+
+      body {
+        padding: 50px;
+        background: url('polyBkgBlue.svg');
+      }
+
+
+      h1 {
+        margin: 0px 40px 0px 40px;
+        color: #ddd;
+        font-size: 1.8em;
+        text-align: center;
+      }
+input[type=text],
+select {
+  width: 75%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  font-size: 20px;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+    </style>
+    <script>
+var asciiChars = ['NUL (null)', 'SOH (start of heading)', 'STX (start of text)', 'ETX (end of text)', 'EOT (end of transmission)', 'ENQ (enquiry)', 'ACK (acknowledge)', 'BEL (bell)', 'BS (backspace)', 'TAB (horizontal tab)', 'LF (line feed)', 'VT (vertical tab)', 'FF  (NP form feed', 'CR  (carriage return)', 'SO  (shift out)', 'SI (shift in)', 'DLE (data link escape)', 'DC1 (device control 1)', 'DC2 (device control 2)', 'DC3 (device control 3)', 'DC4 (device control 4)', 'NAK (negative acknowledge)', 'SYN (synchronous idle)', 'ETB (end of trans. block)', 'CAN (cancel)', 'EM  (end of medium)', 'SUB (substitute)', 'ESC (escape)', 'FS  (file separator)', 'GS (group separator)', 'RS (record separator)', 'US (unit separator)', 'SPACE', '!', '"', '#', '$', '%', '&', '', '(', ')', '*', '+', ',', '-', '.', '/', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ':', ';', '<', '=', '>', '?', '@', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '[', '\\', ']', '^', '_', "`", 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '{', '|', '}', '~', 'DEL'];
+
+var zeros = ['00000000', '0000000', '000000', '00000', '0000', '000', '00', '0', ''];
+
+function validInput(type, obj) {
+  if (type === 'dec') {
+    obj.value = obj.value.replace(/[^0-9]+/g, '');
+  } else if (type === 'hex') {
+    obj.value = obj.value.replace(/[^0-9A-Fa-f]+/g, '').toUpperCase();
+  } else if (type === 'bin') {
+    obj.value = obj.value.replace(/[^0-1]+/g, '');
+  } else if (type === 'asc') {
+    if (obj.value.length > 1) {
+      obj.value = obj.value.substr(1);
+    }
+    obj.value = obj.value.replace(/[^ -~]+/g, '');
+  }
+  updateAll(type, obj);
+}
+
+function updateAll(type, obj) {
+  var id_dec = document.getElementById('dec');
+  var id_hex = document.getElementById('hex');
+  var id_bin = document.getElementById('bin');
+  var id_asc = document.getElementById('asc');
+  var val = 0;
+  if (obj.value !== '') {
+    if (type === 'dec') {
+      val = parseInt(obj.value, 10);
+      id_hex.value = val.toString(16).toUpperCase();
+      id_bin.value = (val <= 255 ? zeros[val.toString(2).length] : '') + val.toString(2);
+    } else if (type === 'hex') {
+      val = parseInt(obj.value, 16);
+      id_dec.value = val.toString(10);
+      id_bin.value = (val <= 255 ? zeros[val.toString(2).length] : '') + val.toString(2);
+    } else if (type === 'bin') {
+      val = parseInt(obj.value, 2);
+      id_dec.value = val.toString(10);
+      id_hex.value = val.toString(16);
+    } else if (type === 'asc') {
+      val = obj.value.charCodeAt(0);
+      id_dec.value = val.toString(10);
+      id_hex.value = val.toString(16);
+      id_bin.value = (val <= 255 ? zeros[val.toString(2).length] : '') + val.toString(2);
+    }
+    if (type !== 'asc') {
+      if (val > 127 || val < 0) {
+        id_asc.value = ''
+      } else {
+        id_asc.value = asciiChars[val];
+      }
+    }
+  } else {
+  	clearValues();
+  }
+}
+
+function clearValues() {
+  document.getElementById('dec').value = '';
+  document.getElementById('hex').value = '';
+  document.getElementById('bin').value = '';
+  document.getElementById('asc').value = '';
+}
+
+    </script>
+  </head>
+  <body>
+<table width="100%">
+  <tr>
+    <td width="25%">
+      Decimal:</td>
+    <td><input type="text" id="dec" size="4" onkeyup="validInput('dec', this);" onfocus="this.value='';" /></td>
+  </tr>
+  <tr>
+    <td>Binary:</td>
+    <td><input type="text" id="bin" size="10" onkeyup="validInput('bin', this);" onfocus="this.value='';" /></td>
+  </tr>
+  <tr>
+    <td>Hexadecimal:</td>
+    <td><input type="text" id="hex" size="3" onkeyup="validInput('hex', this);" onfocus="this.value='';" /></td>
+  </tr>
+  <tr>
+    <td>ASCII:</td>
+    <td><input type="text" id="asc" size="16" onkeyup="validInput('asc', this);" onfocus="this.value='';" /></td>
+  </tr>
+</table>
+
+  </body>
+</html>
