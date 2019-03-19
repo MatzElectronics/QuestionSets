@@ -295,7 +295,7 @@ function setCurrentAnswer(a_num, q_type) {
 }
 
 function setColor(e, i, c) {
-  if (e !== null && currentAnswer.questionType === 3) {
+  if (e !== null && (currentAnswer.questionType === 3 || currentAnswer.questionType === 2) {
     if (e.getAttributeNS(null, 'class') === "e-dot-white") {
       e.setAttributeNS(null, 'class', "e-dot-black");
       electrons[parseInt(e.id.split('-')[1])-1] = 1;
