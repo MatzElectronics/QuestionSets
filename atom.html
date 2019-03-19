@@ -160,6 +160,9 @@ function setBohrDiagram() {
   for (var i = 1; i <= currentAnswer.atomicNumber; i++) {
     setColor(null, i, 1); 
   }
+  for (i; i <= 18; i++) {
+    setColor(null, i, 0);
+  }
   nucPartCount('proton', 0, currentAnswer.atomicNumber);
   nucPartCount('neutron', 0, currentAnswer.neutrons);
 }
