@@ -94,7 +94,6 @@
 var currentProblem = {};
 var divRot = 0;
 
-document.getElementById('score').innerHTML = getCookie('theScore');
 	
 function rotRuler() {
 var v = parseInt(document.getElementById('theRuler').style.transform);
@@ -393,6 +392,8 @@ function dragElement(elmnt) {
   }
 }
 generateToy();
+document.getElementById('score').innerHTML = getCookie('theScore');
+
 </script>
 </div>
 </body>
