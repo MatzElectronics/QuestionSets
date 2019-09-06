@@ -94,6 +94,8 @@
 var currentProblem = {};
 var divRot = 0;
 
+document.getElementById('score').innerHTML = getCookie('theScore');
+	
 function rotRuler() {
 var v = parseInt(document.getElementById('theRuler').style.transform);
 v += 90;
@@ -224,6 +226,7 @@ function checkAnswer() {
         if (awDiff < 1 && ahDiff < 1) {
           z++;
           document.getElementById('score').innerHTML = z;
+	  setCookie('theScore', z.toString(10), 7);
           var sc = '<a href="https://docs.google.com/forms/d/e/1FAIpQLScmfbs8w_VWMQML4z3EIAqgTfFuklcQMKK3nFjjPrpgSotO-g/viewform?usp=pp_url&entry.901367584=' + getURLParameter('teacher') + '&entry.1270571468=' + encodeURI(getScoreString(z)) + '">Turn in score</a>';
           document.getElementById('codeZ').innerHTML = sc
           generateToy();
@@ -249,7 +252,27 @@ function checkAnswer() {
         document.getElementById('tryagain').innerHTML = '&nbsp;';
       }
 
+function setCookie(cname, cvalue, exdays) {
+  var d = new Date();
+  d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+  var expires = "expires="+d.toUTCString();
+  document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+}
 
+function getCookie(cname) {
+  var name = cname + "=";
+  var ca = document.cookie.split(';');
+  for(var i = 0; i < ca.length; i++) {
+    var c = ca[i];
+    while (c.charAt(0) == ' ') {
+      c = c.substring(1);
+    }
+    if (c.indexOf(name) == 0) {
+      return c.substring(name.length, c.length);
+    }
+  }
+  return "0";
+}
 </script>
 </head>
 <body>
