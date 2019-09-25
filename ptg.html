@@ -583,7 +583,7 @@ function generateGraph() {
   var lineSegments = ['A and B', 'B and C', 'C and D', 'D and E', 'E and F', 'F and G'];
   var lineDirections = ['going forward', 'standing still', 'going back'];
 
-  var qqVal = [0, 0, 0, 1, 2, 2, 2, 3, 4, 4, 4, 5]
+  var qqVal = [0, 0, 1, 2, 2, 2, 2, 3, 4, 4, 4, 4, 5]
   var q2Val = qqVal[Math.floor(Math.random() * qqVal.length)];
 
   if ((k[q2Val + 1] - k[q2Val]) > 0) q2Answer = 0;
