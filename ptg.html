@@ -731,6 +731,7 @@ $('theScore').innerHTML = checkScoreCookie;
 if (checkScoreCookie !== "0") {
   var scc = '<a href="https://docs.google.com/forms/d/e/1FAIpQLScmfbs8w_VWMQML4z3EIAqgTfFuklcQMKK3nFjjPrpgSotO-g/viewform?usp=pp_url&entry.901367584=' + getURLParameter('teacher') + '&entry.1270571468=' + encodeURI(getScoreString(parseInt(checkScoreCookie))) + '">Turn in score</a>';
   $('codeZ').innerHTML = scc
+   qType = parseInt(checkScoreCookie) % 4;
 }
 
 generateGraph();
