@@ -670,7 +670,7 @@ function isC() {
   var sc = '<a href="https://docs.google.com/forms/d/e/1FAIpQLScmfbs8w_VWMQML4z3EIAqgTfFuklcQMKK3nFjjPrpgSotO-g/viewform?usp=pp_url&entry.901367584=' + getURLParameter('teacher') + '&entry.1270571468=' + encodeURI(getScoreString(ts)) + '">Turn in score</a>';
 
   $('codeZ').innerHTML = sc;
-  setCookie('theScorePT', z.toString(10), 7);
+  setCookie('theScorePT', ts.toString(10), 7);
 }
 
 function getScoreString(score) {
