@@ -183,7 +183,9 @@ function setLabels() {
   document.getElementById('mass').value = currentAnswer.atomicWeight;
 }
 
-function setAll(a_num, q_type) {
+function setAll() {
+  var a_num = Math.floor(Math.random() * 18) + 1;  // returns a random integer from 1 to 18 
+  var q_type = Math.floor(Math.random() * 5);  // returns a random integer from 0 to 4   
   setCurrentAnswer(a_num, q_type);
   setTimeout(function() {
     setLabels();
@@ -417,9 +419,7 @@ function checkAnswer() {
   if (isCorrect) {
     document.getElementById('correct').style.display = 'block';
     setTimeout(function() {
-      var m1 = Math.floor(Math.random() * 18) + 1;  // returns a random integer from 1 to 18 
-      var t1 = Math.floor(Math.random() * 5);  // returns a random integer from 0 to 4 
-      setAll(m1, t1);
+      setAll();
       document.getElementById('correct').style.display = 'none';
     }, 1000);
 
@@ -435,9 +435,7 @@ function checkAnswer() {
 }
 
 function skipAnswer() {
-      var m1 = Math.floor(Math.random() * 18) + 1;  // returns a random integer from 1 to 18 
-      var t1 = Math.floor(Math.random() * 5);  // returns a random integer from 0 to 4 
-      setAll(m1, t1);
+  setAll();
 }
 
 function getScoreString() {
@@ -556,9 +554,7 @@ document.getElementById('proton_-1').onclick = function(e) {e.preventDefault; nu
 document.getElementById('neutron_1').onclick = function(e) {e.preventDefault; nucPartCount('neutron', 1)};
 document.getElementById('neutron_-1').onclick = function(e) {e.preventDefault; nucPartCount('neutron', -1)};
 
-var m = Math.floor(Math.random() * 18) + 1;  // returns a random integer from 1 to 18 
-var t = Math.floor(Math.random() * 5);  // returns a random integer from 0 to 4 
-setAll(m, t);
+setAll();
 </script>
 </body>
 </html>
