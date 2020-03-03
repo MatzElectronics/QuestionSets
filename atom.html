@@ -411,12 +411,12 @@ function setColor(e, i, c) {
       return;
     }
   }
-  if (i && c) {
+  if (i && c && currentAnswer.questionType > 1) {
     e = document.getElementById('e-' + i);
     electrons[i - 1] = c;
     e.setAttributeNS(null, 'class', (c === 1 ? "e-dot-black" : "e-dot-white"));
   }
-  if (e === null && i === null) {
+  if (e === null && i === null && currentAnswer.questionType > 1) {
     for (i = 1; i < 19; i++) {
       e = document.getElementById('e-' + i);
       electrons[i - 1] = c;
