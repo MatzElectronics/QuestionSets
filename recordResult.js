@@ -3,11 +3,11 @@ const CLIENT_ID = '577330164204-gl74gvihq2salvig519oaoe5s50khj18.apps.googleuser
 const API_KEY = 'AIzaSyDwzsmOQntaQhlhotpa0HrbQZaIx4fX-XE';
 const SCOPE = 'https://www.googleapis.com/auth/spreadsheets';
 
-let initSheetsApi =()=> { //initialize the Google API
+function initSheetsApi () { //initialize the Google API
     gapi.load('client:auth2', initClient);
   }
 
-let initClient = ()=> { //provide the authentication credentials you set up in the Google developer console
+function initClient () { //provide the authentication credentials you set up in the Google developer console
     gapi.client.init({
       'apiKey': API_KEY,
       'clientId': CLIENT_ID,
@@ -21,7 +21,7 @@ let initClient = ()=> { //provide the authentication credentials you set up in t
     //});
   }
 
- let onFormSubmit(submissionValues) {
+ function onFormSubmit(submissionValues) {
 
     const params = {
       // The ID of the spreadsheet to update.
