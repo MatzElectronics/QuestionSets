@@ -1,179 +1,154 @@
 <html>
+
 <head>
-	<title>Stopwatch practice</title>
-<style>
+    <title>Stopwatch practice</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,700;1,400;1,700&display=swap');
 
-      @import url(https://fonts.googleapis.com/css?family=Roboto);
-      body,
-      input,
-      select,
-      textarea,
-      body * {
-        font-family: 'Roboto', sans-serif;
-        box-sizing: border-box;
-      }
-      
-      body {
-        padding: 50px;
-        background: url('polyBkgRed.svg');
-      }
-      .infoText {
-        color: #ccc;
-        font-size: 0.8em;
-      }
-
-
-      #qField {
-        padding: 20px;
-        background: #fff;
-        border-radius: 5px;
-      }
-
-
-</style>
-<script>
-
-var endPos = 700;
-var theAccel = 0.15;
-var theInterval = 10;
-var theTime = -5;
-
-function setFinish() {
-  endPos = Math.floor(Math.random() * 250 + 500);
-  document.getElementById('finishLine').transform.baseVal.getItem(0).setTranslate(endPos, 0);
-  theAccel = Math.random() * 0.15 + 0.05;
-  theInterval = Math.random() * 35 + 20
-  theTime = -5;
-}
-
-function startCar(ac, ep) {
-  var carPos = 0;
-  var accel = ac;
-  var accelAmt = ac;
-  var stamp = performance.now();
-  var mover =
-    setInterval(function() {
-      document.getElementById('car').transform.baseVal.getItem(0).setTranslate(carPos, 0);
-      carPos += accelAmt;
-      accelAmt += accel;
-
-      if (carPos <= (ep - 92)) {
-        theTime = Math.round((performance.now() - stamp) / 10) / 100;
-      }
-
-      if (carPos > 700) {
-      clearInterval(mover);
-       setTimeout(function() {document.getElementById('car').transform.baseVal.getItem(0).setTranslate(0, 0);},1000); }
-    }, theInterval);
-}
-
-
-    function getURLParameter(name) {
-    return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(window.location.search) || [null, ''])[1].replace(/\+/g, '%20')) || null;
-}
-	
-function getScoreString(score) {
-	var e = '@';
-  if (score > 62) {
-    e = String.fromCharCode(score + 2);
-    score -= 62;
-  }
-  if (score > 62) {
-    score = 62;
-  }
-  var p = Math.floor(Math.random() * 8) + 1;
-  var s = '';
-  s += String.fromCharCode(p + 64);
-  for (var i = 1; i < 12; i++) {
-    if (i === p) {
-      s+= String.fromCharCode(score + 64);
-    } else {
-      var c = String.fromCharCode(Math.floor(Math.random() * 62) + 64);
-      s += c
-    }
-  }
-  s += e;
-  s += String.fromCharCode(Math.floor(Math.random() * 62) + 64);
-  return s + ' - Stopwatch';
-}
-          
-
-
-function checkAnswer() {
-        var aw = parseFloat(document.getElementById('guessWidth').value);
-
-        var z = parseInt(document.getElementById('score').innerHTML);
-
-	var awDiff = Math.abs(aw - theTime);	
-
-        if (awDiff < .26) {
-          z++;
-          document.getElementById('score').innerHTML = z;
-          var sc = '<a href="https://docs.google.com/forms/d/e/1FAIpQLScmfbs8w_VWMQML4z3EIAqgTfFuklcQMKK3nFjjPrpgSotO-g/viewform?usp=pp_url&entry.901367584=' + getURLParameter('teacher') + '&entry.1270571468=' + encodeURI(getScoreString(z)) + '">Turn in score</a>';
-          document.getElementById('codeZ').innerHTML = sc
-          setFinish();
-          document.getElementById('tryagain').innerHTML = 'Correct!';
-          document.getElementById('guessWidth').value = '';
-        } else {
-          document.getElementById('tryagain').innerHTML = 'Incorrect, try again.';
+        body,
+        input,
+        select,
+        textarea,
+        body * {
+            font-family: 'Roboto', sans-serif;
+            box-sizing: border-box;
         }
 
-        if (awDiff >= 1) {
-          document.getElementById('guessWidth').value = '';
+        body {
+            padding: 50px;
+            background: url('polyBkgRed.svg');
+            background-size: cover;
         }
-      }
+
+        .infoText {
+            color: #ccc;
+            font-size: 0.8em;
+        }
 
 
+        #qField {
+            padding: 20px;
+            background: #fff;
+            border-radius: 5px;
+        }
+    </style>
 
-</script>
+    <script src="common_utils.js"></script>
 </head>
+
 <body>
-<div id="qField">
-      <h3>Stopwatch Practice</h3>
-      <hr>
-	
-      <h2>Score: <span id="score">0
-    </span> - <span id="codeZ">
-    </span></h2>
- 
+    <div id="qField">
+        <h3>Measurement Practice - Stopwatch</h3>
+        <hr>
 
+        <div id="result" class="car_image">
+            <svg viewBox="0 0 800 100" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                <path d="M0,40 800,40" stroke="#ddd" stroke-width="80" />
+                <path d="M100,0 100,80" stroke="#000" stroke-width="3" stroke-dasharray="5,5" />
+                <path id="finishLine" d="M0,0 0,80" stroke="#000" stroke-width="3" stroke-dasharray="5,5"
+                    transform="translate(700,0)" />
+                <g id="car" transform="translate(0,0)">
+                    <path id="car0" d="M25,15 40,15 40,65 25,65Z" fill="#222" />
+                    <path id="car1" d="M80,15 95,15 95,65 80,65Z" fill="#222" />
+                    <path id="car2" d="M20,20 100,20 100,60 20,60Z" fill="#777" />
+                    <path id="car3" d="M20,20 100,20 100,60 20,60Z" fill="#aaa" />
+                </g>
+            </svg>
+        </div>
 
-<div id="result" class="car_image">
-<svg width="800" height="100">
-  <path d="M0,40 800,40" stroke="#ddd" stroke-width="80"/>
-  <path d="M100,0 100,80" stroke="#000" stroke-width="3" stroke-dasharray="5,5"/>
-    <path id="finishLine" d="M0,0 0,80" stroke="#000" stroke-width="3" stroke-dasharray="5,5" transform="translate(700,0)"/>
-  <g id="car" transform="translate(0,0)">
-    <path id="car0" d="M25,15 40,15 40,65 25,65Z" fill="#222"/>
-    <path id="car1" d="M80,15 95,15 95,65 80,65Z" fill="#222"/>
-    <path id="car2" d="M20,20 100,20 100,60 20,60Z" fill="#777"/>
-    <path id="car3" d="M20,20 100,20 100,60 20,60Z" fill="#aaa"/>
-  </g>
-</svg>
-</div>
+        <table>
+            <tr>
+                <td style="max-width:300px;">
+                    Use a stopwatch (on your phone is okay) to time how long it takes the car to cross the finish
+                    line.<br>
+                    <br>Use the &quot;Go!&quot; button to start the car.</td>
+                <td style="padding-left:40px;"><button id="carGo" onclick="startCar(theAccel, endPos);">Go!</button>
+                </td>
+            </tr>
+        </table><br>
+        Time: <input type="text" id="guessWidth" onFocus="$('#tryagain').innerHTML='&nbsp;';" size="5" />
+        seconds<br><br>
 
+        <div id="tryagain" style="font-size:12px;color:#aa0000;">&nbsp;</div>
+        <button id="check" onclick="checkAnswer()">check answer</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <br><br>
 
+        <button id="setup" onclick="setFinish();">skip</button>
 
-     <table border=0><tr><td>
-      Use a stopwatch to time how long it takes the car to cross the finish line.<br>
-	     Use the &quot;Go!&quot; button to start the car.</td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button id="carGo" onclick="startCar(theAccel, endPos);">Go!</button></td></tr></table><br>
-Time: </td><td><input type="text" id="guessWidth" onFocus="document.getElementById('tryagain').innerHTML='&nbsp;';" size="5"/> seconds<br><br>
+        <hr>
 
-      <div id="tryagain" style="font-size:12px;color:#aa0000;">&nbsp;</div>
-      <button id="check" onclick="checkAnswer()">check answer</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-      <br><br>
-      <script>
-        setFinish();
-      </script>
+        <h2>Score: <span id="score">0
+            </span> - <span id="codeZ">
+            </span>
+        </h2>
 
+        <script>
+            var endPos = 700;
+            var theAccel = 0.08;
+            var theInterval = 10;
+            var theTime = -5;
 
+            setScoreFromCookie('Stopwatch', (checkScoreCookie) => {});
 
+            function setFinish() {
+                endPos = Math.floor(Math.random() * 250 + 500);
+                $('#finishLine').transform.baseVal.getItem(0).setTranslate(endPos, 0);
+                theAccel = Math.random() * 0.06 + 0.05;
+                theInterval = Math.random() * 30 + 10;
+                theTime = -5;
+            }
 
+            function startCar(ac, ep) {
+                var carPos = 0;
+                var accel = ac;
+                var accelAmt = ac;
+                var stamp = performance.now();
+                var mover = setInterval(function () {
+                    if (carPos) {
+                        $('#car').transform.baseVal.getItem(0).setTranslate(carPos, 0);
+                    }
+                    carPos += accelAmt;
+                    accelAmt += accel;
 
-<button id="setup" onclick="setFinish();" style="display:none;">Setup
-</button>
+                    if (carPos <= (ep - 92) && carPos > (ep - 192)) {
+                        theTime = (performance.now() - stamp) / 1000;
+                    }
 
+                    if (carPos > 700) {
+                        clearInterval(mover);
+                        setTimeout(function () {
+                            $('#car').transform.baseVal.getItem(0).setTranslate(0, 0);
+                        }, 1000);
+                    }
+                }, theInterval);
+            }
 
+            function checkAnswer() {
+                var aw = parseFloat($('#guessWidth').value);
 
+                var z = getScore();
+
+                var awDiff = Math.abs(aw - theTime);
+
+                if (awDiff < .26) {
+                    z++;
+
+                    setScore(z, 'Stopwatch');
+                    setFinish();
+
+                    $('#tryagain').innerHTML = 'Correct!';
+                    $('#guessWidth').value = '';
+                } else {
+                    $('#tryagain').innerHTML = 'Incorrect, try again.';
+                }
+
+                if (awDiff >= 1) {
+                    $('#guessWidth').value = '';
+                }
+            }
+
+            setFinish();
+        </script>
 </body>
+
 </html>

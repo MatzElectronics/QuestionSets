@@ -1,0 +1,535 @@
+<html>
+
+<head>
+    <title>Observation practice</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+
+        body,
+        input,
+        select,
+        textarea,
+        body * {
+            font-family: 'Roboto', sans-serif;
+            box-sizing: border-box;
+        }
+
+        body {
+            padding: 50px;
+            background: url('polyBkgGreen.svg');
+            background-size: cover;
+        }
+
+        .infoText {
+            color: #ccc;
+            font-size: 0.8em;
+        }
+
+
+        #qField {
+            padding: 20px;
+            background: #fff;
+            border-radius: 5px;
+        }
+
+        th {
+            font-weight: bold;
+        }
+
+        .data-grid td {
+            text-align: center;
+        }
+
+        .data-grid input {
+            padding: 5px;
+            text-align: center;
+            border: 1px solid #000;
+            border-radius: 5px;
+        }
+
+        #big-timer {
+            font-size: 36px;
+            font-family: monospace;
+            border: 1px solid #000;
+            border-radius: 10px;
+            background: #eee;
+            padding: 5px 25px;
+        }
+
+        .show-result {
+            display: none;
+        }
+
+        .big-bold {
+            font-size: 24px;
+            font-weight: 700;
+        }
+    </style>
+
+    <script src="https://cdn.jsdelivr.net/npm/p5@1.1.9/lib/p5.js"></script>
+    <script src="common_utils.js"></script>
+
+    <script>
+    </script>
+</head>
+
+<body>
+    <div id="qField">
+        <h3>Observation Practice</h3>
+        <hr>
+
+        <table border="0">
+            <tr>
+                <td style="max-width:500px;">
+                    A timer will run for <span class="big-bold" id='total-time'>3:00</span> minutes:seconds.<br>
+                    Every <span class="big-bold" id='interval-time'>30</span> seconds, count the number of birds in the
+                    dark grey
+                    box.<br>
+                    There are <span class="big-bold" id='bird-count'>8</span> birds.<br>
+                    <br><i>If their white dot is in the dark grey box, it counts as "in".</i><br><br>
+                    Record your counts in the table below.<br><br>
+                    When the 3 minutes are done, your results
+                    will display at the bottom of the screen.<br><br>
+                </td>
+                <td style="text-align: center; padding-left: 20px;">
+                    <br><br>
+                    <span id="big-timer">0:00</span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div id="sketch-holder"></div>
+                </td>
+                <td style="text-align: center; padding-left: 20px;">
+                    <button id="birdsGo" onclick="startTimer()">start</button><br><br>
+                    <button id="ResetTimer" onclick="clearFields()">reset</button><br><br>
+                    <table class="data-grid">
+                        <tr>
+                            <th>&nbsp;Time:&nbsp;</th>
+                            <th>&nbsp;Your Count:&nbsp;</th>
+                            <th class="show-result">&nbsp;</th>
+                        </tr>
+                        <tr>
+                            <td id="interval-0">0:30</td>
+                            <td><input id="time-0" type="text" size="4" /></td>
+                            <td id="result-0" class="show-result"></td>
+                        </tr>
+                        <tr>
+                            <td id="interval-1">1:00</td>
+                            <td><input id="time-1" type="text" size="4" /></td>
+                            <td id="result-1" class="show-result"></td>
+                        </tr>
+                        <tr>
+                            <td id="interval-2">1:30</td>
+                            <td><input id="time-2" type="text" size="4" /></td>
+                            <td id="result-2" class="show-result"></td>
+                        </tr>
+                        <tr>
+                            <td id="interval-3">2:00</td>
+                            <td><input id="time-3" type="text" size="4" /></td>
+                            <td id="result-3" class="show-result"></td>
+                        </tr>
+                        <tr>
+                            <td id="interval-4">2:30</td>
+                            <td><input id="time-4" type="text" size="4" /></td>
+                            <td id="result-4" class="show-result"></td>
+                        </tr>
+                        <tr>
+                            <td id="interval-5">3:00</td>
+                            <td><input id="time-5" type="text" size="4" /></td>
+                            <td id="result-5" class="show-result"></td>
+                        </tr>
+                    </table>
+                    <br>
+                    <div id="tryagain" style="font-size:12px;color:#aa0000;">&nbsp;</div>
+                    <button id="check" onclick="checkAnswer()">check answers</button>
+                </td>
+            </tr>
+        </table>
+        <hr>
+
+        <h2>Score: <span id="score">0
+            </span> - <span id="codeZ">
+            </span>
+        </h2>
+
+        <script>
+            let BIRD_INTERVAL = 30;
+            let BIRD_COUNT = 8;
+            let BIRD_SPEED = 0.6;
+
+            let timerInterval = null;
+            let checkerInterval = null;
+            let birdCounts = [];
+
+            let flock;
+            let theTimer = 0;
+
+            setScoreFromCookie('Observation', (checkScoreCookie) => {
+                BIRD_INTERVAL = 30 - checkScoreCookie * 5;
+                //BIRD_COUNT = 8;
+                BIRD_SPEED = 0.6 + checkScoreCookie * 0.1;
+            });
+
+            function checkAnswer() {
+                let answers = null;
+                if ($('#check').innerHTML === 'check answers') {
+                    answers = reviewAnswers();
+                    if (answers.length > 5) {
+                        tempScore = answers.reduce((a, b) => {
+                            return a + b;
+                        }, 0);
+
+                        if (tempScore < 7) {
+                            let newScore = getScore();
+                            newScore++;
+                            setScore(newScore, 'Observation');
+
+                            BIRD_SPEED += 0.1;
+                            BIRD_INTERVAL -= 5;
+
+                            $('#check').innerHTML = 'next';
+                        } else {
+                            $('#check').innerHTML = 'try again';
+                        }
+                    }
+                } else {
+                    clearFields();
+                }
+            }
+
+            function secondsToMinSec(seconds) {
+                let minutes = Math.floor(seconds / 60);
+                let remainder = seconds - (minutes * 60);
+                let secString = remainder.toString(10);
+                if (secString.length === 1) {
+                    secString = '0' + secString;
+                }
+                return minutes + ':' + secString;
+            }
+
+            
+
+            function setup() {
+                clearFields();
+                canvas = createCanvas(480, 360);
+                canvas.parent('sketch-holder');
+            }
+
+            function draw() {
+                background(240);
+                fill(180);
+                stroke(150);
+                rect(240, 0, 240, 360);
+                if (flock) {
+                    flock.run();
+                }
+            }
+
+            function startFlock() {
+                flock = new Flock();
+                // Add an initial set of boids into the system
+                for (let i = 0; i < 8; i++) {
+                    let b = new Boid(width / 2, height / 2);
+                    flock.addBoid(b);
+                }
+            }
+
+            // The Nature of Code
+            // Daniel Shiffman
+            // http://natureofcode.com
+
+            // Flock object
+            // Does very little, simply manages the array of all the boids
+
+            function Flock() {
+                // An array for all the boids
+                this.boids = []; // Initialize the array
+            }
+
+            Flock.prototype.run = function () {
+                for (let i = 0; i < this.boids.length; i++) {
+                    this.boids[i].run(this.boids); // Passing the entire list of boids to each boid individually
+                }
+            }
+
+            Flock.prototype.addBoid = function (b) {
+                this.boids.push(b);
+            }
+
+            // The Nature of Code
+            // Daniel Shiffman
+            // http://natureofcode.com
+
+            // Boid class
+            // Methods for Separation, Cohesion, Alignment added
+
+            function Boid(x, y) {
+                this.acceleration = createVector(0, 0);
+                this.velocity = createVector(random(-1, 1), random(-1, 1));
+                this.position = createVector(x, y);
+                this.r = 10.0;
+                this.maxspeed = BIRD_SPEED; // Maximum speed
+                this.maxforce = 0.05; // Maximum steering force
+            }
+
+            Boid.prototype.run = function (boids) {
+                this.flock(boids);
+                this.update();
+                this.borders();
+                this.render();
+            }
+
+            Boid.prototype.applyForce = function (force) {
+                // We could add mass here if we want A = F / M
+                this.acceleration.add(force);
+            }
+
+            // We accumulate a new acceleration each time based on three rules
+            Boid.prototype.flock = function (boids) {
+                let sep = this.separate(boids); // Separation
+                let ali = this.align(boids); // Alignment
+                let coh = this.cohesion(boids); // Cohesion
+                // Arbitrarily weight these forces
+                sep.mult(1.2);
+                ali.mult(0.15);
+                coh.mult(0.25);
+                // Add the force vectors to acceleration
+                this.applyForce(sep);
+                this.applyForce(ali);
+                this.applyForce(coh);
+            }
+
+            // Method to update location
+            Boid.prototype.update = function () {
+                // Update velocity
+                this.velocity.add(this.acceleration);
+                // Limit speed
+                this.velocity.limit(this.maxspeed);
+                this.position.add(this.velocity);
+                // Reset accelertion to 0 each cycle
+                this.acceleration.mult(0);
+            }
+
+            // A method that calculates and applies a steering force towards a target
+            // STEER = DESIRED MINUS VELOCITY
+            Boid.prototype.seek = function (target) {
+                let desired = p5.Vector.sub(target, this
+                    .position); // A vector pointing from the location to the target
+                // Normalize desired and scale to maximum speed
+                desired.normalize();
+                desired.mult(this.maxspeed);
+                // Steering = Desired minus Velocity
+                let steer = p5.Vector.sub(desired, this.velocity);
+                steer.limit(this.maxforce); // Limit to maximum steering force
+                return steer;
+            }
+
+            Boid.prototype.render = function () {
+                // Draw a triangle rotated in the direction of velocity
+                let theta = this.velocity.heading() + radians(90);
+                fill(50);
+                stroke(20);
+                push();
+                translate(this.position.x, this.position.y);
+                rotate(theta);
+                triangle(0, -this.r * 2, -this.r, this.r * 2, this.r, this.r * 2);
+                fill(255);
+                circle(0, 0, 6);
+
+                pop();
+            }
+
+            // Wraparound
+            Boid.prototype.borders = function () {
+                if (this.position.x < 0) this.position.x = width;
+                if (this.position.y < 0) this.position.y = height;
+                if (this.position.x > width) this.position.x = 0;
+                if (this.position.y > height) this.position.y = 0;
+            }
+
+            // Separation
+            // Method checks for nearby boids and steers away
+            Boid.prototype.separate = function (boids) {
+                let desiredseparation = 45.0;
+                let steer = createVector(0, 0);
+                let count = 0;
+                // For every boid in the system, check if it's too close
+                for (let i = 0; i < boids.length; i++) {
+                    let d = p5.Vector.dist(this.position, boids[i].position);
+                    // If the distance is greater than 0 and less than an arbitrary amount (0 when you are yourself)
+                    if ((d > 0) && (d < desiredseparation)) {
+                        // Calculate vector pointing away from neighbor
+                        let diff = p5.Vector.sub(this.position, boids[i].position);
+                        diff.normalize();
+                        diff.div(d); // Weight by distance
+                        steer.add(diff);
+                        count++; // Keep track of how many
+                    }
+                }
+                // Average -- divide by how many
+                if (count > 0) {
+                    steer.div(count);
+                }
+
+                // As long as the vector is greater than 0
+                if (steer.mag() > 0) {
+                    // Implement Reynolds: Steering = Desired - Velocity
+                    steer.normalize();
+                    steer.mult(this.maxspeed);
+                    steer.sub(this.velocity);
+                    steer.limit(this.maxforce);
+                }
+                return steer;
+            }
+
+            // Alignment
+            // For every nearby boid in the system, calculate the average velocity
+            Boid.prototype.align = function (boids) {
+                let neighbordist = 50;
+                let sum = createVector(0, 0);
+                let count = 0;
+                for (let i = 0; i < boids.length; i++) {
+                    let d = p5.Vector.dist(this.position, boids[i].position);
+                    if ((d > 0) && (d < neighbordist)) {
+                        sum.add(boids[i].velocity);
+                        count++;
+                    }
+                }
+                if (count > 0) {
+                    sum.div(count);
+                    sum.normalize();
+                    sum.mult(this.maxspeed);
+                    let steer = p5.Vector.sub(sum, this.velocity);
+                    steer.limit(this.maxforce);
+                    return steer;
+                } else {
+                    return createVector(0, 0);
+                }
+            }
+
+            // Cohesion
+            // For the average location (i.e. center) of all nearby boids, calculate steering vector towards that location
+            Boid.prototype.cohesion = function (boids) {
+                let neighbordist = 55;
+                let sum = createVector(0, 0); // Start with empty vector to accumulate all locations
+                let count = 0;
+                for (let i = 0; i < boids.length; i++) {
+                    let d = p5.Vector.dist(this.position, boids[i].position);
+                    if ((d > 0) && (d < neighbordist)) {
+                        sum.add(boids[i].position); // Add location
+                        count++;
+                    }
+                }
+                if (count > 0) {
+                    sum.div(count);
+                    return this.seek(sum); // Steer towards the location
+                } else {
+                    return createVector(0, 0);
+                }
+            }
+
+            function inGreyCount() {
+                let total = 0;
+                flock.boids.forEach((elem) => {
+                    if (elem.position.x >= 240) total++;
+                });
+                return total;
+            }
+
+            function startTimer() {
+                clearFields();
+                $('#big-timer').innerHTML = secondsToMinSec(0);
+                startFlock();
+                checkBirds();
+                timerInterval = setInterval(() => {
+                    theTimer++;
+                    $('#big-timer').innerHTML = secondsToMinSec(theTimer);
+                }, 1000);
+            }
+
+            function checkBirds() {
+                checkerInterval = setTimeout(() => {
+                    birdCounts.push(inGreyCount());
+                    if (birdCounts.length < 6) {
+                        checkBirds();
+                    } else {
+                        clearInterval(timerInterval);
+                        timerInterval = null;
+                    }
+                }, 1000 * BIRD_INTERVAL);
+            }
+
+            function reviewAnswers() {
+                let totalAnswers = 0;
+                for (let i = 0; i < 6; i++) {
+                    if ($('#time-' + i).value.length > 0) {
+                        totalAnswers++;
+                    }
+                }
+
+                let answers = [];
+                if (totalAnswers > 5) {
+                    showResultColumn(true);
+                    for (let i = 0; i < 6; i++) {
+                        let userCount = parseInt($('#time-' + i).value);
+                        answers.push(userCount);
+                        let birdCount = birdCounts[i];
+                        $('#result-' + i).innerHTML = birdCount;
+                        let difference = Math.abs(userCount - birdCount);
+                        if (difference < 3) {
+                            $('#time-' + i).style.backgroundColor = ['#dfd', '#ffd', '#fed'][
+                                difference
+                            ];
+                        } else {
+                            $('#time-' + i).style.backgroundColor = '#fdd';
+                        }
+                    }
+                }
+
+                return answers.map((e, i) => {
+                    return Math.abs(e - birdCounts[i]);
+                });
+            }
+
+            function clearFields() {
+                flock = null;
+                birdCounts = [];
+                showResultColumn(false);
+                $('#check').innerHTML = 'check answers';
+
+
+                theTimer = 0;
+                if (checkerInterval) {
+                    clearTimeout(checkerInterval);
+                    checkerInterval = null;
+                }
+                $('#big-timer').innerHTML = secondsToMinSec(theTimer);
+                if (timerInterval) {
+                    clearInterval(timerInterval);
+                    timerInterval = null;
+                }
+
+                for (let i = 0; i < 6; i++) {
+                    $('#time-' + i).style.backgroundColor = '#fff';
+                    $('#time-' + i).value = '';
+
+                    $('#interval-' + i).innerHTML = secondsToMinSec((i + 1) * BIRD_INTERVAL);
+                    $('#total-time').innerHTML = secondsToMinSec(BIRD_INTERVAL * 6);
+                    $('#interval-time').innerHTML = BIRD_INTERVAL;
+                    $('#bird-count').innerHTML = BIRD_COUNT;
+
+                }
+            }
+
+            function showResultColumn(mode) {
+                let elements = document.querySelectorAll('.show-result');
+                for (let i = 0; i < elements.length; i++) {
+                    elements[i].style.display = (mode ? 'table-cell' : 'none');
+                }
+            }
+        </script>
+
+</body>
+
+</html>
