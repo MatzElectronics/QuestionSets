@@ -2,44 +2,29 @@
 
 <head>
     <title>Distance, speed, and time practice</title>
-
     <script src="common_utils.js"></script>
-
     <style>
         @import url(https://fonts.googleapis.com/css?family=Roboto);
-
-        body,
-        input,
-        select,
-        textarea,
-        body * {
+        * {
             font-family: 'Roboto', sans-serif;
             box-sizing: border-box;
         }
-
-        * {
-            box-sizing: border-box;
-        }
-
         body {
             padding: 50px;
             background: url('polyBkgBlue.svg');
             background-size: cover;
         }
-
         table {
             padding: 20px;
             background: #fff;
             border-radius: 5px;
         }
-
         h1 {
             margin: 0px 40px 0px 40px;
             color: #ddd;
             font-size: 1.8em;
             text-align: center;
         }
-
     </style>
     <script>
         var currentProblem = {
@@ -85,11 +70,6 @@
             $('#question').innerHTML = currentProblem.problem;
             $('#tryagain').innerHTML = '&nbsp;';
             $('#guessUnit').value = ' ';
-        }
-
-        function randomName() {
-            var n = Math.floor(Math.random() * names.length);
-            return names[n];
         }
 
         function mathProblem() {

@@ -206,6 +206,11 @@ const names = [
     'Kayla'
 ]
 
+function randomName() {
+    var n = Math.floor(Math.random() * names.length);
+    return names[n];
+}
+
 function setScoreFromCookie(activity, callback) {
     let checkScoreCookie = getCookie(activity + 'theScore');
     if (checkScoreCookie !== "0") {
