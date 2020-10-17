@@ -1,549 +1,160 @@
 <html>
-  <head>
-	  <title>Distance, speed, and time practice</title>
-    <script
-  src="https://code.jquery.com/jquery-3.3.1.min.js"
-  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
-  crossorigin="anonymous"></script>
+
+<head>
+    <title>Distance, speed, and time practice</title>
+
+    <script src="common_utils.js"></script>
+
     <style>
-      @import url(https://fonts.googleapis.com/css?family=Roboto);
-      body,
-      input,
-      select,
-      textarea,
-      body * {
-        font-family: 'Roboto', sans-serif;
-        box-sizing: border-box;
-      }
-      body::after, body::before,
-      input::after,
-      input::before,
-      select::after,
-      select::before,
-      textarea::after,
-      textarea::before,
-      body *::after,
-      body *::before {
-        box-sizing: border-box;
-      }
-      
-      body {
-        padding: 50px;
-        background: url('polyBkgBlue.svg');
-      }
+        @import url(https://fonts.googleapis.com/css?family=Roboto);
 
-      #calcBody {
-        background-color: #eee;
-        height: 322px;
-        width: 280px;
-        padding-top: 1px;
-        margin: auto;
-        border: 1px solid #888;
-      }
-      table {
-        padding: 20px;
-        background: #fff;
-        border-radius: 5px;
-      }
-      h1 {
-        margin: 0px 40px 0px 40px;
-        color: #ddd;
-        font-size: 1.8em;
-        text-align: center;
-      }
-      #screen {
-        margin: 20px 40px 20px 40px;
-        height: 35px;
-        background: #ddd;
-        border-radius: 0px;
-        box-shadow: 1px 1px 1px #555 inset;
-      }
-      #screen p {
-        position: relative;
-        top: 2px;
-        margin: 5px;
-        text-align: right;
-        font-size: 1.4em;
-        overflow: hidden;
+        body,
+        input,
+        select,
+        textarea,
+        body * {
+            font-family: 'Roboto', sans-serif;
+            box-sizing: border-box;
+        }
 
-      }
-      #buttonPad {
-        -webkit-column-count: 4;
-        -moz-column-count: 4;
-        column-count: 4;
-        width: 240px;
-        margin: auto;
-      }
-      .btn {
-        background: #ddd;
-        height: 35px;
-        width: 50px;
-        margin: 5px 0 5px 0;
-        border-radius: 3px;
-        font-size: 1.1em;
-      }
-      #plus {
-        height: 80px;
-      }
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            padding: 50px;
+            background: url('polyBkgBlue.svg');
+            background-size: cover;
+        }
+
+        table {
+            padding: 20px;
+            background: #fff;
+            border-radius: 5px;
+        }
+
+        h1 {
+            margin: 0px 40px 0px 40px;
+            color: #ddd;
+            font-size: 1.8em;
+            text-align: center;
+        }
+
     </style>
     <script>
-    var currentProblem = {
-      problem: '',
-      answerNumber: 0,
-      answerUnit: ''
-    }
-
-    var dstStrings = [
-      '(n) went (s) for (t). How far did (n) go?',
-      '(n) traveled (d) in (t).  How fast was (n) going?',
-      'How long did it take (n) to go (d) if (n) was traveling (s)?'
-    ]
-
-    var drtUnits = [
-      ['meters', 'miles', 'kilometers'],
-      ['m/s', 'mph', 'km/h'],
-      ['seconds', 'hours', 'hours']
-    ]
-
-    var names = [
-      'James',
-      'John',
-      'Robert',
-      'Michael',
-      'William',
-      'David',
-      'Richard',
-      'Joseph',
-      'Thomas',
-      'Charles',
-      'Christopher',
-      'Daniel',
-      'Matthew',
-      'Anthony',
-      'Donald',
-      'Mark',
-      'Paul',
-      'Steven',
-      'Andrew',
-      'Kenneth',
-      'George',
-      'Joshua',
-      'Kevin',
-      'Brian',
-      'Edward',
-      'Ronald',
-      'Timothy',
-      'Jason',
-      'Jeffrey',
-      'Ryan',
-      'Jacob',
-      'Gary',
-      'Nicholas',
-      'Eric',
-      'Stephen',
-      'Jonathan',
-      'Larry',
-      'Justin',
-      'Scott',
-      'Brandon',
-      'Frank',
-      'Benjamin',
-      'Gregory',
-      'Raymond',
-      'Samuel',
-      'Patrick',
-      'Alexander',
-      'Jack',
-      'Dennis',
-      'Jerry',
-      'Tyler',
-      'Aaron',
-      'Henry',
-      'Jose',
-      'Douglas',
-      'Peter',
-      'Adam',
-      'Nathan',
-      'Zachary',
-      'Walter',
-      'Kyle',
-      'Harold',
-      'Carl',
-      'Jeremy',
-      'Gerald',
-      'Keith',
-      'Roger',
-      'Arthur',
-      'Terry',
-      'Lawrence',
-      'Sean',
-      'Christian',
-      'Ethan',
-      'Austin',
-      'Joe',
-      'Albert',
-      'Jesse',
-      'Willie',
-      'Billy',
-      'Bryan',
-      'Bruce',
-      'Noah',
-      'Jordan',
-      'Dylan',
-      'Ralph',
-      'Roy',
-      'Alan',
-      'Wayne',
-      'Eugene',
-      'Juan',
-      'Gabriel',
-      'Louis',
-      'Russell',
-      'Randy',
-      'Vincent',
-      'Philip',
-      'Logan',
-      'Bobby',
-      'Harry',
-      'Johnny',
-      'Mary',
-      'Patricia',
-      'Jennifer',
-      'Linda',
-      'Elizabeth',
-      'Barbara',
-      'Susan',
-      'Jessica',
-      'Sarah',
-      'Margaret',
-      'Karen',
-      'Nancy',
-      'Lisa',
-      'Betty',
-      'Dorothy',
-      'Sandra',
-      'Ashley',
-      'Kimberly',
-      'Donna',
-      'Emily',
-      'Carol',
-      'Michelle',
-      'Amanda',
-      'Melissa',
-      'Deborah',
-      'Stephanie',
-      'Rebecca',
-      'Laura',
-      'Helen',
-      'Sharon',
-      'Cynthia',
-      'Kathleen',
-      'Amy',
-      'Shirley',
-      'Angela',
-      'Anna',
-      'Ruth',
-      'Brenda',
-      'Pamela',
-      'Nicole',
-      'Katherine',
-      'Samantha',
-      'Christine',
-      'Catherine',
-      'Virginia',
-      'Debra',
-      'Rachel',
-      'Janet',
-      'Emma',
-      'Carolyn',
-      'Maria',
-      'Heather',
-      'Diane',
-      'Julie',
-      'Joyce',
-      'Evelyn',
-      'Joan',
-      'Victoria',
-      'Kelly',
-      'Christina',
-      'Lauren',
-      'Frances',
-      'Martha',
-      'Judith',
-      'Cheryl',
-      'Megan',
-      'Andrea',
-      'Olivia',
-      'Ann',
-      'Jean',
-      'Alice',
-      'Jacqueline',
-      'Hannah',
-      'Doris',
-      'Kathryn',
-      'Gloria',
-      'Teresa',
-      'Sara',
-        'Janice',
-        'Marie',
-        'Julia',
-        'Grace',
-        'Judy',
-        'Theresa',
-        'Madison',
-        'Beverly',
-        'Denise',
-        'Marilyn',
-        'Amber',
-        'Danielle',
-        'Rose',
-        'Brittany',
-        'Diana',
-        'Abigail',
-        'Natalie',
-        'Jane',
-        'Lori',
-        'Alexis',
-        'Tiffany',
-        'Kayla'
-      ]
-
-    function getURLParameter(name) {
-    return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(window.location.search) || [null, ''])[1].replace(/\+/g, '%20')) || null;
-}
-	
-function getScoreString(score) {
-	var e = '@';
-  if (score > 62) {
-    e = String.fromCharCode(score + 2);
-    score -= 62;
-  }
-  if (score > 62) {
-    score = 62;
-  }
-  var p = Math.floor(Math.random() * 8) + 1;
-  var s = '';
-  s += String.fromCharCode(p + 64);
-  for (var i = 1; i < 12; i++) {
-    if (i === p) {
-      s+= String.fromCharCode(score + 64);
-    } else {
-      var c = String.fromCharCode(Math.floor(Math.random() * 62) + 64);
-      s += c
-    }
-  }
-  s += e;
-  s += String.fromCharCode(Math.floor(Math.random() * 62) + 64);
-  return s + ' - Distance, Rate, Time';
-}
-          
-      function checkAnswer() {
-        var a = parseInt(document.getElementById('guessNumber').value);
-        var u = document.getElementById('guessUnit').value;
-        var z = parseInt(document.getElementById('score').innerHTML);
-        if (a == currentProblem.answerNumber && u == currentProblem.answerUnit) {
-          z++;
-          document.getElementById('score').innerHTML = z;
-          var sc = '<a href="https://docs.google.com/forms/d/e/1FAIpQLScmfbs8w_VWMQML4z3EIAqgTfFuklcQMKK3nFjjPrpgSotO-g/viewform?usp=pp_url&entry.901367584=' + getURLParameter('teacher') + '&entry.1270571468=' + encodeURI(getScoreString(z)) + '">Turn in score</a>';
-
-          document.getElementById('codeZ').innerHTML = sc
-          currentProblem = mathProblem();
-          document.getElementById('question').innerHTML = currentProblem.problem;
-          document.getElementById('tryagain').innerHTML = 'Correct!';
-          document.getElementById('guessNumber').value = '';
-        } else {
-          document.getElementById('tryagain').innerHTML = 'Incorrect, try again.';
-        }
-        if (u !== currentProblem.answerUnit) {
-          document.getElementById('guessUnit').value = ' ';
-        }
-      }
-
-      function skipAnswer() {
-      document.getElementById('guessNumber').value = '';
-        currentProblem = mathProblem();
-        document.getElementById('question').innerHTML = currentProblem.problem;
-        document.getElementById('tryagain').innerHTML = '&nbsp;';
-        document.getElementById('guessUnit').value = ' ';
-      }
-
-      function randomName() {
-        var n = Math.floor(Math.random() * names.length);
-        return names[n];
-      }
-
-      function mathProblem() {
-        var m = randomName();
-        var n = Math.floor(Math.random() * 3);
-        var o = Math.floor(Math.random() * 3);
-        var s = dstStrings[n];
-        var p = [];
-        p[2] = Math.floor((Math.random() * 24) + 2);
-        p[1] = Math.floor((Math.random() * 100) + 2);
-        p[0] = p[2] * p[1];
-
-        var pStr = s.replace(/\(n\)/g, m)
-          .replace(/\(s\)/g, p[1] + ' ' + drtUnits[1][o])
-          .replace(/\(t\)/g, p[2] + ' ' + drtUnits[2][o])
-          .replace(/\(d\)/g, p[0] + ' ' + drtUnits[0][o])
-        return {
-          problem: pStr,
-          answerNumber: p[n],
-          answerUnit: drtUnits[n][o]
-        }
-      }
-      
-      $(document).ready(function() {
-        var currentNum = '';
-        var total = 0;
-        var operation = '';
-        console.log(typeof(total));
-
-        function updateDisplay(disp) {
-          console.log('Display updating: '+disp);
-          $('p').text(disp);
+        var currentProblem = {
+            problem: '',
+            answerNumber: 0,
+            answerUnit: ''
         }
 
-        function opPush(op) {
-          console.log('Operand pushed');
-          if (op === 'percent') {
-            var currentNumInt = Number(currentNum);
-            currentNumInt= currentNumInt / 100;
-            currentNum = currentNumInt;
-            updateDisplay(currentNumInt);
-          } else {
-            console.log('else run');
-            if (op !== 'ce') {
-              var currentNumInt = Number(currentNum);
-              if (currentNumInt) {
-                switch (operation) {
-                  case '':
-                    total = currentNumInt;
-                    break;
-                  case 'divide':
-                    total = total / currentNumInt;
-                    break;
-                  case 'times':
-                    total = total * currentNumInt;
-                    break;
-                  case 'minus':
-                    total = total - currentNumInt;
-                    break;
-                  case 'plus':
-                    total = total + currentNumInt;
-                    break;
-                  case 'equals':
-                    break;
-                }
-              }
-              if (op === 'ca') {
-                console.log('CA');
-                total = 0;
-                op = '';
-              }
-              console.log('Total = '+total);
-              operation = op;
+        var dstStrings = [
+            '(n) went (s) for (t). How far did (n) go?',
+            '(n) traveled (d) in (t).  How fast was (n) going?',
+            'How long did it take (n) to go (d) if (n) was traveling (s)?'
+        ]
+
+        var drtUnits = [
+            ['meters', 'miles', 'kilometers'],
+            ['m/s', 'mph', 'km/h'],
+            ['seconds', 'hours', 'hours']
+        ]
+
+        function checkAnswer() {
+            var a = parseInt($('#guessNumber').value);
+            var u = $('#guessUnit').value;
+            var z = parseInt($('#score').innerHTML);
+            if (a == currentProblem.answerNumber && u == currentProblem.answerUnit) {
+                z++;
+                setScore(z, 'Distance, Rate, and Time');
+                currentProblem = mathProblem();
+                $('#question').innerHTML = currentProblem.problem;
+                $('#tryagain').innerHTML = 'Correct!';
+                $('#guessNumber').value = '';
+            } else {
+                $('#tryagain').innerHTML = 'Incorrect, try again.';
             }
-            updateDisplay(total);
-            currentNum = '';
-          }
+            if (u !== currentProblem.answerUnit) {
+                $('#guessUnit').value = ' ';
+            }
         }
 
-        function numPush(num) {
-          console.log('Number pushed: '+num);
-          currentNum += num;
-          if (currentNum === '.') {
-            currentNum = '0.';
-          }
-          updateDisplay(currentNum);
+        function skipAnswer() {
+            $('#guessNumber').value = '';
+            currentProblem = mathProblem();
+            $('#question').innerHTML = currentProblem.problem;
+            $('#tryagain').innerHTML = '&nbsp;';
+            $('#guessUnit').value = ' ';
         }
 
-        function buttonPush(btn) {
-          console.log('btn = '+btn);
-          if (btn === 'decimal') {
-            numPush('.');
-          } else if (isNaN(btn)) {
-            opPush(btn);
-          } else {
-            numPush(btn);
-          }
+        function randomName() {
+            var n = Math.floor(Math.random() * names.length);
+            return names[n];
         }
 
-        // superfluous?
-        function updateTotal(op,num) {
+        function mathProblem() {
+            var m = randomName();
+            var n = Math.floor(Math.random() * 3);
+            var o = Math.floor(Math.random() * 3);
+            var s = dstStrings[n];
+            var p = [];
+            p[2] = Math.floor((Math.random() * 24) + 2);
+            p[1] = Math.floor((Math.random() * 100) + 2);
+            p[0] = p[2] * p[1];
+
+            var pStr = s.replace(/\(n\)/g, m)
+                .replace(/\(s\)/g, p[1] + ' ' + drtUnits[1][o])
+                .replace(/\(t\)/g, p[2] + ' ' + drtUnits[2][o])
+                .replace(/\(d\)/g, p[0] + ' ' + drtUnits[0][o])
+            return {
+                problem: pStr,
+                answerNumber: p[n],
+                answerUnit: drtUnits[n][o]
+            }
         }
-
-
-        $('button').click(function() {
-          var btn = $(this).attr("id");
-          console.log('Button pushed: '+btn);
-          buttonPush(btn);
-        });
-      })
-
     </script>
-  </head>
-  <body><table border="0"><tr><td>
-    <h3>Distance, speed, and time practice problems</h3>
-    Helpful formulas:<br><em>
-    distance = speed &times; time<br>
-    speed = distance &div; time<br>
-    time = distance &div; speed</em><hr>
-    <h2>
-      Score: <span id="score">0
-    </span> - <span id="codeZ">
-    </span></h2>
-    <br>
-    <div id="question"></div><br>
-    <div id="tryagain" style="font-size:12px;color:#aa0000;">&nbsp;</div>
-    <input type="text" id="guessNumber" onFocus="document.getElementById('tryagain').innerHTML='&nbsp;';" />
-    <select id="guessUnit">
-    <option value="meters"> </option>
-    <option value="meters">meters</option>
-    <option value="miles">miles</option>
-    <option value="kilometers">kilometers</option>
-    <option value="m/s">m/s</option>
-    <option value="mph">mph</option>
-    <option value="km/h">km/h</option>
-    <option value="seconds">seconds</option>
-    <option value="hours">hours</option>
-    </select>
-    <button id="check" onclick="checkAnswer()">check answer</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    <button id="skip" onclick="skipAnswer()">skip</button><br><br><br>
-    <script>
-      var x = mathProblem();
-      currentProblem = x;
-      document.getElementById('question').innerHTML = x.problem;
-    </script>
-    </td><td>
-    <div id="calculator" style="display:none;">
-      <div id="calcBody">
-        <div id="screen">
-          <p>0</p>
-        </div>
-        <div id="buttonPad">
-          <button id="ca" class="btn">CA</button>
-          <button id="7" class="btn">7</button>
-          <button id="4" class="btn">4</button>
-          <button id="1" class="btn">1</button>
-          <button id="0" class="btn">0</button>
-          <button id="ce" class="btn">CE</button>
-          <button id="8" class="btn">8</button>
-          <button id="5" class="btn">5</button>
-          <button id="2" class="btn">2</button>
-          <button id="decimal" class="btn">.</button>
-          <button id="percent" class="btn">%</button>
-          <button id="9" class="btn">9</button>
-          <button id="6" class="btn">6</button>
-          <button id="3" class="btn">3</button>
-          <button id="equals" class="btn">=</button>
-          <button id="divide" class="btn">&div;</button>
-          <button id="times" class="btn">x</button>
-          <button id="minus" class="btn">-</button>
-          <button id="plus" class="btn">+</button>
-        </div>
-      </div>
-    </div>
-    </td></tr></table>
-  </body>
+</head>
+
+<body>
+    <table border="0">
+        <tr>
+            <td>
+                <h3>Distance, speed, and time practice problems</h3>
+                Helpful formulas:<br><em>
+                    distance = speed &times; time<br>
+                    speed = distance &div; time<br>
+                    time = distance &div; speed</em>
+                <hr>
+                <h2>
+                    Score: <span id="score">0
+                    </span> - <span id="codeZ">
+                    </span></h2>
+                <br>
+                <div id="question"></div><br>
+                <div id="tryagain" style="font-size:12px;color:#aa0000;">&nbsp;</div>
+                <input type="text" id="guessNumber" onFocus="$('#tryagain').innerHTML='&nbsp;';" />
+                <select id="guessUnit">
+                    <option value="meters"> </option>
+                    <option value="meters">meters</option>
+                    <option value="miles">miles</option>
+                    <option value="kilometers">kilometers</option>
+                    <option value="m/s">m/s</option>
+                    <option value="mph">mph</option>
+                    <option value="km/h">km/h</option>
+                    <option value="seconds">seconds</option>
+                    <option value="hours">hours</option>
+                </select>
+                <button id="check" onclick="checkAnswer()">check answer</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <button id="skip" onclick="skipAnswer()">skip</button><br><br><br>
+                <script>
+                    setScoreFromCookie('Distance, Rate, and Time', (checkScoreCookie) => {});
+
+                    currentProblem = mathProblem();
+                    $('#question').innerHTML = currentProblem.problem;
+                </script>
+            </td>
+        </tr>
+    </table>
+</body>
+
 </html>
