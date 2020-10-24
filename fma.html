@@ -42,7 +42,7 @@
             'If (n) pushes a (m) object with (f) of force, what will the object\'s acceleration be?'
         ]
         var drtUnits = [
-            ['kg*m/s\u00b2 (Newtons)'],
+            ['kg*m/s\u00b2 (newtons)'],
             ['kg (kilograms)'],
             ['m/s\u00b2']
         ]
@@ -50,7 +50,7 @@
 
         function checkAnswer() {
             var a = parseInt($('#guessNumber').value);
-            var u = $('#guessUnit').value;
+            var u = $('#guessUnit').value.replace(/&sup2;/g,'\u00b2');
             var z = parseInt($('#score').innerHTML);
             if (a == currentProblem.answerNumber && u == currentProblem.answerUnit) {
                 z++;
@@ -117,8 +117,8 @@
                 <input type="text" id="guessNumber" onFocus="$('#tryagain').innerHTML='&nbsp;';" />
                 <select id="guessUnit">
                     <option>--choose a unit--</option>
-                    <option value="kg*m/s&sup2;">kg*m/s&sup2; (Newtons)</option>
-                    <option value="kg">kg (kilograms)</option>
+                    <option value="kg*m/s&sup2; (newtons)">kg*m/s&sup2; (Newtons)</option>
+                    <option value="kg (kilograms)">kg (kilograms)</option>
                     <option value="m/s&sup2;">m/s&sup2;</option>
                 </select>
                 <button id="check" onclick="checkAnswer()">check answer</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
