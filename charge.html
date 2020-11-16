@@ -1,0 +1,440 @@
+<html>
+
+<head>
+    <title>Electric Charge in an Atom practice</title>
+    <script src="common_utils.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+        body,
+        input,
+        select,
+        textarea,
+        body * {
+            font-family: 'Roboto', sans-serif;
+            box-sizing: border-box;
+        }
+
+        body::after,
+        body::before,
+        input::after,
+        input::before,
+        select::after,
+        select::before,
+        textarea::after,
+        textarea::before,
+        body *::after,
+        body *::before {
+            box-sizing: border-box;
+        }
+
+        body {
+            padding: 50px;
+            background: url('polyBkgBlue.svg');
+            background-size: cover;
+        }
+
+        table {
+            padding: 20px;
+            background: #fff;
+            border-radius: 5px;
+        }
+
+        input::placeholder {
+            opacity: 0.4;
+        }
+
+        .pTableCell {
+            padding: 5px 5px;
+            margin: 4px;
+            background-color: #f9f9f9;
+            display: inline-block;
+            border: none;
+            text-align: center;
+            border-radius: 4px;
+            font-size: 20px;
+            box-sizing: border-box;
+        }
+
+
+        .e-dot-white {
+            stroke: none;
+            fill: rgba(255, 255, 255, .9);
+            cursor: pointer;
+        }
+
+        .e-dot-black {
+            stroke: none;
+            fill: rgba(0, 0, 0, .9);
+            cursor: pointer;
+        }
+
+        .protonText {
+            cursor: default;
+            fill: rgba(172, 0, 0, 1);
+            font-family: sans-serif;
+            font-size: 18pt;
+        }
+
+        .neutronText {
+            cursor: default;
+            fill: rgba(0, 172, 0, 1);
+            font-family: sans-serif;
+            font-size: 18pt;
+        }
+
+        .scores {
+            font-size: 10pt;
+            color: blue;
+        }
+
+        #pCell {
+            border-radius: 5px;
+            background-color: #fff;
+            border: 1px solid black;
+            padding: 20px;
+            /* width: 50%; */
+        }
+
+        .noSelect {
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+    </style>
+    <script>
+        let electrons = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+        let elemProperties = [
+            [1.008, 'Hydrogen', 'H'],
+            [4.003, 'Helium', 'He'],
+            [6.941, 'Lithium', 'Li'],
+            [9.012, 'Beryllium', 'Be'],
+            [10.811, 'Boron', 'B'],
+            [12.011, 'Carbon', 'C'],
+            [14.007, 'Nitrogen', 'N'],
+            [15.999, 'Oxygen', 'O'],
+            [18.998, 'Fluorine', 'F'],
+            [20.18, 'Neon', 'Ne'],
+            [22.99, 'Sodium', 'Na'],
+            [24.305, 'Magnesium', 'Mg'],
+            [26.982, 'Aluminum', 'Al'],
+            [28.086, 'Silicon', 'Si'],
+            [30.974, 'Phosphorus', 'P'],
+            [32.065, 'Sulfur', 'S'],
+            [35.453, 'Chlorine', 'Cl'],
+            [39.948, 'Argon', 'Ar'],
+        ];
+
+        let questionText = [
+            'Click the up/down arrows to set the correct number <br>of <b>protons</b> to give the atom a <b>##</b> charge.',
+            'Click on the orbits in the atom to add or remove <br><b>electrons</b> to give the atom a <b>##</b> charge.',
+        ]
+
+        let score = 0;
+
+        let currentAnswer = {
+            atomicNumber: 0,
+            questionType: 0,
+            charge: 0,
+            symbol: 'Z',
+            elementName: 'Zzzzz',
+            atomicWeight: 0.0,
+            neutrons: 0,
+            shell0: 0,
+            shell1: 0,
+            shell2: 0,
+            valence: 0,
+            valenceEmptys: 0,
+            valenceSingles: 0,
+            valencePairs: 0
+        }
+
+        function setBohrDiagram() {
+            setColor(null, null, 0);
+            for (let i = 1; i <= currentAnswer.atomicNumber; i++) {
+                setColor(null, i, 1);
+            }
+            nucPartCount('proton', 0, currentAnswer.atomicNumber);
+        }
+
+        function setAll() {
+            let q_type = getParameter('q_type');
+            let a_num = Math.floor(Math.random() * 7) + 7; // returns a random integer from 6 to 18 
+            let c_num = Math.floor(Math.random() * 11) - 5; // returns a random integer from -5 to 5 
+            if (!q_type) {
+                q_type = Math.floor(Math.random() * 2); // returns a random integer from 0 to 1 
+            } else {
+                q_type = parseInt(q_type);
+            }
+            setCurrentAnswer(a_num, q_type, c_num);
+            setTimeout(function () {
+                setBohrDiagram();
+            }, 10);
+
+
+            setTimeout(function () {
+                $('#question').innerHTML = questionText[q_type].replace(/##/g, c_num > 0 ? '+' + c_num : (c_num === 0 ? 'neutral' : c_num));
+                blankQuestion();
+            }, 15);
+        }
+
+        function blankQuestion() {
+            switch (currentAnswer.questionType) {
+                case 0: // Protons/Neutrons
+                    nucPartCount('proton', 0, 0);
+                    $('#BohrModel').setAttributeNS(null, 'width', "300");
+                    $('#BohrModel').style.display = 'inline';
+                    break;
+                case 1: // Bohr Electrons
+                    setColor(null, null, 0);
+                    $('#BohrModel').setAttributeNS(null, 'width', "210");
+                    $('#BohrModel').style.display = 'inline';
+                    break;
+            }
+        }
+
+        function setCurrentAnswer(a_num, q_type, c_num) {
+            currentAnswer.charge = c_num;
+            currentAnswer.atomicNumber = a_num;
+            currentAnswer.questionType = q_type;
+            currentAnswer.symbol = elemProperties[a_num - 1][2];
+            currentAnswer.elementName = elemProperties[a_num - 1][1];
+            currentAnswer.atomicWeight = elemProperties[a_num - 1][0];
+            currentAnswer.neutrons = Math.round(elemProperties[a_num - 1][0] - a_num);
+            let electrons = a_num;
+            currentAnswer.shell0 = (electrons < 2 ? electrons : 2);
+            electrons -= currentAnswer.shell0;
+            currentAnswer.shell1 = (electrons < 8 ? electrons : 8);
+            electrons -= currentAnswer.shell1;
+            currentAnswer.shell2 = (electrons < 8 ? electrons : 8);
+            if (a_num < 3) {
+                currentAnswer.valence = currentAnswer.shell0;
+            } else if (a_num < 11) {
+                currentAnswer.valence = currentAnswer.shell1;
+            } else {
+                currentAnswer.valence = currentAnswer.shell2;
+            }
+            switch (currentAnswer.valence) {
+                case 1:
+                    currentAnswer.valenceEmptys = 3;
+                    currentAnswer.valenceSingles = 1;
+                    currentAnswer.valencePairs = 0;
+                    break;
+                case 2:
+                    currentAnswer.valenceEmptys = 2;
+                    currentAnswer.valenceSingles = 2;
+                    currentAnswer.valencePairs = 0;
+                    break;
+                case 3:
+                    currentAnswer.valenceEmptys = 1;
+                    currentAnswer.valenceSingles = 3;
+                    currentAnswer.valencePairs = 0;
+                    break;
+                case 4:
+                    currentAnswer.valenceEmptys = 0;
+                    currentAnswer.valenceSingles = 4;
+                    currentAnswer.valencePairs = 0;
+                    break;
+                case 5:
+                    currentAnswer.valenceEmptys = 0;
+                    currentAnswer.valenceSingles = 3;
+                    currentAnswer.valencePairs = 1;
+                    break;
+                case 6:
+                    currentAnswer.valenceEmptys = 0;
+                    currentAnswer.valenceSingles = 2;
+                    currentAnswer.valencePairs = 2;
+                    break;
+                case 7:
+                    currentAnswer.valenceEmptys = 0;
+                    currentAnswer.valenceSingles = 1;
+                    currentAnswer.valencePairs = 3;
+                    break;
+                case 8:
+                    currentAnswer.valenceEmptys = 0;
+                    currentAnswer.valenceSingles = 0;
+                    currentAnswer.valencePairs = 4;
+                    break;
+            }
+        }
+
+        function setColor(e, i, c) {
+            if (e !== null && (currentAnswer.questionType === 0 || currentAnswer.questionType === 1)) {
+                if (e.getAttributeNS(null, 'class') === "e-dot-white") {
+                    e.setAttributeNS(null, 'class', "e-dot-black");
+                    electrons[parseInt(e.id.split('-')[1]) - 1] = 1;
+                    return;
+                } else {
+                    e.setAttributeNS(null, 'class', "e-dot-white");
+                    electrons[parseInt(e.id.split('-')[1]) - 1] = 0;
+                    return;
+                }
+            }
+            if (i && c) {
+                e = $('#e-' + i);
+                electrons[i - 1] = c;
+                e.setAttributeNS(null, 'class', (c === 1 ? "e-dot-black" : "e-dot-white"));
+            }
+            if (e === null && i === null) {
+                for (i = 1; i < 19; i++) {
+                    e = $('#e-' + i);
+                    electrons[i - 1] = c;
+                    e.setAttributeNS(null, 'class', (c === 1 ? "e-dot-black" : "e-dot-white"));
+                }
+            }
+        }
+
+        function nucPartCount(part, change, setTo) {
+            let e = document.getElementById(part + 'T');
+            let c = (setTo ? setTo : parseInt(e.innerHTML) + change);
+            if (setTo === 0 && change === 0) c = 0;
+            if (c > 9) e.setAttributeNS(null, 'x', "81");
+            else e.setAttributeNS(null, 'x', "88");
+            e.innerHTML = c + part[0];
+        }
+
+        function checkAnswer() {
+            let isCorrect = false;
+            switch (currentAnswer.questionType) {
+                case 0: // Protons/Neutrons
+                    if (parseInt($('#protonT').innerHTML) - currentAnswer.charge === currentAnswer.atomicNumber) {
+                        isCorrect = true;
+                    }
+                    break;
+                case 1: // Bohr Electrons
+                    let s0 = electrons[0] + electrons[1];
+                    let s1 = electrons[2] + electrons[3] + electrons[4] + electrons[5] + electrons[6] + electrons[7] +
+                        electrons[
+                            8] + electrons[9];
+                    let s2 = electrons[10] + electrons[11] + electrons[12] + electrons[13] + electrons[14] + electrons[
+                            15] +
+                        electrons[16] + electrons[17];
+                    if (s0 + s1 + s2 === parseInt($('#protonT').innerHTML) - currentAnswer.charge) {
+                        isCorrect = true;
+                    }
+                    break;
+            }
+
+            if (isCorrect) {
+                score++;
+                $('#score').innerHTML = 'Score: ' + score;
+                $('#correct').style.display = 'block';
+                setScore(score, 'Atomic Charge');
+
+                setTimeout(function () {
+                    setAll();
+                    $('#correct').style.display = 'none';
+                }, 1000);
+
+            } else {
+                $('#tryagain').innerHTML = 'Incorrect. Try Again.';
+                blankQuestion();
+                setTimeout(function () {
+                    $('#tryagain').innerHTML = '&nbsp;';
+                }, 2500);
+            }
+        }
+
+        function skipAnswer() {
+            setAll();
+        }
+    </script>
+
+</head>
+
+<body>
+    <table class="mainTable" border="0">
+        <tr>
+            <td>
+                <table width="100%" border="0" cellpadding="0" cellspacing="0">
+                    <tr>
+                        <td>
+                            <svg xmlns="http://www.w3.org/2000/svg" xmlns:html="http://www.w3.org/1999/xhtml"
+                                xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="300" height="205"
+                                class="noSelect" id="BohrModel">
+                                <circle cx="100" cy="100" r="50" stroke="black" stroke-width="1px" fill="none" />
+                                <circle cx="100" cy="100" r="70" stroke="black" stroke-width="1px" fill="none" />
+                                <circle cx="100" cy="100" r="90" stroke="black" stroke-width="1px" fill="none" />
+                                <circle cx="100" cy="100" r="30" stroke="none" fill="#eee" />
+
+
+                                <circle id="e-1" cx="100" cy="51" r="6" class="e-dot-white" onclick="setColor(this);" />
+                                <circle id="e-2" cx="100" cy="149" r="6" class="e-dot-white"
+                                    onclick="setColor(this);" />
+
+                                <circle id="e-3" cx="80" cy="33" r="6" class="e-dot-white" onclick="setColor(this);" />
+                                <circle id="e-4" cx="120" cy="33" r="6" class="e-dot-white" onclick="setColor(this);" />
+                                <circle id="e-5" cx="120" cy="167" r="6" class="e-dot-white"
+                                    onclick="setColor(this);" />
+                                <circle id="e-6" cx="80" cy="167" r="6" class="e-dot-white" onclick="setColor(this);" />
+
+                                <circle id="e-7" cy="80" cx="33" r="6" class="e-dot-white" onclick="setColor(this);" />
+                                <circle id="e-8" cy="120" cx="33" r="6" class="e-dot-white" onclick="setColor(this);" />
+                                <circle id="e-9" cy="120" cx="167" r="6" class="e-dot-white"
+                                    onclick="setColor(this);" />
+                                <circle id="e-10" cy="80" cx="167" r="6" class="e-dot-white"
+                                    onclick="setColor(this);" />
+
+                                <circle id="e-11" cx="80" cy="13" r="6" class="e-dot-white" onclick="setColor(this);" />
+                                <circle id="e-12" cx="120" cy="13" r="6" class="e-dot-white"
+                                    onclick="setColor(this);" />
+                                <circle id="e-13" cx="120" cy="187" r="6" class="e-dot-white"
+                                    onclick="setColor(this);" />
+                                <circle id="e-14" cx="80" cy="187" r="6" class="e-dot-white"
+                                    onclick="setColor(this);" />
+
+                                <circle id="e-15" cy="80" cx="13" r="6" class="e-dot-white" onclick="setColor(this);" />
+                                <circle id="e-16" cy="120" cx="13" r="6" class="e-dot-white"
+                                    onclick="setColor(this);" />
+                                <circle id="e-17" cy="120" cx="187" r="6" class="e-dot-white"
+                                    onclick="setColor(this);" />
+                                <circle id="e-18" cy="80" cx="187" r="6" class="e-dot-white"
+                                    onclick="setColor(this);" />
+
+                                <text class="protonText" id="protonT" x="87" y="108">18p</text>
+                                <text class="protonText" x="222" y="106">p</text>
+
+                                <path id="proton_1" d="M220,80 L230,65 240,80Z" fill="rgba(172, 0, 0, 1)"
+                                    style="cursor:pointer;" />
+                                <path id="proton_-1" d="M220,120 L230,135 240,120Z" fill="rgba(172, 0, 0, 1)"
+                                    style="cursor:pointer;" />
+
+                            </svg>
+                            </div>
+                        </td>
+                        <td style="padding-left:10px;">
+                            <h3>Score: <span id="score">0</span> - <span id="codeZ"></span></h3>
+                            <hr>
+                            <div id="question"></div><br>
+                            <div id="tryagain" style="font-size:12px;color:#aa0000;">&nbsp;</div>
+                            <br><br>
+                            <button id="check" onclick="checkAnswer()">check
+                                answer</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <button id="skip" onclick="skipAnswer()">skip</button><br>
+                            <div id="correct" style="font-size:14px;color:#0a0;display:none;">Correct!</div>
+
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+    <script>
+        $('#proton_1').onclick = function (e) {
+            e.preventDefault;
+            nucPartCount('proton', 1)
+        };
+        $('#proton_-1').onclick = function (e) {
+            e.preventDefault;
+            nucPartCount('proton', -1)
+        };
+        setAll();
+
+        setScoreFromCookie('Atomic Charge', (checkScoreCookie) => {});
+    </script>
+</body>
+
+</html>
