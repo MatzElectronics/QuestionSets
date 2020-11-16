@@ -262,7 +262,7 @@
         }
 
         function setColor(e, i, c) {
-            if (e !== null && (currentAnswer.questionType === 0 || currentAnswer.questionType === 1)) {
+            if (e !== null && currentAnswer.questionType === 1) {
                 if (e.getAttributeNS(null, 'class') === "e-dot-white") {
                     e.setAttributeNS(null, 'class', "e-dot-black");
                     electrons[parseInt(e.id.split('-')[1]) - 1] = 1;
