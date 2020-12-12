@@ -1,0 +1,384 @@
+<html>
+
+<head>
+    <title>Wave Measurement and Calculation practice</title>
+    <script src="common_utils.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+
+        * {
+            font-family: 'Roboto', sans-serif;
+            box-sizing: border-box;
+        }
+
+        body {
+            padding: 50px;
+            background: url('polyBkgPurple.svg');
+            background-size: cover;
+        }
+
+        .main-area {
+            padding: 20px;
+            background: #fff;
+            border-radius: 5px;
+        }
+
+        button {
+            display: inline-block;
+            padding: 6px 12px;
+            margin-bottom: 0;
+            font-size: 12px !important;
+            font-weight: 400;
+            line-height: 17px;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: middle;
+            -ms-touch-action: manipulation;
+            touch-action: manipulation;
+            cursor: pointer;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            background-image: none;
+            border: 1px solid transparent;
+            border-radius: 5px;
+            color: #fff;
+            background-color: #337ab7;
+            border-color: #2e6da4;
+        }
+
+        button:focus {
+            outline: none;
+        }
+
+        h1 {
+            margin: 0px 40px 0px 40px;
+            color: #ddd;
+            font-size: 1.8em;
+            text-align: center;
+        }
+
+        .rulerText {
+            fill: black;
+            font-family: monospace;
+            font-size: 12px;
+        }
+
+        select,
+        input {
+            padding: 6px;
+            margin-top: -1px;
+            border-radius: 5px;
+            border: 1px solid #333;
+        }
+
+        input {
+            padding: 7px;
+        }
+
+        #help-formulas, 
+        #user-response, 
+        #question {
+            margin-bottom: 25px;
+        }
+
+        #wave-image {
+            margin-bottom: 70px;
+            margin-top: 25px;
+        }
+
+        .ruler_rotate0 {
+            -webkit-transform: rotateZ(0deg);
+            /* Safari */
+            transform: rotateZ(0deg);
+            /* Standard syntax */
+        }
+
+        .ruler_rotate90 {
+            -webkit-transform: rotateZ(90deg);
+            /* Safari */
+            transform: rotateZ(90deg);
+            /* Standard syntax */
+        }
+
+        .ruler_rotate180 {
+            -webkit-transform: rotateZ(180deg);
+            /* Safari */
+            transform: rotateZ(180deg);
+            /* Standard syntax */
+        }
+
+        .ruler_rotate270 {
+            -webkit-transform: rotateZ(270deg);
+            /* Safari */
+            transform: rotateZ(270deg);
+            /* Standard syntax */
+        }
+
+        .draggable {
+            position: absolute;
+            z-index: 9;
+            background-color: #f1f1f1;
+            /* border: 1px solid #d3d3d3; */
+            text-align: center;
+        }
+
+        .ruler {
+            padding: 0px;
+            cursor: move;
+            /* z-index: 10; */
+            background-color: rgba(240, 240, 240, .7);
+        }
+    </style>
+    <script>
+        var currentProblem = {
+            problem: '',
+            answerNumber: 0,
+            answerUnit: ''
+        }
+        var dstStrings = [
+            'If a wave has a wavelength of (m) and a speed of (a), what is the wave&apos;s frequency?',
+            'If a wave has a frequency of (f) and a speed of (a), what is the wave&apos;s wavelength?',
+            'If a wave has a wavelength of (m) and a frequency of (f), what is the wave&apos;s speed?'
+        ]
+        var drtUnits = [
+            ['Hz'], // f
+            ['m'], // m
+            ['m/s'] // a
+        ]
+
+        function checkAnswer() {
+            var a = parseFloat($('#guessNumber').value);
+            var u = $('#guessUnit').value;
+            var z = parseInt($('#score').innerHTML);
+            if (currentProblem.type === 2 || currentProblem.type === 4) {
+                if (Math.abs(a - currentProblem.answerNumber) <= 0.3) {
+                    z++;
+                    setScore(z, 'Waves');
+                    currentProblem = mathProblem();
+                    $('#question').innerHTML = currentProblem.problem + '<br>';
+                    $('#tryagain').innerHTML = 'Correct!';
+                    $('#guessNumber').value = '';
+                    $('#guessUnit').value = ' ';
+                } else {
+                    $('#tryagain').innerHTML = 'Incorrect, try again.';
+                }
+            } else {
+                if (a == currentProblem.answerNumber && u == currentProblem.answerUnit) {
+                    z++;
+                    setScore(z, 'Waves');
+                    currentProblem = mathProblem();
+                    $('#question').innerHTML = currentProblem.problem + '<br>';
+                    $('#tryagain').innerHTML = 'Correct!';
+                    $('#guessNumber').value = '';
+                    $('#guessUnit').value = ' ';
+                } else {
+                    $('#tryagain').innerHTML = 'Incorrect, try again.';
+                }
+                if (u !== currentProblem.answerUnit) {
+                    $('#guessUnit').value = ' ';
+                }
+            }
+        }
+
+        function skipAnswer() {
+            $('#guessNumber').value = '';
+            currentProblem = mathProblem();
+            $('#question').innerHTML = currentProblem.problem + '<br>';
+            $('#tryagain').innerHTML = '&nbsp;';
+            $('#guessUnit').value = ' ';
+        }
+
+        function mathProblem() {
+            var currentScore = parseInt($('#score').innerHTML) || 0;
+            var currentProblemType = currentScore % 5;
+
+            // 0 = freq, 1 = wavelength, 2 = speed
+            var m = randomName();
+            var n = Math.floor(Math.random() * 3);
+            var o = 0;
+            var s = dstStrings[n];
+            var p = [];
+            var pStr = '';
+            var showWave = false;
+
+            p[0] = Math.floor((Math.random() * 100) + 2);
+            p[1] = Math.floor((Math.random() * 50) + 2);
+            if (currentProblemType === 2 || currentProblemType === 4) {
+                n = 2;
+                p[2] = (currentProblemType === 4 ? waveMakerLongitudinal() : waveMakerTransverse()) / 25;
+                pStr = 'Use the ruler to measure the wavelength of the wave in cm (centimeters):';
+                showWave = true;
+            } else {
+                p[2] = p[0] * p[1];
+                pStr = s.replace(/\(n\)/g, m)
+                .replace(/\(m\)/g, p[1] + ' ' + drtUnits[1][o])
+                .replace(/\(a\)/g, p[2] + ' ' + drtUnits[2][o])
+                .replace(/\(f\)/g, p[0] + ' ' + drtUnits[0][o]);
+            }
+            $('#question').innerHTML = currentProblem.problem + '<br>';
+
+            $('#the-ruler').style.display = (showWave ? 'block' : 'none');
+            $('#wave-image').style.display = (showWave ? 'block' : 'none');
+            $('#guessUnit').style.display = (showWave ? 'none' : 'inline');
+            $('#help-formulas').style.display = (showWave ? 'none' : 'block');
+            if (showWave) {
+                resetRuler();
+            }
+
+            return {
+                problem: pStr,
+                answerNumber: p[n],
+                answerUnit: drtUnits[n][o],
+                type: currentProblemType
+            }
+        }
+
+        function waveMakerLongitudinal() {
+            let z = '';
+            let x = (Math.random() * 160 + 50);
+            let w = x / (3.141592);
+            for (let i = 0; i < 600; i += 10) {
+                for (let j = 0; j < 150; j += 7.5) {
+                    let x = (Math.random() * 9 - 18);
+                    let y = (Math.random() * 7 - 14);
+                    let h = Math.sin(i / w);
+                    let s = h * w * 0.85;
+                    z += `<circle cx="${i + x + s}" cy="${j + y}" r="1.5" fill="#409" stroke="none"/>`;
+                }
+            }
+            $('#theWave').innerHTML = z;
+            return x;
+        }
+
+        function waveMakerTransverse() {
+            let x = Math.random() * 200 + 30;
+            let m = Math.floor(300 / x) + 1;
+            let c = '';
+            for (let i = 0; i < m; i++) {
+                c += `c${x / 3},-75 ${x - x / 3},-75 ${x},0 c${x / 3},75 ${x - x / 3},75 ${x},0 `;
+            }
+            let z = `<path id="theWave" fill="none" stroke="#409" stroke-width="3" d="M0,75 ${c}"/>`;
+            $('#theWave').innerHTML = z;
+            return x;
+        }
+    </script>
+</head>
+
+<body>
+    <div class="main-area">
+        <h3>Wave Measurement and Calculation practice problems</h3>
+        <div id="help-formulas">
+            <b>Helpful formulas:</b><br><em>
+            wavelength = speed &div; frequency<br>
+            speed = frequency &times; wavelength<br>
+            frequency = speed &div; wavelength</em>
+        </div>
+        <hr>
+        <div id="question"></div>
+        <div id="wave-image">
+            <svg width="600" height="155" xmlns="http://www.w3.org/2000/svg" version="1.1">
+                <g id="theWave"></g>
+            </svg>
+        </div>
+        <div id="tryagain" style="font-size:12px;color:#aa0000;">&nbsp;</div>
+        <div id="user-response">
+            <input type="text" id="guessNumber" onFocus="$('#tryagain').innerHTML='&nbsp;';" />
+            <select id="guessUnit">
+                <option value=" ">--choose a unit--</option>
+                <option value="Hz">Hz (Hertz)</option>
+                <option value="m">m (meters)</option>
+                <option value="m/s">m/s (meters/second)</option>
+            </select>
+            <button id="check" onclick="checkAnswer()">check answer</button>
+            <button id="skip" onclick="skipAnswer()">skip</button>
+            <br>
+        </div>
+        <hr>
+        <h2>
+            Score: <span id="score">0</span> - <span id="codeZ"></span>
+        </h2>
+    </div>
+
+    <div class="draggable ruler" id="the-ruler">
+        <svg height="48" width="616">
+            <path
+                d="M7,0 l0,30 m5,-30 l0,15 m5,-15 l0,15 m5,-15 l0,15 m5,-15 l0,15 m5,-15 l0,22 m5,-22 l0,15 m5,-15 l0,15 m5,-15 l0,15 m5,-15 l0,15 m5,-15 l0,30  m5,-30 l0,15 m5,-15 l0,15 m5,-15 l0,15 m5,-15 l0,15 m5,-15 l0,22 m5,-22 l0,15 m5,-15 l0,15 m5,-15 l0,15 m5,-15 l0,15 m5,-15 l0,30 m5,-30 l0,15 m5,-15 l0,15 m5,-15 l0,15 m5,-15 l0,15 m5,-15 l0,22 m5,-22 l0,15 m5,-15 l0,15 m5,-15 l0,15 m5,-15 l0,15 m5,-15 l0,30 m5,-30 l0,15 m5,-15 l0,15 m5,-15 l0,15 m5,-15 l0,15 m5,-15 l0,22 m5,-22 l0,15 m5,-15 l0,15 m5,-15 l0,15 m5,-15 l0,15 m5,-15 l0,30 m5,-30 l0,15 m5,-15 l0,15 m5,-15 l0,15 m5,-15 l0,15 m5,-15 l0,22 m5,-22 l0,15 m5,-15 l0,15 m5,-15 l0,15 m5,-15 l0,15 m5,-15 l0,30 m5,-30 l0,15 m5,-15 l0,15 m5,-15 l0,15 m5,-15 l0,15 m5,-15 l0,22 m5,-22 l0,15 m5,-15 l0,15 m5,-15 l0,15 m5,-15 l0,15 m5,-15 l0,30 m5,-30 l0,15 m5,-15 l0,15 m5,-15 l0,15 m5,-15 l0,15 m5,-15 l0,22 m5,-22 l0,15 m5,-15 l0,15 m5,-15 l0,15 m5,-15 l0,15 m5,-15 l0,30 m5,-30 l0,15 m5,-15 l0,15 m5,-15 l0,15 m5,-15 l0,15 m5,-15 l0,22 m5,-22 l0,15 m5,-15 l0,15 m5,-15 l0,15 m5,-15 l0,15 m5,-15 l0,30 m5,-30 l0,15 m5,-15 l0,15 m5,-15 l0,15 m5,-15 l0,15 m5,-15 l0,22 m5,-22 l0,15 m5,-15 l0,15 m5,-15 l0,15 m5,-15 l0,15 m5,-15 l0,30 m5,-30 l0,15 m5,-15 l0,15 m5,-15 l0,15 m5,-15 l0,15 m5,-15 l0,22 m5,-22 l0,15 m5,-15 l0,15 m5,-15 l0,15 m5,-15 l0,15 m5,-15 l0,30 m5,-30 l0,15 m5,-15 l0,15 m5,-15 l0,15 m5,-15 l0,15 m5,-15 l0,22 m5,-22 l0,15 m5,-15 l0,15 m5,-15 l0,15 m5,-15 l0,15 m5,-15 l0,30 m5,-30 l0,15 m5,-15 l0,15 m5,-15 l0,15 m5,-15 l0,15 m5,-15 l0,22 m5,-22 l0,15 m5,-15 l0,15 m5,-15 l0,15 m5,-15 l0,15 m5,-15 l0,30"
+                stroke="black" stroke-width="1" />
+            <text x="3" y="42" class="rulerText">0cm</text>
+            <text x="53" y="42" class="rulerText">1</text>
+            <text x="103" y="42" class="rulerText">2</text>
+            <text x="153" y="42" class="rulerText">3</text>
+            <text x="203" y="42" class="rulerText">4</text>
+            <text x="253" y="42" class="rulerText">5</text>
+            <text x="303" y="42" class="rulerText">6</text>
+            <text x="353" y="42" class="rulerText">7</text>
+            <text x="403" y="42" class="rulerText">8</text>
+            <text x="453" y="42" class="rulerText">9</text>
+            <text x="500" y="42" class="rulerText">10</text>
+            <text x="550" y="42" class="rulerText">11</text>
+            <text x="600" y="42" class="rulerText">12</text>
+        </svg>
+    </div>
+
+    <script>
+        setScoreFromCookie('Waves', (checkScoreCookie) => {});
+
+        currentProblem = mathProblem();
+        $('#question').innerHTML = currentProblem.problem + '<br>';
+
+        dragElement($('#the-ruler'));
+
+        function resetRuler() {
+            $('#the-ruler').style.top = ($('.main-area').offsetHeight + $('.main-area').offsetTop + 10) + 'px';
+            $('#the-ruler').style.left = ($('.main-area').offsetLeft + 10) + 'px';
+        }
+
+        function dragElement(elmnt) {
+            var pos1 = 0,
+                pos2 = 0,
+                pos3 = 0,
+                pos4 = 0;
+            if (document.getElementById(elmnt.id)) {
+                // if present, the header is where you move the DIV from:
+                document.getElementById(elmnt.id).onmousedown = dragMouseDown;
+            } else {
+                // otherwise, move the DIV from anywhere inside the DIV: 
+                elmnt.onmousedown = dragMouseDown;
+            }
+
+            function dragMouseDown(e) {
+                e = e || window.event;
+                e.preventDefault();
+                // get the mouse cursor position at startup:
+                pos3 = e.clientX;
+                pos4 = e.clientY;
+                document.onmouseup = closeDragElement;
+                // call a function whenever the cursor moves:
+                document.onmousemove = elementDrag;
+            }
+
+            function elementDrag(e) {
+                e = e || window.event;
+                e.preventDefault();
+                // calculate the new cursor position:
+                pos1 = pos3 - e.clientX;
+                pos2 = pos4 - e.clientY;
+                pos3 = e.clientX;
+                pos4 = e.clientY;
+                // set the element's new position:
+                elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
+                elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+            }
+
+            function closeDragElement() {
+                // stop moving when mouse button is released:
+                document.onmouseup = null;
+                document.onmousemove = null;
+            }
+        }
+    </script>
+</body>
+
+</html>

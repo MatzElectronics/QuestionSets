@@ -1,491 +1,509 @@
 <html>
 
 <head>
-  <title>Velocity-Time Graph Practice Problems</title>
-  <style>
-    @import url(https://fonts.googleapis.com/css?family=Roboto);
+    <title>Velocity-Time Graph Practice Problems</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,700;1,400;1,700&display=swap');
 
-    body,
-    html,
-    * {
-      font-family: 'Roboto', sans-serif;
-      box-sizing: border-box;
-    }
+        body,
+        html,
+        * {
+            font-family: 'Roboto', sans-serif;
+            box-sizing: border-box;
+        }
 
-    body {
-      padding: 50px;
-      background: url('polyBkgBlue.svg');
-    }
+        body {
+            padding: 50px;
+            background: url('polyBkgBlue.svg');
+        }
 
-    .bkgLine {
-      stroke-width: 1;
-      stroke: #eee;
-      fill: none;
-    }
+        .bkgLine {
+            stroke-width: 1;
+            stroke: #eee;
+            fill: none;
+        }
 
-    .axisLine {
-      stroke-width: 1;
-      stroke: black;
-      fill: none;
-    }
+        .axisLine {
+            stroke-width: 1;
+            stroke: black;
+            fill: none;
+        }
 
-    .lineCircle {
-      stroke: blue;
-      stroke-width: 1;
-      fill: #228;
-    }
+        .lineCircle {
+            stroke: blue;
+            stroke-width: 1;
+            fill: #228;
+        }
 
-    text {
-      font-size: 11px;
-      font-family: sans-serif;
-    }
+        text {
+            font-size: 11px;
+            font-family: sans-serif;
+        }
 
-    #p0,
-    #p1,
-    #p2,
-    #p3,
-    #p4,
-    #p5,
-    #p6 {
-      font-size: 13px;
-      fill: white;
-      font-weight: bold;
-      font-family: sans-serif;
-    }
+        #p0,
+        #p1,
+        #p2,
+        #p3,
+        #p4,
+        #p5,
+        #p6 {
+            font-size: 13px;
+            fill: white;
+            font-weight: bold;
+            font-family: sans-serif;
+        }
 
-    #b1,
-    #b2,
-    #b3,
-    #b4,
-    #b5,
-    #b6 {
-      fill: #ccc;
-      stroke: none;
-    }
+        #b1,
+        #b2,
+        #b3,
+        #b4,
+        #b5,
+        #b6 {
+            fill: #ccc;
+            stroke: none;
+        }
 
-    .gLabel {
-      fill: black;
-      font-family: sans-serif;
-      font-size: 10px;
+        .gLabel {
+            fill: black;
+            font-family: sans-serif;
+            font-size: 10px;
 
-    }
+        }
 
-    .gLabelItalic {
-      font-size: 13px;
-      font-weight: bold;
-    }
+        .gLabelItalic {
+            font-size: 13px;
+            font-weight: bold;
+        }
 
-    button {
-      display: inline-block;
-      padding: 6px 12px;
-      margin-bottom: 0;
-      font-size: 12px !important;
-      font-weight: 400;
-      line-height: 17px;
-      text-align: center;
-      white-space: nowrap;
-      vertical-align: middle;
-      -ms-touch-action: manipulation;
-      touch-action: manipulation;
-      cursor: pointer;
-      -webkit-user-select: none;
-      -moz-user-select: none;
-      -ms-user-select: none;
-      user-select: none;
-      background-image: none;
-      border: 1px solid transparent;
-      border-radius: 4px;
-      color: #fff;
-      background-color: #337ab7;
-      border-color: #2e6da4;
-    }
+        button {
+            display: inline-block;
+            padding: 6px 12px;
+            margin-bottom: 0;
+            font-size: 12px !important;
+            font-weight: 400;
+            line-height: 17px;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: middle;
+            -ms-touch-action: manipulation;
+            touch-action: manipulation;
+            cursor: pointer;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            background-image: none;
+            border: 1px solid transparent;
+            border-radius: 4px;
+            color: #fff;
+            background-color: #337ab7;
+            border-color: #2e6da4;
+        }
 
-    button:focus {
-      outline: none;
-    }
+        button:focus {
+            outline: none;
+        }
 
-    hr {
-      border: 0;
-      height: 1px;
-      background: #777;
-      background-image: linear-gradient(to right, #ddd, #aaa, #ddd);
-    }
+        hr {
+            border: 0;
+            height: 1px;
+            background: #777;
+            background-image: linear-gradient(to right, #ddd, #aaa, #ddd);
+        }
 
-    table {
-      padding: 20px;
-      background: #fff;
-      border-radius: 5px;
-    }
-  </style>
+        table {
+            padding: 20px;
+            background: #fff;
+            border-radius: 5px;
+        }
+    </style>
 </head>
 
 <body>
-  <table border="0">
-    <tr>
-      <td>
-        <h3>Velocity-Time Graph Practice Problems</h3>
+    <table border="0">
+        <tr>
+            <td>
+                <h3>Velocity-Time Graph Practice Problems</h3>
 
-        Your Score: <span id='theScore'>0</span> - <span id="codeZ">
-        </span>
-        <hr>
-        <div id='g1'><svg width="460" height="255">
-            <g transform="translate(45,10)">
-              <path d="M0,0 400,0 M0,20 400,20 M0,40 400,40 M0,60 400,60 M0,80 400,80 M0,100 400,100 M0,120 400,120 M0,140 400,140 M0,160 400,160 M0,180 400,180" class="bkgLine" />
-              <path d="M40,0 40,200 M80,0 80,200 M120,0 120,200 M160,0 160,200 M200,0 200,200 M240,0 240,200 M280,0 280,200 M320,0 320,200 M360,0 360,200 M400,0 400,200" class="bkgLine" />
-              <path d="M0,0 0,200 M0,200 400,200 M-5,0 0,0 M-5,20 0,20 M-5,40 0,40 M-5,60 0,60 M-5,80 0,80 M-5,100 0,100 M-5,120 0,120 M-5,140 0,140 M-5,160 0,160 M-5,180 0,180 M-5,200 0,200 M40,200 40,205 M80,200 80,205 M120,200 120,205 M160,200 160,205 M200,200 200,205 M240,200 240,205 M280,200 280,205 M320,200 320,205 M360,200 360,205 M400,200 400,205 " class="axisLine" />
-              <text x='-20' y='205'>0</text>
-              <text x='-20' y='185'>1</text>
-              <text x='-20' y='165'>2</text>
-              <text x='-20' y='145'>3</text>
-              <text x='-20' y='125'>4</text>
-              <text x='-20' y='105'>5</text>
-              <text x='-20' y='85'>6</text>
-              <text x='-20' y='65'>7</text>
-              <text x='-20' y='45'>8</text>
-              <text x='-20' y='25'>9</text>
-              <text x='-25' y='5'>10</text>
-              <text x='-150' y='-35' transform="rotate(-90)" style="font-size:13px; font-weight:bold;">Position (meters)</text>
-              <text x='-3' y='222'>0</text>
-              <text x='33' y='222'>10</text>
-              <text x='73' y='222'>20</text>
-              <text x='113' y='222'>30</text>
-              <text x='153' y='222'>40</text>
-              <text x='193' y='222'>50</text>
-              <text x='233' y='222'>60</text>
-              <text x='273' y='222'>70</text>
-              <text x='313' y='222'>80</text>
-              <text x='353' y='222'>90</text>
-              <text x='390' y='222'>100</text>
-              <text x='150' y='240' style="font-size:13px; font-weight:bold;">Time (seconds)</text>
-              <path id="graphPath" stroke="blue" stroke-width="2.5" fill="none" />
-              <circle id='c0' cx='1' cy='1' r='8' class="lineCircle" />
-              <circle id='c1' cx='1' cy='1' r='8' class="lineCircle" />
-              <circle id='c2' cx='1' cy='1' r='8' class="lineCircle" />
-              <circle id='c3' cx='1' cy='1' r='8' class="lineCircle" />
-              <circle id='c4' cx='1' cy='1' r='8' class="lineCircle" />
-              <circle id='c5' cx='1' cy='1' r='8' class="lineCircle" />
-              <circle id='c6' cx='1' cy='1' r='8' class="lineCircle" />
-              <text id='p0' x='1' y='1'>A</text>
-              <text id='p1' x='1' y='1'>B</text>
-              <text id='p2' x='1' y='1'>C</text>
-              <text id='p3' x='1' y='1'>D</text>
-              <text id='p4' x='1' y='1'>E</text>
-              <text id='p5' x='1' y='1'>F</text>
-              <text id='p6' x='1' y='1'>G</text>
-            </g>
-          </svg></div>
-        <div id='g2'>
-          <svg width="460" height="255" id="graphingBlock" onclick="setCoords(evt)">
-            <g transform="translate(45,10)">
-              <path d="M0,0 400,0 M0,20 400,20 M0,40 400,40 M0,60 400,60 M0,80 400,80 M0,100 400,100 M0,120 400,120 M0,140 400,140 M0,160 400,160 M0,180 400,180" class="bkgLine" />
-              <path d="M40,0 40,200 M80,0 80,200 M120,0 120,200 M160,0 160,200 M200,0 200,200 M240,0 240,200 M280,0 280,200 M320,0 320,200 M360,0 360,200 M400,0 400,200" class="bkgLine" />
-              <path d="M0,0 0,200 M0,100 400,100 M-5,0 0,0 M-5,20 0,20 M-5,40 0,40 M-5,60 0,60 M-5,80 0,80 M-5,100 0,100 M-5,120 0,120 M-5,140 0,140 M-5,160 0,160 M-5,180 0,180 M-5,200 0,200" class="axisLine" />
-              <text x='-30' y='205'>-1.0</text>
-              <text x='-30' y='185'>-0.8</text>
-              <text x='-30' y='165'>-0.6</text>
-              <text x='-30' y='145'>-0.4</text>
-              <text x='-30' y='125'>-0.2</text>
-              <text x='-17' y='105'>0</text>
-              <text x='-25' y='85'>0.2</text>
-              <text x='-25' y='65'>0.4</text>
-              <text x='-25' y='45'>0.6</text>
-              <text x='-25' y='25'>0.9</text>
-              <text x='-25' y='5'>1.0</text>
-              <text x='-180' y='-35' transform="rotate(-90)" style="font-size:13px; font-weight:bold;">Velocity (meters/second)</text>
-              <text x='-3' y='215'>0</text>
-              <text x='33' y='215'>10</text>
-              <text x='73' y='215'>20</text>
-              <text x='113' y='215'>30</text>
-              <text x='153' y='215'>40</text>
-              <text x='193' y='215'>50</text>
-              <text x='233' y='215'>60</text>
-              <text x='273' y='215'>70</text>
-              <text x='313' y='215'>80</text>
-              <text x='353' y='215'>90</text>
-              <text x='390' y='215'>100</text>
-              <text x='150' y='231' style="font-size:13px; font-weight:bold;">Time (seconds)</text>
-              <path id="graphPath2" stroke="blue" stroke-width="2.5" fill="none" />
-              <circle id='cs0' cx='0' cy='100' r='4' class="lineCircle" />
-              <circle id='cs1' cx='40' cy='100' r='4' class="lineCircle" />
-              <circle id='cs2' cx='80' cy='100' r='4' class="lineCircle" />
-              <circle id='cs3' cx='120' cy='100' r='4' class="lineCircle" />
-              <circle id='cs4' cx='160' cy='100' r='4' class="lineCircle" />
-              <circle id='cs5' cx='200' cy='100' r='4' class="lineCircle" />
-              <circle id='cf0' cx='0' cy='100' r='4' class="lineCircle" />
-              <circle id='cf1' cx='40' cy='100' r='4' class="lineCircle" />
-              <circle id='cf2' cx='80' cy='100' r='4' class="lineCircle" />
-              <circle id='cf3' cx='120' cy='100' r='4' class="lineCircle" />
-              <circle id='cf4' cx='160' cy='100' r='4' class="lineCircle" />
-              <circle id='cf5' cx='200' cy='100' r='4' class="lineCircle" />
-              <text id='tt0' x='20' y='80'>0</text>
-              <text id='tt1' x='60' y='80'>0</text>
-              <text id='tt2' x='100' y='80'>0</text>
-              <text id='tt3' x='140' y='80'>0</text>
-              <text id='tt4' x='180' y='80'>0</text>
-              <text id='tt5' x='220' y='80'>0</text>
-            </g>
-          </svg></div>
-        <hr>
-        <div id="result"></div>
-        <button onclick="check1();">check answer</button>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <button onclick="generateGraph();">skip</button>
-        <div id="result0"></div><br>
-      </td>
-    </tr>
-  </table>
+                Your Score: <span id='theScore'>0</span> - <span id="codeZ">
+                </span>
+                <hr>
+                <div id='g1'><svg width="460" height="255">
+                        <g transform="translate(45,10)">
+                            <path
+                                d="M0,0 400,0 M0,20 400,20 M0,40 400,40 M0,60 400,60 M0,80 400,80 M0,100 400,100 M0,120 400,120 M0,140 400,140 M0,160 400,160 M0,180 400,180"
+                                class="bkgLine" />
+                            <path
+                                d="M40,0 40,200 M80,0 80,200 M120,0 120,200 M160,0 160,200 M200,0 200,200 M240,0 240,200 M280,0 280,200 M320,0 320,200 M360,0 360,200 M400,0 400,200"
+                                class="bkgLine" />
+                            <path
+                                d="M0,0 0,200 M0,200 400,200 M-5,0 0,0 M-5,20 0,20 M-5,40 0,40 M-5,60 0,60 M-5,80 0,80 M-5,100 0,100 M-5,120 0,120 M-5,140 0,140 M-5,160 0,160 M-5,180 0,180 M-5,200 0,200 M40,200 40,205 M80,200 80,205 M120,200 120,205 M160,200 160,205 M200,200 200,205 M240,200 240,205 M280,200 280,205 M320,200 320,205 M360,200 360,205 M400,200 400,205 "
+                                class="axisLine" />
+                            <text x='-20' y='205'>0</text>
+                            <text x='-20' y='185'>1</text>
+                            <text x='-20' y='165'>2</text>
+                            <text x='-20' y='145'>3</text>
+                            <text x='-20' y='125'>4</text>
+                            <text x='-20' y='105'>5</text>
+                            <text x='-20' y='85'>6</text>
+                            <text x='-20' y='65'>7</text>
+                            <text x='-20' y='45'>8</text>
+                            <text x='-20' y='25'>9</text>
+                            <text x='-25' y='5'>10</text>
+                            <text x='-150' y='-35' transform="rotate(-90)"
+                                style="font-size:13px; font-weight:bold;">Position (meters)</text>
+                            <text x='-3' y='222'>0</text>
+                            <text x='33' y='222'>10</text>
+                            <text x='73' y='222'>20</text>
+                            <text x='113' y='222'>30</text>
+                            <text x='153' y='222'>40</text>
+                            <text x='193' y='222'>50</text>
+                            <text x='233' y='222'>60</text>
+                            <text x='273' y='222'>70</text>
+                            <text x='313' y='222'>80</text>
+                            <text x='353' y='222'>90</text>
+                            <text x='390' y='222'>100</text>
+                            <text x='150' y='240' style="font-size:13px; font-weight:bold;">Time (seconds)</text>
+                            <path id="graphPath" stroke="blue" stroke-width="2.5" fill="none" />
+                            <circle id='c0' cx='1' cy='1' r='8' class="lineCircle" />
+                            <circle id='c1' cx='1' cy='1' r='8' class="lineCircle" />
+                            <circle id='c2' cx='1' cy='1' r='8' class="lineCircle" />
+                            <circle id='c3' cx='1' cy='1' r='8' class="lineCircle" />
+                            <circle id='c4' cx='1' cy='1' r='8' class="lineCircle" />
+                            <circle id='c5' cx='1' cy='1' r='8' class="lineCircle" />
+                            <circle id='c6' cx='1' cy='1' r='8' class="lineCircle" />
+                            <text id='p0' x='1' y='1'>A</text>
+                            <text id='p1' x='1' y='1'>B</text>
+                            <text id='p2' x='1' y='1'>C</text>
+                            <text id='p3' x='1' y='1'>D</text>
+                            <text id='p4' x='1' y='1'>E</text>
+                            <text id='p5' x='1' y='1'>F</text>
+                            <text id='p6' x='1' y='1'>G</text>
+                        </g>
+                    </svg></div>
+                <div id='g2'>
+                    <svg width="460" height="255" id="graphingBlock" onclick="setCoords(evt)">
+                        <g transform="translate(45,10)">
+                            <path
+                                d="M0,0 400,0 M0,20 400,20 M0,40 400,40 M0,60 400,60 M0,80 400,80 M0,100 400,100 M0,120 400,120 M0,140 400,140 M0,160 400,160 M0,180 400,180"
+                                class="bkgLine" />
+                            <path
+                                d="M40,0 40,200 M80,0 80,200 M120,0 120,200 M160,0 160,200 M200,0 200,200 M240,0 240,200 M280,0 280,200 M320,0 320,200 M360,0 360,200 M400,0 400,200"
+                                class="bkgLine" />
+                            <path
+                                d="M0,0 0,200 M0,100 400,100 M-5,0 0,0 M-5,20 0,20 M-5,40 0,40 M-5,60 0,60 M-5,80 0,80 M-5,100 0,100 M-5,120 0,120 M-5,140 0,140 M-5,160 0,160 M-5,180 0,180 M-5,200 0,200"
+                                class="axisLine" />
+                            <text x='-30' y='205'>-1.0</text>
+                            <text x='-30' y='185'>-0.8</text>
+                            <text x='-30' y='165'>-0.6</text>
+                            <text x='-30' y='145'>-0.4</text>
+                            <text x='-30' y='125'>-0.2</text>
+                            <text x='-17' y='105'>0</text>
+                            <text x='-25' y='85'>0.2</text>
+                            <text x='-25' y='65'>0.4</text>
+                            <text x='-25' y='45'>0.6</text>
+                            <text x='-25' y='25'>0.9</text>
+                            <text x='-25' y='5'>1.0</text>
+                            <text x='-180' y='-35' transform="rotate(-90)"
+                                style="font-size:13px; font-weight:bold;">Velocity (meters/second)</text>
+                            <text x='-3' y='215'>0</text>
+                            <text x='33' y='215'>10</text>
+                            <text x='73' y='215'>20</text>
+                            <text x='113' y='215'>30</text>
+                            <text x='153' y='215'>40</text>
+                            <text x='193' y='215'>50</text>
+                            <text x='233' y='215'>60</text>
+                            <text x='273' y='215'>70</text>
+                            <text x='313' y='215'>80</text>
+                            <text x='353' y='215'>90</text>
+                            <text x='390' y='215'>100</text>
+                            <text x='150' y='231' style="font-size:13px; font-weight:bold;">Time (seconds)</text>
+                            <path id="graphPath2" stroke="blue" stroke-width="2.5" fill="none" />
+                            <circle id='cs0' cx='0' cy='100' r='4' class="lineCircle" />
+                            <circle id='cs1' cx='40' cy='100' r='4' class="lineCircle" />
+                            <circle id='cs2' cx='80' cy='100' r='4' class="lineCircle" />
+                            <circle id='cs3' cx='120' cy='100' r='4' class="lineCircle" />
+                            <circle id='cs4' cx='160' cy='100' r='4' class="lineCircle" />
+                            <circle id='cs5' cx='200' cy='100' r='4' class="lineCircle" />
+                            <circle id='cf0' cx='0' cy='100' r='4' class="lineCircle" />
+                            <circle id='cf1' cx='40' cy='100' r='4' class="lineCircle" />
+                            <circle id='cf2' cx='80' cy='100' r='4' class="lineCircle" />
+                            <circle id='cf3' cx='120' cy='100' r='4' class="lineCircle" />
+                            <circle id='cf4' cx='160' cy='100' r='4' class="lineCircle" />
+                            <circle id='cf5' cx='200' cy='100' r='4' class="lineCircle" />
+                            <text id='tt0' x='20' y='80'>0</text>
+                            <text id='tt1' x='60' y='80'>0</text>
+                            <text id='tt2' x='100' y='80'>0</text>
+                            <text id='tt3' x='140' y='80'>0</text>
+                            <text id='tt4' x='180' y='80'>0</text>
+                            <text id='tt5' x='220' y='80'>0</text>
+                        </g>
+                    </svg></div>
+                <hr>
+                <div id="result"></div>
+                <button onclick="check1();">check answer</button>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <button onclick="generateGraph();">skip</button>
+                <div id="result0"></div><br>
+            </td>
+        </tr>
+    </table>
 
-  <script>
-    function $(elem) {
-      return document.getElementById(elem);
-    }
-
-
-    var svg = $('graphingBlock');
-    var pt = svg.createSVGPoint(); // Created once for document
-    var q = [{}, {}, {}, {}, {}, {}, {}, {}];
-
-    var outPosY = [];
-    var aa = [];
-    var q2Answer = 0;
-    var q3Answer = 0;
-    var rr = [0, 0, 0, 0, 0, 0, 0];
-    qType = 0;
-
-    var qText = ['', '', '', ''];
-
-    function setCoords(evt) {
-      pt.x = evt.clientX;
-      pt.y = evt.clientY;
-      // The cursor point, translated into svg coordinates
-      var cursorpt = pt.matrixTransform(svg.getScreenCTM().inverse());
-      cursorpt.x = Math.round(cursorpt.x / 1) * 1 - 45;
-      cursorpt.y = Math.round(cursorpt.y / 1) * 1 - 10;
-      cursorpt.y = cursorpt.y < 0 ? 0 : cursorpt.y;
-      cursorpt.y = cursorpt.y > 260 ? 260 : cursorpt.y;
-      var tpt = 0;
-      for (var jj = 0; jj < 6; jj++) {
-        if ((cursorpt.x > parseInt($('cs' + jj).getAttribute('cx')))) tpt = jj;
-      }
-
-      $('cs' + tpt).setAttribute('cy', cursorpt.y);
-      $('cf' + tpt).setAttribute('cy', cursorpt.y);
-      var outStr = 'M';
-
-      for (jj = 0; jj < 6; jj++) {
-        outStr += $('cs' + jj).getAttribute('cx') + ',' + $('cs' + jj).getAttribute('cy') + ' ' + $('cf' + jj)
-          .getAttribute('cx') + ',' + $('cf' + jj).getAttribute('cy') + ' ';
-
-        $('tt' + jj).setAttribute('x', (parseInt($('cs' + jj).getAttribute('cx')) + parseInt($('cf' + jj).getAttribute(
-          'cx'))) / 2 - 10);
-        $('tt' + jj).setAttribute('y', parseInt($('cs' + jj).getAttribute('cy')) - 8);
-        $('tt' + jj).innerHTML = ((parseInt($('cf' + jj).getAttribute('cy')) - 100) / -100).toFixed(2);
-        $('tt' + jj).setAttribute('fill', '#000');
-
-        rr[jj] = ((parseInt($('cf' + jj).getAttribute('cy')) - 100) / -100);
-      }
-
-      //outPosY[ii] = (260 - thePt.getAttribute('cy')) / 40;
-
-      $('graphPath2').setAttribute('d', outStr);
-      //$('result2').innerHTML = outPosY.join(' ');
-    }
-
-    var j = [];
-    var k = [];
-    var ss = [0, 0, 0, 0, 0, 0];
-
-    function generateGraph() {
-      var resultElement = $('result');
-      var graphPath = $('graphPath');
-      var a = [0, 0, 0];
-
-      a[0] = Math.floor(Math.random() * 9 + 1);
-      do {
-        a[1] = Math.floor(Math.random() * 9 + 1);
-      } while (a[1] === a[0]);
-      do {
-        a[2] = Math.floor(Math.random() * 9 + 1);
-      } while (a[2] === a[0] || a[2] === a[1]);
-
-      var b = [0, 0, 0];
-
-      b[0] = Math.floor(Math.random() * 3 + 1) * 2;
-      b[1] = Math.floor(Math.random() * (8 - b[0]) / 2 + 1) * 2;
-      b[2] = 12 - b[0] - b[1];
-
-      var c = [0, 0, 0];
-
-      c[0] = Math.floor(Math.random() * 2 + 1) * 2;
-      c[1] = Math.floor(Math.random() * 2 + 1) * 2;
-      if (c[0] + c[1] >= 8) {
-        if (c[0] > 2) c[0] -= 2;
-        else c[1] -= 2;
-      }
-      c[2] = 8 - c[0] - c[1];
-
-
-      j[0] = 0
-      j[1] = (b[0]) * 5;
-      j[2] = (b[0] + c[0]) * 5;
-      j[3] = (b[0] + c[0] + b[1]) * 5;
-      j[4] = (b[0] + c[0] + b[1] + c[1]) * 5;
-      j[5] = (b[0] + c[0] + b[1] + c[1] + b[2]) * 5;
-      j[6] = (b[0] + c[0] + b[1] + c[1] + b[2] + c[2]) * 5;
-
-
-      k[0] = 0;
-      k[1] = a[0];
-      k[2] = k[1];
-      k[3] = a[1];
-      k[4] = k[3];
-      k[5] = a[2];
-      k[6] = k[5];
-
-      var p = [];
-      p[0] = [0, 200];
-      p[1] = [b[0] * 20, 200 - a[0] * 20];
-      p[2] = [b[0] * 20 + c[0] * 20, 200 - a[0] * 20];
-      p[3] = [b[0] * 20 + c[0] * 20 + b[1] * 20, 200 - a[1] * 20];
-      p[4] = [b[0] * 20 + c[0] * 20 + b[1] * 20 + c[1] * 20, 200 - a[1] * 20];
-      p[5] = [b[0] * 20 + c[0] * 20 + b[1] * 20 + c[1] * 20 + b[2] * 20, 200 - a[2] * 20];
-      p[6] = [b[0] * 20 + c[0] * 20 + b[1] * 20 + c[1] * 20 + b[2] * 20 + c[2] * 20, 200 - a[2] * 20];
-
-      var outStr2 = 'M' + p.join(' ');
-      graphPath.setAttribute('d', outStr2);
-      for (var idx = 0; idx < 7; idx++) {
-        $('c' + idx).setAttribute('cx', p[idx][0]);
-        $('c' + idx).setAttribute('cy', p[idx][1]);
-
-        if (idx < 6) {
-          $('cs' + idx).setAttribute('cx', p[idx][0] + (idx === 0 ? 0 : 4));
-          $('cf' + idx).setAttribute('cx', p[idx + 1][0] - (idx === 5 ? 0 : 4));
-          $('cs' + idx).setAttribute('cy', 100);
-          $('cf' + idx).setAttribute('cy', 100);
+    <script>
+        function $(elem) {
+            return document.getElementById(elem);
         }
 
-        $('graphPath2').setAttribute('d', 'M0,100 L400,100');
 
-        $('p' + idx).setAttribute('x', p[idx][0] - 4.5);
-        $('p' + idx).setAttribute('y', p[idx][1] + 4.5);
-      }
+        var svg = $('graphingBlock');
+        var pt = svg.createSVGPoint(); // Created once for document
+        var q = [{}, {}, {}, {}, {}, {}, {}, {}];
 
-      for (idx = 0; idx < 6; idx++) {
-        ss[idx] = (k[idx + 1] - k[idx]) / (j[idx + 1] - j[idx]);
-        rr[idx] = parseFloat($('tt' + idx).innerHTML);
-      }
+        var outPosY = [];
+        var aa = [];
+        var q2Answer = 0;
+        var q3Answer = 0;
+        var rr = [0, 0, 0, 0, 0, 0, 0];
+        qType = 0;
 
+        var qText = ['', '', '', ''];
 
-      for (var jj = 0; jj < 6; jj++) {
-        $('tt' + jj).setAttribute('x', (parseInt($('cs' + jj).getAttribute('cx')) + parseInt($('cf' + jj).getAttribute(
-          'cx'))) / 2 - 10);
-        $('tt' + jj).setAttribute('y', parseInt($('cs' + jj).getAttribute('cy')) - 8);
-        $('tt' + jj).innerHTML = ((parseInt($('cf' + jj).getAttribute('cy')) - 100) / -100).toFixed(2);
-        $('tt' + jj).setAttribute('fill', '#000');
-      }
-    }
+        function setCoords(evt) {
+            pt.x = evt.clientX;
+            pt.y = evt.clientY;
+            // The cursor point, translated into svg coordinates
+            var cursorpt = pt.matrixTransform(svg.getScreenCTM().inverse());
+            cursorpt.x = Math.round(cursorpt.x / 1) * 1 - 45;
+            cursorpt.y = Math.round(cursorpt.y / 1) * 1 - 10;
+            cursorpt.y = cursorpt.y < 0 ? 0 : cursorpt.y;
+            cursorpt.y = cursorpt.y > 260 ? 260 : cursorpt.y;
+            var tpt = 0;
+            for (var jj = 0; jj < 6; jj++) {
+                if ((cursorpt.x > parseInt($('cs' + jj).getAttribute('cx')))) tpt = jj;
+            }
 
-    function check1() {
-      var testQ1 = 0;
-      for (var idx = 0; idx < 6; idx++) {
-        if (Math.abs(ss[idx] - rr[idx]) < 0.05) {
-          testQ1++;
-        } else {
-          $('tt' + idx).setAttribute('fill', '#f00');
+            $('cs' + tpt).setAttribute('cy', cursorpt.y);
+            $('cf' + tpt).setAttribute('cy', cursorpt.y);
+            var outStr = 'M';
+
+            for (jj = 0; jj < 6; jj++) {
+                outStr += $('cs' + jj).getAttribute('cx') + ',' + $('cs' + jj).getAttribute('cy') + ' ' + $('cf' + jj)
+                    .getAttribute('cx') + ',' + $('cf' + jj).getAttribute('cy') + ' ';
+
+                $('tt' + jj).setAttribute('x', (parseInt($('cs' + jj).getAttribute('cx')) + parseInt($('cf' + jj)
+                    .getAttribute(
+                        'cx'))) / 2 - 10);
+                $('tt' + jj).setAttribute('y', parseInt($('cs' + jj).getAttribute('cy')) - 8);
+                $('tt' + jj).innerHTML = ((parseInt($('cf' + jj).getAttribute('cy')) - 100) / -100).toFixed(2);
+                $('tt' + jj).setAttribute('fill', '#000');
+
+                rr[jj] = ((parseInt($('cf' + jj).getAttribute('cy')) - 100) / -100);
+            }
+
+            //outPosY[ii] = (260 - thePt.getAttribute('cy')) / 40;
+
+            $('graphPath2').setAttribute('d', outStr);
+            //$('result2').innerHTML = outPosY.join(' ');
         }
-      }
-      $('result0').innerHTML = testQ1 > 5 ? 'correct' : 'incorrect';
-      if (testQ1 > 5) isC();
-      setTimeout(function () {
-        $('result0').innerHTML = '';
-      }, 1250);
-    }
 
-    function isC() {
-      var ts = parseInt($('theScore').innerHTML);
-      ts++;
-      $('theScore').innerHTML = ts;
-      qType++;
+        var j = [];
+        var k = [];
+        var ss = [0, 0, 0, 0, 0, 0];
 
-      if (qType > 3) qType = 0;
-      setTimeout(function () {
-        $('result0').innerHTML = '';
-      }, 1250);
-      setTimeout(generateGraph, 1500);
+        function generateGraph() {
+            var resultElement = $('result');
+            var graphPath = $('graphPath');
+            var a = [0, 0, 0];
+
+            a[0] = Math.floor(Math.random() * 9 + 1);
+            do {
+                a[1] = Math.floor(Math.random() * 9 + 1);
+            } while (a[1] === a[0]);
+            do {
+                a[2] = Math.floor(Math.random() * 9 + 1);
+            } while (a[2] === a[0] || a[2] === a[1]);
+
+            var b = [0, 0, 0];
+
+            b[0] = Math.floor(Math.random() * 3 + 1) * 2;
+            b[1] = Math.floor(Math.random() * (8 - b[0]) / 2 + 1) * 2;
+            b[2] = 12 - b[0] - b[1];
+
+            var c = [0, 0, 0];
+
+            c[0] = Math.floor(Math.random() * 2 + 1) * 2;
+            c[1] = Math.floor(Math.random() * 2 + 1) * 2;
+            if (c[0] + c[1] >= 8) {
+                if (c[0] > 2) c[0] -= 2;
+                else c[1] -= 2;
+            }
+            c[2] = 8 - c[0] - c[1];
 
 
-      var sc =
-        '<a href="https://docs.google.com/forms/d/e/1FAIpQLScmfbs8w_VWMQML4z3EIAqgTfFuklcQMKK3nFjjPrpgSotO-g/viewform?usp=pp_url&entry.901367584=' +
-        getURLParameter('teacher') + '&entry.1270571468=' + encodeURI(getScoreString(ts)) + '">Turn in score</a>';
+            j[0] = 0
+            j[1] = (b[0]) * 5;
+            j[2] = (b[0] + c[0]) * 5;
+            j[3] = (b[0] + c[0] + b[1]) * 5;
+            j[4] = (b[0] + c[0] + b[1] + c[1]) * 5;
+            j[5] = (b[0] + c[0] + b[1] + c[1] + b[2]) * 5;
+            j[6] = (b[0] + c[0] + b[1] + c[1] + b[2] + c[2]) * 5;
 
-      $('codeZ').innerHTML = sc;
-      setCookie('theScoreVT', ts.toString(10), 7);
-    }
 
-    function getScoreString(score) {
-      var e = '@';
-      if (score > 62) {
-        e = String.fromCharCode(score + 2);
-        score -= 62;
-      }
-      if (score > 62) {
-        score = 62;
-      }
-      var p = Math.floor(Math.random() * 8) + 1;
-      var s = '';
-      s += String.fromCharCode(p + 64);
-      for (var i = 1; i < 12; i++) {
-        if (i === p) {
-          s += String.fromCharCode(score + 64);
-        } else {
-          var c = String.fromCharCode(Math.floor(Math.random() * 62) + 64);
-          s += c
+            k[0] = 0;
+            k[1] = a[0];
+            k[2] = k[1];
+            k[3] = a[1];
+            k[4] = k[3];
+            k[5] = a[2];
+            k[6] = k[5];
+
+            var p = [];
+            p[0] = [0, 200];
+            p[1] = [b[0] * 20, 200 - a[0] * 20];
+            p[2] = [b[0] * 20 + c[0] * 20, 200 - a[0] * 20];
+            p[3] = [b[0] * 20 + c[0] * 20 + b[1] * 20, 200 - a[1] * 20];
+            p[4] = [b[0] * 20 + c[0] * 20 + b[1] * 20 + c[1] * 20, 200 - a[1] * 20];
+            p[5] = [b[0] * 20 + c[0] * 20 + b[1] * 20 + c[1] * 20 + b[2] * 20, 200 - a[2] * 20];
+            p[6] = [b[0] * 20 + c[0] * 20 + b[1] * 20 + c[1] * 20 + b[2] * 20 + c[2] * 20, 200 - a[2] * 20];
+
+            var outStr2 = 'M' + p.join(' ');
+            graphPath.setAttribute('d', outStr2);
+            for (var idx = 0; idx < 7; idx++) {
+                $('c' + idx).setAttribute('cx', p[idx][0]);
+                $('c' + idx).setAttribute('cy', p[idx][1]);
+
+                if (idx < 6) {
+                    $('cs' + idx).setAttribute('cx', p[idx][0] + (idx === 0 ? 0 : 4));
+                    $('cf' + idx).setAttribute('cx', p[idx + 1][0] - (idx === 5 ? 0 : 4));
+                    $('cs' + idx).setAttribute('cy', 100);
+                    $('cf' + idx).setAttribute('cy', 100);
+                }
+
+                $('graphPath2').setAttribute('d', 'M0,100 L400,100');
+
+                $('p' + idx).setAttribute('x', p[idx][0] - 4.5);
+                $('p' + idx).setAttribute('y', p[idx][1] + 4.5);
+            }
+
+            for (idx = 0; idx < 6; idx++) {
+                ss[idx] = (k[idx + 1] - k[idx]) / (j[idx + 1] - j[idx]);
+                rr[idx] = parseFloat($('tt' + idx).innerHTML);
+            }
+
+
+            for (var jj = 0; jj < 6; jj++) {
+                $('tt' + jj).setAttribute('x', (parseInt($('cs' + jj).getAttribute('cx')) + parseInt($('cf' + jj)
+                    .getAttribute(
+                        'cx'))) / 2 - 10);
+                $('tt' + jj).setAttribute('y', parseInt($('cs' + jj).getAttribute('cy')) - 8);
+                $('tt' + jj).innerHTML = ((parseInt($('cf' + jj).getAttribute('cy')) - 100) / -100).toFixed(2);
+                $('tt' + jj).setAttribute('fill', '#000');
+            }
         }
-      }
-      s += e;
-      s += String.fromCharCode(Math.floor(Math.random() * 62) + 64);
-      return s + ' - Velocity-Time Graphs';
-    }
 
-    function getURLParameter(name) {
-      return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(window.location.search) ||
-        [null, ''])[1].replace(/\+/g, '%20')) || null;
-    }
-
-    function setCookie(cname, cvalue, exdays) {
-      var d = new Date();
-      d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
-      var expires = "expires=" + d.toUTCString();
-      document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
-    }
-
-    function getCookie(cname) {
-      var name = cname + "=";
-      var ca = document.cookie.split(';');
-      for (var i = 0; i < ca.length; i++) {
-        var c = ca[i];
-        while (c.charAt(0) == ' ') {
-          c = c.substring(1);
+        function check1() {
+            var testQ1 = 0;
+            for (var idx = 0; idx < 6; idx++) {
+                if (Math.abs(ss[idx] - rr[idx]) < 0.05) {
+                    testQ1++;
+                } else {
+                    $('tt' + idx).setAttribute('fill', '#f00');
+                }
+            }
+            $('result0').innerHTML = testQ1 > 5 ? 'correct' : 'incorrect';
+            if (testQ1 > 5) isC();
+            setTimeout(function () {
+                $('result0').innerHTML = '';
+            }, 1250);
         }
-        if (c.indexOf(name) == 0) {
-          return c.substring(name.length, c.length);
+
+        function isC() {
+            var ts = parseInt($('theScore').innerHTML);
+            ts++;
+            $('theScore').innerHTML = ts;
+            qType++;
+
+            if (qType > 3) qType = 0;
+            setTimeout(function () {
+                $('result0').innerHTML = '';
+            }, 1250);
+            setTimeout(generateGraph, 1500);
+
+
+            var sc =
+                '<a href="https://docs.google.com/forms/d/e/1FAIpQLScmfbs8w_VWMQML4z3EIAqgTfFuklcQMKK3nFjjPrpgSotO-g/viewform?usp=pp_url&entry.901367584=' +
+                getURLParameter('teacher') + '&entry.1270571468=' + encodeURI(getScoreString(ts)) +
+                '">Turn in score</a>';
+
+            $('codeZ').innerHTML = sc;
+            setCookie('theScoreVT', ts.toString(10), 7);
         }
-      }
-      return "0";
-    }
 
-    var checkScoreCookie = getCookie('theScoreVT');
-    $('theScore').innerHTML = checkScoreCookie;
-    if (checkScoreCookie !== "0") {
-      var scc =
-        '<a href="https://docs.google.com/forms/d/e/1FAIpQLScmfbs8w_VWMQML4z3EIAqgTfFuklcQMKK3nFjjPrpgSotO-g/viewform?usp=pp_url&entry.901367584=' +
-        getURLParameter('teacher') + '&entry.1270571468=' + encodeURI(getScoreString(parseInt(checkScoreCookie))) +
-        '">Turn in score</a>';
-      $('codeZ').innerHTML = scc
-    }
+        function getScoreString(score) {
+            var e = '@';
+            if (score > 62) {
+                e = String.fromCharCode(score + 2);
+                score -= 62;
+            }
+            if (score > 62) {
+                score = 62;
+            }
+            var p = Math.floor(Math.random() * 8) + 1;
+            var s = '';
+            s += String.fromCharCode(p + 64);
+            for (var i = 1; i < 12; i++) {
+                if (i === p) {
+                    s += String.fromCharCode(score + 64);
+                } else {
+                    var c = String.fromCharCode(Math.floor(Math.random() * 62) + 64);
+                    s += c
+                }
+            }
+            s += e;
+            s += String.fromCharCode(Math.floor(Math.random() * 62) + 64);
+            return s + ' - Velocity-Time Graphs';
+        }
 
-    generateGraph();
-  </script>
+        function getURLParameter(name) {
+            return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(window.location
+                .search) || [null, ''])[1].replace(/\+/g, '%20')) || null;
+        }
+
+        function setCookie(cname, cvalue, exdays) {
+            var d = new Date();
+            d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+            var expires = "expires=" + d.toUTCString();
+            document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+        }
+
+        function getCookie(cname) {
+            var name = cname + "=";
+            var ca = document.cookie.split(';');
+            for (var i = 0; i < ca.length; i++) {
+                var c = ca[i];
+                while (c.charAt(0) == ' ') {
+                    c = c.substring(1);
+                }
+                if (c.indexOf(name) == 0) {
+                    return c.substring(name.length, c.length);
+                }
+            }
+            return "0";
+        }
+
+        var checkScoreCookie = getCookie('theScoreVT');
+        $('theScore').innerHTML = checkScoreCookie;
+        if (checkScoreCookie !== "0") {
+            var scc =
+                '<a href="https://docs.google.com/forms/d/e/1FAIpQLScmfbs8w_VWMQML4z3EIAqgTfFuklcQMKK3nFjjPrpgSotO-g/viewform?usp=pp_url&entry.901367584=' +
+                getURLParameter('teacher') + '&entry.1270571468=' + encodeURI(getScoreString(parseInt(
+                    checkScoreCookie))) +
+                '">Turn in score</a>';
+            $('codeZ').innerHTML = scc
+        }
+
+        generateGraph();
+    </script>
 </body>
 
 </html>
