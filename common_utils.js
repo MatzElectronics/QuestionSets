@@ -273,7 +273,7 @@ function getScoreString(score) {
     b = (b.length < 2 ? '0' : '') + b;
     c = (c.length < 2 ? '0' : '') + c;
 
-    return (a + c + b).toUpperCase();
+    return ' ' + (a + c + b).toUpperCase();
 }
 
 function setScore(score, activity) {

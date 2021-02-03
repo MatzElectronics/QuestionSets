@@ -63,6 +63,10 @@ function setColor(dragon, blueOrGreen) {
 }
 
 function setDragon(dragon, genotype) {
+    if (!$(`#dragon${dragon}`).genes) {
+        $(`#dragon${dragon}`).genes = genotype;
+    }
+
     [
         ['color', 'c'],
         ['spikes', 'p'],
@@ -79,44 +83,42 @@ function setDragon(dragon, genotype) {
                 } else {
                     dragons[trait[0]].remove(dragon);
                 }
+
+                $(`#dragon${dragon}`).genes = $(`#dragon${dragon}`).genes.replace((new RegExp(`[${trait[1]}]+`, 'gi')), '');
+                $(`#dragon${dragon}`).genes += traitGenes;
+
             } else if (traitGenes.indexOf('' + trait[1] + trait[1]) > -1) {
                 if (dragons[trait[0]].dominant) {
                     dragons[trait[0]].remove(dragon);
                 } else {
                     dragons[trait[0]].add(dragon);
                 }
+
+                $(`#dragon${dragon}`).genes = $(`#dragon${dragon}`).genes.replace((new RegExp(`[${trait[1]}]+`, 'gi')), '');
+                $(`#dragon${dragon}`).genes += traitGenes;
             }
         }
     });
 
-    let genderGenes = genotype.replace(/[^xXyY]/g, '');
+    let genderGenes = genotype.replace(/[^xXyY]+/gi, '');
     if (genderGenes.length > 0) {
         genderGenes = genderGenes.toUpperCase().indexOf('Y') > -1 ? 'XY' : 'XX';
-    }
 
-    dragons.gender.set(dragon, genderGenes);
+        $(`#dragon${dragon}`).genes = $(`#dragon${dragon}`).genes.replace(/[xXyY]+/gi, '');
+        $(`#dragon${dragon}`).genes += genderGenes;
+
+        dragons.gender.set(dragon, genderGenes);
+    }
 }
 
-// TODO: fix this function
 function formatGenotype(genotype) {
-    let formattedGenotype = '';
-    let genes = genotype.split('').sort();
-    for (let i = 0; i < genes.length; i++) {
-        if (genes[i].toLowerCase() === genes[i + 1].toLowerCase() && genes[i].toLowerCase() !== 'x' && genes[i].toLowerCase() !== 'y') {
-            if (genes[i] !== genes[i + 1]) {
-                formattedGenotype += genes[i].toUpperCase() + genes[i].toLowerCase();
-            } else {
-                formattedGenotype += genes[i] + genes[i + 1];
-            }
-        } else if ((genes[i].toLowerCase() === 'x' || genes[i].toLowerCase() === 'y') && (genes[i + 1].toLowerCase() === 'x' || genes[i + 1].toLowerCase() === 'y')) {
-            if (genes[i] === 'y' || genes[i + 1] === 'y') {
-                formattedGenotype += 'XY';
-            } else {
-                formattedGenotype += 'XX';
-            }
-        }
-    }
-    return formattedGenotype;
+    let traits = ['h','s','w','t','c','p','xy'];
+    let newGenotype = '';
+    traits.forEach((trait) => {
+        let traitGenes = genotype.replace((new RegExp(`[^${trait}]+`, 'gi')), '');
+        newGenotype += traitGenes.split('').sort().join('');
+    });
+    return newGenotype;
 }
 
 function breedDragons(genotype1, genotype2, offspringCount) {
@@ -143,10 +145,32 @@ function breedDragons(genotype1, genotype2, offspringCount) {
         } else {
             genotype += 'XX';
         }
-        offspring.push(genotype);
+        offspring.push(formatGenotype(genotype));
     }
 
     return offspring;
+}
+
+function compareGenotypes(genotype1, genotype2) {
+    genotype1 = formatGenotype(genotype1);
+    genotype2 = formatGenotype(genotype2);
+
+    let traits = ['h','s','w','t','c','p'];
+
+    differenceScore = 0;
+    traits.forEach((trait) => {
+        let traitGenes1 = genotype1.replace((new RegExp(`[^${trait}]+`, 'gi')), '');
+        let traitGenes2 = genotype2.replace((new RegExp(`[^${trait}]+`, 'gi')), '');
+
+        if (!(traitGenes1 === traitGenes2 || (traitGenes1.toLowerCase() !== traitGenes1 && traitGenes2.toLowerCase() !== traitGenes2))) {
+            if (traitGenes1[0] !== traitGenes2[0]) differenceScore++;
+            if (traitGenes1[1] !== traitGenes2[1]) differenceScore++;
+        }
+    });
+    
+    if (genotype1[genotype1.length - 1] !== genotype2[genotype2.length - 1]) differenceScore++;
+
+    return differenceScore;
 }
 
 function getRandomGenotype(traits) {
@@ -177,12 +201,12 @@ function getRandomGenotype(traits) {
 }
 
 function randomDragon(dragon, setChromosomes) {
-    let genotype = getRandomGenotype()
+    let genotype = getRandomGenotype();
     setDragon(dragon, genotype);
     if (setChromosomes !== false) {
         setChromosome(dragon, genotype)
     }
-    return genotype;
+    return formatGenotype(genotype);
 }
 
 function setupGeneListener(dragon) {
@@ -232,7 +256,7 @@ function getChromosome(dragon) {
     traits.forEach((t) => {
         genotype += $(`#c${dragon}-gene-label-${t}`).innerHTML;
     });
-    return genotype; //formatGenotype(genotype);
+    return formatGenotype(genotype);
 }
 
 function setChromosome(dragon, genotype) {

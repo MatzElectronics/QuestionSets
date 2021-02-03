@@ -15,7 +15,7 @@
 
         body {
             padding: 50px;
-            background: url('polyBkgPurple.svg');
+            background: url('polyBkgGreen.svg');
             background-size: cover;
         }
 
@@ -225,8 +225,8 @@
                 if (g_types === 2) break;
             }
 
-            dragons.gender.set(1, 'xy');
-            dragons.gender.set(2, 'xx');
+            setDragon(1, 'xy');
+            setDragon(2, 'xx');
 
             let pStr = `The male dragon at the top is <em>${genotypes[0][0] === genotypes[0][1] ? 'homozygous ' + (genotypes[0].toLowerCase() === genotypes[0] ? 'recessive' : 'dominant') : 'heterozygous'}</em> for <b>${d_trait[0]}</b> (${genotypes[0]}).<br>`;
             pStr += `The female dragon on the left is <em>${genotypes[1][0] === genotypes[1][1] ? 'homozygous ' + (genotypes[1].toLowerCase() === genotypes[1] ? 'recessive' : 'dominant') : 'heterozygous'}</em> for <b>${d_trait[0]}</b> (${genotypes[1]}).<br>`;
@@ -236,7 +236,7 @@
                 pStr += `<br>${d_trait[0][0].toUpperCase() + d_trait[0].substring(1)} on a dragon are a recessive trait, and will only show up when both of the dragon&apos;s alleles for ${d_trait[0].toLowerCase()} are recessive (${d_trait[1] + d_trait[1]}).`;
             }
             pStr += `<hr>`;
-            
+
             return {
                 problem: pStr,
                 answerNumber: genotypes,
@@ -250,7 +250,7 @@
     <table class="main-table" border="0">
         <tr>
             <td>
-                <h3>Punnet Square practice problems</h3>
+                <h3>Punnett Square practice problems</h3>
                 <hr>
                 <div id="question"></div><br>
                 <table style="border:0">

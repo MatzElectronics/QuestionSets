@@ -1,0 +1,252 @@
+<html>
+
+<head>
+    <title>Chromosome Genes practice</title>
+    <script src="common_utils.js"></script>
+
+    <link href="dragons.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css?family=Roboto');
+
+        * {
+            font-family: 'Roboto', sans-serif;
+            box-sizing: border-box;
+        }
+
+        body {
+            padding: 50px;
+            background: url('polyBkgBlue.svg');
+            background-size: cover;
+        }
+
+        .main-table {
+            padding: 20px;
+            background: #fff;
+            border-radius: 5px;
+        }
+
+        h1 {
+            margin: 0px 40px 0px 40px;
+            color: #ddd;
+            font-size: 1.8em;
+            text-align: center;
+        }
+
+        button {
+            display: inline-block;
+            padding: 6px 12px;
+            margin-bottom: 0;
+            font-size: 12px !important;
+            font-weight: 400;
+            line-height: 17px;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: middle;
+            -ms-touch-action: manipulation;
+            touch-action: manipulation;
+            cursor: pointer;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            background-image: none;
+            border: 1px solid transparent;
+            border-radius: 4px;
+            color: #fff;
+            background-color: #337ab7;
+            border-color: #2e6da4;
+        }
+
+
+        button:focus,
+        button:hover {
+            outline: none;
+            filter: brightness(0.85);
+        }
+
+        .p-square {
+            border-collapse: collapse;
+            border: none;
+            width: 250px;
+            font-weight: 900;
+        }
+
+        .p-square td {
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        #dragon-container-2 {
+            padding-left: 90px;
+        }
+
+        .p-square input {
+            border: 1px solid #ccc;
+            font-size: 16px;
+            text-align: center;
+            height: 30px;
+            width: 40px;
+        }
+
+        .border-all {
+            border: 1px solid black;
+            width: 70px;
+            height: 70px;
+            padding: 10px;
+            background: #eee;
+        }
+
+        .border-sides {
+            padding: 0 10px;
+            width: 70px;
+            height: 50px;
+        }
+
+        .border-topbot {
+            padding: 10px;
+            width: 60px;
+            height: 70px;
+        }
+
+        .dragon-drawing {
+            height: 250px;
+        }
+
+        .no-margin {
+            margin-top: 0;
+            margin-bottom: 0;
+        }
+    </style>
+
+
+    <script>
+        function setupGeneClickers() {
+            setTimeout(() => {
+                'hswtcp'.split('').forEach((g) => {
+                    ['r', 'l'].forEach((s) => {
+                        let currentElement = `#c1-gene-${s}${g}`
+                        $(currentElement).addEventListener('click', (e) => {
+                            let clickCount = parseInt($('#click-count').innerHTML);
+                            clickCount--;
+                            $('#click-count').innerHTML = clickCount;
+
+                            if (clickCount === 0) {
+                                $('#click-count').innerHTML = '<span style="color:#b00;">Out of gene changes!!</span>';
+                                setTimeout(() => {
+                                    pSquareProblem()
+                                }, 1000);
+                            }
+                        });
+                    });
+                });
+            }, 500);
+        }
+
+        function checkAnswer() {
+            let a = compareGenotypes($('#dragon1').genes, $('#dragon2').genes);
+
+            let z = parseInt($('#score').innerHTML);
+
+            if (a === 0) {
+                z++;
+                setScore(z, 'Chromosome Genes');
+
+                $('#tryagain').innerHTML = 'Correct!';
+                setTimeout(() => {
+                    skipAnswer(false);
+                }, 500);
+
+            } else {
+                $('#tryagain').innerHTML = 'Incorrect, try again.';
+            }
+        }
+
+        function skipAnswer(clearHint) {
+            pSquareProblem();
+            if (clearHint !== false) {
+                $('#tryagain').innerHTML = '&nbsp;';
+            }
+        }
+
+        function pSquareProblem() {
+            if ($('#dragon-container-1').innerHTML === '') {
+                for (let idx = 1; idx < 3; idx++) {
+                    $('#dragon-container-' + idx).innerHTML =
+                        `<svg id="dragon${idx}" class="dragon-drawing" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3351 3794"></svg>`;
+                    drawDragon(idx);
+                }
+                $('#chromosome-container-1').innerHTML =
+                    '\n<svg id="chromosome1" class="dragon-chromosome" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 248"></svg>';
+            }
+            drawChromosome(1);
+            setupGeneListener(1);
+
+            let diffScore = 0;
+
+            while (diffScore < 3) {
+                let dragonGenes1 = randomDragon(1);
+                let dragonGenes2 = randomDragon(2, false);
+
+                diffScore = compareGenotypes(dragonGenes1, dragonGenes2);
+            }
+
+            $('#click-count').innerHTML = Math.floor(diffScore * 1.5) + 1;
+        }
+    </script>
+    <script src="dragons.js"></script>
+</head>
+
+<body>
+    <table class="main-table" border="0">
+        <tr>
+            <td>
+                <h3>Chromosome Genes Practice Problems</h3>
+                <div id="question">Click the genes on the Chromosomes to make changes. Keep making changes until your
+                    dragon has the same traits as the target dragon.</div><br>
+                <hr>
+                <table style="border:0">
+
+                    <tr>
+                        <td style="text-align: center;">
+                            <h4>Your Dragon</h4>
+                            <p id="dragon-container-1"></p>
+                        </td>
+                        <td>
+                            <h4>&nbsp;</h4>
+                            <p id="chromosome-container-1"></p>
+                        </td>
+                        <td style="text-align: center;">
+                            <h4 style="padding-left: 80px;">Target Dragon</h4>
+                            <p id="dragon-container-2"></p>
+                        </td>
+                    </tr>
+                </table>
+                <hr>
+                <p>Gene changes left: <span id="click-count">10</span></p>
+
+                <br>
+                <button id="check" onclick="checkAnswer()">check answer</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <button id="skip" onclick="skipAnswer()">skip</button>
+                <br>
+                <div id="tryagain" style="font-size:12px;color:#aa0000;">&nbsp;</div>
+                <hr>
+
+                <h2>
+                    Score: <span id="score">0
+                    </span> - <span id="codeZ">
+                    </span>
+                </h2>
+
+            </td>
+        </tr>
+    </table>
+
+    <script>
+        setScoreFromCookie('Punnett Squares', (checkScoreCookie) => {});
+        skipAnswer();
+        setupGeneClickers();
+    </script>
+
+</body>
+
+</html>
