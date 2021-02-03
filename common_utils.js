@@ -280,15 +280,17 @@ function setScore(score, activity) {
     $('#score').innerHTML = score;
     setCookie(activity + 'theScore', score.toString(10), 7);
 
-    let turnInString = `<a href="https://docs.google.com/forms/d/e/${FORM_SPREADSHEET}/viewform?usp=pp_url`;
     if (getParameter('teacher')) {
+        let turnInString = `<a href="https://docs.google.com/forms/d/e/${FORM_SPREADSHEET}/viewform?usp=pp_url`;
         turnInString += `&entry.${FORM_TEACHER_Q}=${getParameter('teacher')}`;
+        turnInString += `&entry.${FORM_SCORE_Q}=${getScoreString(score)}`;
+        turnInString += `&entry.${FORM_ACTIVITY_Q}=${activity}`;
+        turnInString += `">Turn in score</a>`;
+    
+        $('#codeZ').innerHTML = turnInString;
+    } else {
+        $('#codeZ').innerHTML = '';
     }
-    turnInString += `&entry.${FORM_SCORE_Q}=${getScoreString(score)}`;
-    turnInString += `&entry.${FORM_ACTIVITY_Q}=${activity}`;
-    turnInString += `">Turn in score</a>`;
-
-    $('#codeZ').innerHTML = turnInString;
 }
 
 function getScore() {
