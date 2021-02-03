@@ -223,6 +223,38 @@ function $(elem) {
     return document.querySelector(elem);
 }
 
+function $$(elem) {
+    return document.querySelectorAll(elem);
+}
+
+function addClass(selector, classToAdd) {
+    if (typeof selector === 'string') {
+        $$(selector).forEach((e) => {
+            e.classList.add(classToAdd);
+        });
+    } else if (selector.classList) {
+        selector.classList.add(classToAdd);
+    }
+}
+
+function removeClass(selector, classToRemove) {
+    if (typeof selector === 'string') {
+        $$(selector).forEach((e) => {
+            e.classList.remove(classToRemove);
+        });
+    } else if (selector.classList) {
+        selector.classList.remove(classToRemove);
+    }
+}
+
+function hasClass(selector, classToSearchFor) {
+    if (selector !== 'string' && selector.classList) {
+        return (selector.classList.toString().indexOf(classToSearchFor) > -1);
+    } else {
+        return ($(selector).classList.toString().indexOf(classToSearchFor) > -1);
+    }
+}
+
 function getParameter(name) {
     return (new URL(window.location.href)).searchParams.get(name);
 }

@@ -1,0 +1,143 @@
+.neutral.light {
+    fill: hsla(0, 0%, 100%, 1);
+}
+
+.neutral.medium {
+    fill: hsla(0, 0%, 20%, 1);
+}
+
+.neutral.dark {
+    fill: hsla(0, 0%, 10%, 1);
+}
+
+.blue.light {
+    fill: hsla(210, 50%, 50%, 1);
+}
+
+.blue.medium {
+    fill: hsla(210, 50%, 40%, 1);
+}
+
+.blue.dark {
+    fill: hsla(210, 50%, 25%, 1);
+}
+
+.blue.darkest {
+    fill: hsla(210, 50%, 15%, 1);
+}
+
+.green.light {
+    fill: hsla(160, 50%, 50%, 1);
+}
+
+.green.medium {
+    fill: hsla(160, 50%, 40%, 1);
+}
+
+.green.dark {
+    fill: hsla(160, 50%, 25%, 1);
+}
+
+.green.darkest {
+    fill: hsla(160, 50%, 15%, 1);
+}
+
+.red.light {
+    fill: hsla(0, 70%, 75%, 1);
+}
+
+.red.medium {
+    fill: hsla(0, 70%, 65%, 1);
+}
+
+.red.dark {
+    fill: hsla(0, 70%, 55%, 1);
+}
+
+.purple.light {
+    fill: hsla(285, 70%, 75%, 1);
+}
+
+.purple.medium {
+    fill: hsla(285, 70%, 65%, 1);
+}
+
+.purple.dark {
+    fill: hsla(285, 70%, 55%, 1);
+}
+
+.yellow.light {
+    fill: hsla(45, 75%, 90%, 1);
+}
+
+.yellow.dark {
+    fill: hsla(45, 75%, 75%, 1);
+}
+
+.clear {
+    fill: hsla(0, 0%, 0%, 0);
+}
+
+.dragon-drawing {
+    height: 125px;
+}
+
+.dragon-chromosome {
+    height: 250px;
+}
+
+.gene-small {
+    stroke-width: 5;
+}
+
+.gene-medium {
+    stroke-width: 8;
+}
+
+.gene-large {
+    stroke-width: 11;
+}
+
+.gene-giant {
+    stroke-width: 12;
+}
+
+.dominant {
+    stroke: rgba(255, 255, 255, .9);
+    cursor: pointer;
+}
+
+.recessive {
+    stroke: rgba(255, 255, 255, .5);
+    cursor: pointer;
+}
+
+.sex-chromosome-button {
+    fill: #bbb;
+    cursor: pointer;
+}
+
+.chromosome {
+    fill: hsl(330, 0%, 65%);
+    stroke: hsl(330, 0%, 35%);
+    stroke-width: 2;
+}
+
+.genotype-label,
+.phenotype-label {
+    font-family: sans-serif;
+    font-size: 11px;
+}
+
+.genotype-label {
+    font-weight: bold;
+}
+
+.dragon-chromosome>rect {
+    fill: #eee;
+    stroke: none;
+}
+
+.dragon-chromosome>text {
+    pointer-events: none;
+}
