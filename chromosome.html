@@ -112,6 +112,10 @@
             height: 250px;
         }
 
+        .dragon-chromosome {
+            height: 350px;
+        }
+
         .no-margin {
             margin-top: 0;
             margin-bottom: 0;
@@ -120,26 +124,17 @@
 
 
     <script>
-        function setupGeneClickers() {
-            setTimeout(() => {
-                'hswtcp'.split('').forEach((g) => {
-                    ['r', 'l'].forEach((s) => {
-                        let currentElement = `#c1-gene-${s}${g}`
-                        $(currentElement).addEventListener('click', (e) => {
-                            let clickCount = parseInt($('#click-count').innerHTML);
-                            clickCount--;
-                            $('#click-count').innerHTML = clickCount;
+        function geneClicker() {
+            let clickCount = parseInt($('#click-count').innerHTML);
+            clickCount--;
+            $('#click-count').innerHTML = clickCount;
 
-                            if (clickCount === 0) {
-                                $('#click-count').innerHTML = '<span style="color:#b00;">Out of gene changes!!</span>';
-                                setTimeout(() => {
-                                    pSquareProblem()
-                                }, 1000);
-                            }
-                        });
-                    });
-                });
-            }, 500);
+            if (clickCount === 0) {
+                $('#click-count').innerHTML = '<span style="color:#b00;">Out of gene changes!!</span>';
+                setTimeout(() => {
+                    pSquareProblem()
+                }, 1000);
+            }
         }
 
         function checkAnswer() {
@@ -153,11 +148,14 @@
 
                 $('#tryagain').innerHTML = 'Correct!';
                 setTimeout(() => {
-                    skipAnswer(false);
-                }, 500);
+                    skipAnswer();
+                }, 1000);
 
             } else {
                 $('#tryagain').innerHTML = 'Incorrect, try again.';
+                setTimeout(() => {
+                    $('#tryagain').innerHTML = 'Incorrect, try again.';
+                }, 2500);
             }
         }
 
@@ -177,9 +175,9 @@
                 }
                 $('#chromosome-container-1').innerHTML =
                     '\n<svg id="chromosome1" class="dragon-chromosome" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 248"></svg>';
+                drawChromosome(1);
+                setupGeneListener(1, geneClicker);
             }
-            drawChromosome(1);
-            setupGeneListener(1);
 
             let diffScore = 0;
 
@@ -244,7 +242,6 @@
     <script>
         setScoreFromCookie('Punnett Squares', (checkScoreCookie) => {});
         skipAnswer();
-        setupGeneClickers();
     </script>
 
 </body>

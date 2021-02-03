@@ -167,7 +167,7 @@ function compareGenotypes(genotype1, genotype2) {
             if (traitGenes1[1] !== traitGenes2[1]) differenceScore++;
         }
     });
-    
+
     if (genotype1[genotype1.length - 1] !== genotype2[genotype2.length - 1]) differenceScore++;
 
     return differenceScore;
@@ -209,7 +209,7 @@ function randomDragon(dragon, setChromosomes) {
     return formatGenotype(genotype);
 }
 
-function setupGeneListener(dragon) {
+function setupGeneListener(dragon, callback) {
     setTimeout(() => {
         'hswtcp'.split('').forEach((g) => {
             ['r', 'l'].forEach((s) => {
@@ -229,6 +229,9 @@ function setupGeneListener(dragon) {
                     genotypeElement.innerHTML = currentText.join('');
 
                     setDragon(dragon, getChromosome(dragon));
+                    if (callback) {
+                        callback();
+                    }
                     return getChromosome(dragon);
                 });
             });
@@ -245,6 +248,9 @@ function setupGeneListener(dragon) {
             }
 
             setDragon(dragon, getChromosome(dragon));
+            if (callback) {
+                callback();
+            }
             return getChromosome(dragon);
         });
     }, 250);

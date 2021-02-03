@@ -113,7 +113,7 @@
 }
 
 .sex-chromosome-button {
-    fill: #bbb;
+    fill: #bbb !important;
     cursor: pointer;
 }
 
