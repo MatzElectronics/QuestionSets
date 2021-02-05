@@ -109,6 +109,8 @@ function setDragon(dragon, genotype) {
 
         dragons.gender.set(dragon, genderGenes);
     }
+
+    return $(`#dragon${dragon}`).genes;
 }
 
 function formatGenotype(genotype) {
@@ -121,7 +123,7 @@ function formatGenotype(genotype) {
     return newGenotype;
 }
 
-function breedDragons(genotype1, genotype2, offspringCount) {
+function breedDragons(genotype1, genotype2, offspringCount, callback) {
     let offspring = [];
 
     let allele1 = genotype1.replace(/[^xy]+/gi, '')[1].toUpperCase();
@@ -148,7 +150,11 @@ function breedDragons(genotype1, genotype2, offspringCount) {
         offspring.push(formatGenotype(genotype));
     }
 
-    return offspring;
+    if (callback) {
+        callback(offspring);
+    } else {
+        return offspring;
+    }    
 }
 
 function compareGenotypes(genotype1, genotype2) {
