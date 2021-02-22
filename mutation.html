@@ -448,8 +448,16 @@
 
             var c = $('#protein-container').getBBox();
             $('#protein-strand').setAttribute('viewBox', `${c.x} ${c.y} ${c.width} ${c.height}`);
-            //$('#protein-strand').setAttribute('width', c.width);
-            //$('#protein-strand').setAttribute('height', c.height);
+
+            var divBoxWidth = $('.gene-container.flexible.half-size').offsetWidth - 60;
+            if (c.width > divBoxWidth) {
+                $('#protein-strand').setAttribute('width', divBoxWidth);
+            } else if (c.height > (divBoxWidth * 0.65)) {
+                $('#protein-strand').setAttribute('height', (divBoxWidth * 0.65));
+            } else {
+                $('#protein-strand').setAttribute('width', c.width);
+                $('#protein-strand').setAttribute('height', c.height);
+            }
 
             aminos.forEach((a, idx) => {
                 var e = $('#ga-' + idx);
