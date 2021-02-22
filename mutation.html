@@ -448,8 +448,8 @@
 
             var c = $('#protein-container').getBBox();
             $('#protein-strand').setAttribute('viewBox', `${c.x} ${c.y} ${c.width} ${c.height}`);
-            $('#protein-strand').setAttribute('width', c.width);
-            $('#protein-strand').setAttribute('height', c.height);
+            //$('#protein-strand').setAttribute('width', c.width);
+            //$('#protein-strand').setAttribute('height', c.height);
 
             aminos.forEach((a, idx) => {
                 var e = $('#ga-' + idx);
