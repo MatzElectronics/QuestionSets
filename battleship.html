@@ -1,0 +1,186 @@
+<html>
+<head>
+    <style>
+        @import url('https://fonts.googleapis.com/css?family=Roboto');
+
+        * {
+            font-family: 'Roboto', sans-serif;
+            box-sizing: border-box;
+        }
+
+        body {
+            padding: 50px;
+            background: url('polyBkgBlue.svg');
+            background-size: cover;
+        }
+
+        .main-table {
+            padding: 20px;
+            background: #fff;
+            border-radius: 10px;
+            width: 100%;
+        }
+
+        h1 {
+            margin: 0px 40px 0px 40px;
+            color: #ddd;
+            font-size: 1.8em;
+            text-align: center;
+        }
+
+        button {
+            display: inline-block;
+            padding: 6px 12px;
+            margin-bottom: 0;
+            font-size: 12px !important;
+            font-weight: 400;
+            line-height: 17px;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: middle;
+            -ms-touch-action: manipulation;
+            touch-action: manipulation;
+            cursor: pointer;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            background-image: none;
+            border: 1px solid transparent;
+            border-radius: 4px;
+            color: #fff;
+            background-color: #337ab7;
+            border-color: #2e6da4;
+        }
+
+        table#game-board {
+    border-collapse: collapse;
+    text-align: center;
+}
+
+table#game-board td[id] {
+    border: 1px solid black;
+    width: 50px;
+    height: 50px;
+    background-color: #ddf;
+    cursor: pointer;
+}
+    </style>
+
+    <script>
+        function $(e) {
+            return document.querySelector(e);
+        }
+
+        function $$(e) {
+            return document.querySelectorAll(e);
+        }
+
+        var gameBoard = {
+            moveCount: 100,
+
+            ship5count: 5,
+            C2: ship5,
+            D2: ship5,
+            E2: ship5,
+            F2: ship5,
+            G2: ship5,
+
+            ship4count: 4,
+            D4: ship4,
+            D5: ship4,
+            D6: ship4,
+            D7: ship4,
+
+            ship3count: 3,
+            H5: ship3,
+            I5: ship3,
+            J5: ship3,
+
+            ship2count: 2,
+            I7: ship2,
+            I8: ship2,
+        }
+        
+        function ship5() {
+            gameBoard.ship5count--;
+            if (gameBoard.ship5count == 0) {
+                $('#C2').style.backgroundColor = '#d00';
+                $('#D2').style.backgroundColor = '#d00';
+                $('#E2').style.backgroundColor = '#d00';
+                $('#F2').style.backgroundColor = '#d00';
+                $('#G2').style.backgroundColor = '#d00';
+            }
+        }
+
+        function ship4() {
+            gameBoard.ship4count--;
+            if (gameBoard.ship4count == 0) {
+                $('#D4').style.backgroundColor = '#d00';
+                $('#D5').style.backgroundColor = '#d00';
+                $('#D6').style.backgroundColor = '#d00';
+                $('#D7').style.backgroundColor = '#d00';
+            }
+        }
+
+        function ship3() {
+            gameBoard.ship3count--;
+            if (gameBoard.ship3count == 0) {
+                $('#H5').style.backgroundColor = '#d00';
+                $('#I5').style.backgroundColor = '#d00';
+                $('#J5').style.backgroundColor = '#d00';
+            }
+        }
+
+        function ship2() {
+            gameBoard.ship2count--;
+            if (gameBoard.ship2count == 0) {
+                $('#I7').style.backgroundColor = '#d00';
+                $('#I8').style.backgroundColor = '#d00';
+            }
+        }
+
+        function makeGameBoard() {
+            var letters = 'ABCDEFGHIJ';
+            $('#game-board').innerHTML = '<tr><td>&nbsp;</td><td>1<br></td><td>2<br></td><td>3<br></td><td>4<br></td><td>5<br></td><td>6<br></td><td>7<br></td><td>8<br></td><td>9<br></td><td>10<br></td></tr>';
+            for (var i = 0; i < 10; i++) {
+                var innerBoxes = '<td>' + letters[i] + '&nbsp;&nbsp;&nbsp;&nbsp;</td>';
+                for (var j = 1; j < 11; j++) {
+                    innerBoxes += '<td id="' + letters[i] + j + '" onclick="changeMe(this);"></td>'
+                }
+                $('#game-board').innerHTML += '<tr>' + innerBoxes + '</tr>';
+            }
+        }
+
+        function changeMe(e) {
+            if (e.getAttribute('onclick') !== '') {
+                if (gameBoard[e.id]) {
+                    e.style.backgroundColor = '#faa';
+                    gameBoard[e.id]();
+                } else {
+                    e.style.backgroundColor = '#fff';
+                }
+                gameBoard.moveCount--;
+                $('#moves-count').innerHTML = gameBoard.moveCount;
+                e.style.cursor = 'not-allowed';
+                e.setAttribute('onclick', '');
+            }
+        }
+    </script>
+</head>
+
+<body>
+    <table class="main-table" border="0">
+        <tr>
+            <td>
+                <h2>Battleship!&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Score:&nbsp;<span id="moves-count">100</span></h2>
+
+                <table id="game-board"></table>
+            </td>
+        </tr>
+    </table>
+    <script>
+        makeGameBoard();
+    </script>
+</body>
+</html>
