@@ -377,6 +377,25 @@
         for (let i = 0; i < candies.length; i++) {
             $('#candy-land').innerHTML += `<div class="candy-container" id="candy${i}" style="top:${candies[i].cupTop}px;left:${candies[i].cupLeft};" onclick="pickup(${i})">${candies[i].html.replace(/MVISIBLE/g, candies[i].mSide)}</div>`;
         }
+
+        function graphValues() {
+            let trialCounts = [];
+            $$('.entry').forEach((e, i)=>{
+                let theCount = parseInt(e.innerText || '0');
+                let positionText = ((100-theCount) * 2 + 60).toString();
+                trialCounts.push((i * 40 + 40).toString() + ',' + positionText);
+                $('#circ' + i).setAttribute('cy', positionText);
+            });
+            $('#gLine').setAttribute('d', 'M' + trialCounts.join(' ')); 
+        }
+
+        let entryElements = $$('.entry');
+        for (let i = 0; i < entryElements.length; i++) {
+                entryElements[i].addEventListener('blur', (event)=>{
+                    event.target.innerText = event.target.innerText.replace(/[^0-9]/g,'');
+                graphValues();
+            });
+        }
     </script>
 </body>
 
