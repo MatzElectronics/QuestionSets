@@ -4,7 +4,6 @@
     <title>Candy Flipper</title>
     <script src="common_utils.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css?family=Roboto');
 
         * {
             font-family: 'Roboto', sans-serif;
@@ -21,6 +20,10 @@
             padding: 20px;
             background: #fff;
             border-radius: 5px;
+        }
+
+        .instructions {
+            font-weight: 400;
         }
 
         button {
@@ -48,7 +51,6 @@
             border-color: #2e6da4;
         }
 
-        button:focus,
         button:hover {
             outline: none;
             filter: brightness(0.85);
@@ -127,46 +129,39 @@
         text {
             font-size: 11px;
             fill: black;
-            font-family: sans-serif;
         }
 
-        #p0,
-        #p1,
-        #p2,
-        #p3,
-        #p4,
-        #p5,
-        #p6 {
+        #p0, #p1, #p2, #p3, #p4, #p5, #p6 {
             font-size: 13px;
             fill: white;
             font-weight: bold;
-            font-family: sans-serif;
         }
 
-        #b1,
-        #b2,
-        #b3,
-        #b4,
-        #b5,
-        #b6 {
+        #b1, #b2, #b3, #b4, #b5, #b6 {
             fill: #ccc;
             stroke: none;
         }
 
-        .gLabel {
-            fill: black;
-            font-family: sans-serif;
-            font-size: 10px;
-
-        }
-
-        .gLabelItalic {
-            font-size: 13px;
-            font-weight: bold;
-        }
-
         #chart {
             text-align: center;
+        }
+
+        #cup-count {
+            width: 150px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        #land-count {
+            width: calc(100% - 150px);
+            text-align: center;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        #counts {
+            width: 100%;
         }
 
     </style>
@@ -184,20 +179,24 @@
     </script>
 </head>
 
-<body>
+<body onload="drawCandy();">
     <table border="0">
         <tr>
             <td id="main-table">
                 <div id="the-cup"></div>
                 <h3>Candy Flipper</h3>
-                <p>Click the button to dump out the candy pieces.  Click a candy piece to put it back into the cup.<br>You can type numbers into the table at the bottom of the page to record your data.</p>
-                <div id="candy-land">
-
-                </div>
-
+                <p class="instructions">Click the button to dump out the candy pieces.  Click a candy piece to put it back into the cup.<br>You can type numbers into the table at the bottom of the page to record your data.</p>
+                <div id="candy-land"></div>
+                <table id="counts">
+                    <tr style="background: hsl(225, 25%, 85%);">
+                        <td id="cup-count" style="padding: 10px;">100</td>
+                        <td id="land-count">0</td>
+                    </tr>
+                </table>
                 <div>
                     <button id="check" onclick="dumpCup()">Dump the Cup</button>
                 </div>
+                <br />
                 <div id="data">
                     <table class="data-collection">
                         <tr>
@@ -235,51 +234,32 @@
                     </table>
                 </div>
                 <div id="chart">
-<svg width="600" height="300" id="graphingBlock">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 300" version="1.1" id="graphingBlock" style="background-color:white;">
+                        <style>
+                            .gLabel {
+                                fill: #333;
+                                font-size: 10px;
+                                font-family: 'Arial', sans-serif;
+                            }
+                    
+                            .cLabel {
+                                fill: black;
+                                font-size: 12px;  
+                                font-weight: 700;          
+                                font-family: 'Arial', sans-serif;
+                            }
+                    
+                            .gLabelItalic {
+                                font-size: 13px;
+                                font-weight: bold;
+                                font-family: 'Arial', sans-serif;
+                            }
+                        </style>
                         <g>
                             <text x="-190" y="14" class="gLabel gLabelItalic" transform="rotate(-90)">Count</text>
                             <text x="260" y="294" class="gLabel gLabelItalic">Trial</text>
-                            <path d=" 
-      M40,60v200
-      m20,-200v200
-      m20,-200v200
-      m20,-200v200
-      m20,-200v200
-      m20,-200v200
-      m20,-200v200
-      m20,-200v200
-      m20,-200v200
-      m20,-200v200
-      m20,-200v200
-      m20,-200v200
-      m20,-200v200
-      m20,-200v200
-      m20,-200v200
-      m20,-200v200
-      m20,-200v200
-      m20,-200v200
-      m20,-200v200
-      m20,-200v200
-      m20,-200v200
-      m20,-200v200
-      m20,-200v200
-      m20,-200v200
-      m20,-200v200
-      M40,60h480
-      m-480,20h480
-      m-480,20h480
-      m-480,20h480
-      m-480,20h480
-      m-480,20h480
-      m-480,20h480
-      m-480,20h480
-      m-480,20h480
-      m-480,20h480
-       " stroke="#aaa" stroke-width="1" />
-                            <path d=" 
-      M40,60 40,260 520,260 M40,60 36,60 M40,100 36,100 M40,140 36,140 M40,180 36,180 M40,220 36,220 M40,260 36,260 
-      M40,260v4m40,-4v4m40,-4v4m40,-4v4m40,-4v4m40,-4v4m40,-4v4m40,-4v4m40,-4v4m40,-4v4m40,-4v4m40,-4v4m40,-4v4
-      " stroke="#000" stroke-width="1" fill="none" />
+                            <path d="M40,60v200 m20,-200v200 m20,-200v200 m20,-200v200 m20,-200v200 m20,-200v200 m20,-200v200 m20,-200v200 m20,-200v200 m20,-200v200 m20,-200v200 m20,-200v200 m20,-200v200 m20,-200v200 m20,-200v200 m20,-200v200 m20,-200v200 m20,-200v200 m20,-200v200 m20,-200v200 m20,-200v200 m20,-200v200 m20,-200v200 m20,-200v200 m20,-200v200 M40,60h480 m-480,20h480 m-480,20h480 m-480,20h480 m-480,20h480 m-480,20h480 m-480,20h480 m-480,20h480 m-480,20h480 m-480,20h480" stroke="#aaa" stroke-width="1" />
+                            <path d="M40,60 40,260 520,260 M40,60 36,60 M40,100 36,100 M40,140 36,140 M40,180 36,180 M40,220 36,220 M40,260 36,260 M40,260v4m40,-4v4m40,-4v4m40,-4v4m40,-4v4m40,-4v4m40,-4v4m40,-4v4m40,-4v4m40,-4v4m40,-4v4m40,-4v4m40,-4v4" stroke="#000" stroke-width="1" fill="none" />
                         </g>
                         <g>
                             <circle fill="#00f" cx="40" cy="60" r="6" id="circ0" />
@@ -317,22 +297,40 @@
                         <text y="279" x="434" class="gLabel">10</text>
                         <text y="279" x="474" class="gLabel">11</text>
                         <text y="279" x="514" class="gLabel">12</text>
+
+                        <text y="52" x="48" class="cLabel" id="countLabel0">100</text>
+                        <text y="252" x="88" class="cLabel" id="countLabel1">0</text>
+                        <text y="252" x="128" class="cLabel" id="countLabel2">0</text>
+                        <text y="252" x="168" class="cLabel" id="countLabel3">0</text>
+                        <text y="252" x="208" class="cLabel" id="countLabel4">0</text>
+                        <text y="252" x="248" class="cLabel" id="countLabel5">0</text>
+                        <text y="252" x="288" class="cLabel" id="countLabel6">0</text>
+                        <text y="252" x="328" class="cLabel" id="countLabel7">0</text>
+                        <text y="252" x="368" class="cLabel" id="countLabel8">0</text>
+                        <text y="252" x="408" class="cLabel" id="countLabel9">0</text>
+                        <text y="252" x="444" class="cLabel" id="countLabel10">0</text>
+                        <text y="252" x="484" class="cLabel" id="countLabel11">0</text>
+                        <text y="252" x="524" class="cLabel" id="countLabel12">0</text>
+
                     </svg>
-
-
                 </div>
+                <button onclick="makeImage();">Download as JPG</button>
             </td>
         </tr>
     </table>
 
     <script>
+        let cupCount = 100;
+
         function pickup(candyId) {
             let i = parseInt(candyId);
-            console.log($('#candy' + i));
             if (candies[i].location !== 'cup') {
                 $('#candy' + i).style.top = candies[i].cupTop + 'px';
                 $('#candy' + i).style.left = candies[i].cupLeft + 'px';
                 candies[i].location = 'cup';
+                cupCount++;
+                $('#cup-count').innerHTML = cupCount;
+                $('#land-count').innerHTML = (100 - cupCount);
             }
         }
 
@@ -344,11 +342,81 @@
                     candies[i].mSide = (Math.random() >= 0.5 ? '#fff' : 'rgba(0,0,0,0)');
                     $('#candy' + i).innerHTML = candies[i].html.replace(/MVISIBLE/g, candies[i].mSide);
                     candies[i].location = 'land';
+                    cupCount--;
                 }
+            });
+            $('#cup-count').innerHTML = cupCount;
+            $('#land-count').innerHTML = (100 - cupCount);
+        }
+
+        function graphValues() {
+            let trialCounts = [];
+            $$('.entry').forEach((e, i)=>{
+                let theCount = parseInt(e.innerText || '0');
+                let positionText = ((100-theCount) * 2 + 60);
+                trialCounts.push((i * 40 + 40).toString() + ',' + positionText.toString());
+                $('#circ' + i).setAttribute('cy', positionText.toString());
+                $('#countLabel' + i).setAttribute('y', (positionText - 8).toString());
+                $('#countLabel' + i).innerHTML = theCount.toString();
+            });
+            $('#gLine').setAttribute('d', 'M' + trialCounts.join(' ')); 
+        }
+
+        let entryElements = $$('.entry');
+        for (let i = 0; i < entryElements.length; i++) {
+                entryElements[i].addEventListener('blur', (event)=>{
+                    event.target.innerText = event.target.innerText.replace(/[^0-9]/g,'');
+                graphValues();
             });
         }
 
+        function makeImage() {
+            let svgElement = $('#graphingBlock');
+            let {
+                width,
+                height
+            } = svgElement.getBBox();
+
+            let clonedSvgElement = svgElement.cloneNode(true);
+            let outerHTML = clonedSvgElement.outerHTML,
+                blob = new Blob([outerHTML], {
+                    type: 'image/svg+xml;charset=utf-8'
+                });
+            let URL = window.URL || window.webkitURL || window;
+            let blobURL = URL.createObjectURL(blob);
+
+            console.log(blob);
+
+            let image = new Image();
+            image.onload = () => {
+
+                let canvas = document.createElement('canvas');
+                canvas.width = width;
+                canvas.height = height;
+
+                let context = canvas.getContext('2d');
+                context.drawImage(image, 0, 0, width, height);
+
+                let jpeg = canvas.toDataURL('image/jpg');
+
+                function download(href, name) {
+                    let link = document.createElement('a');
+                    link.download = name;
+                    link.style.opacity = "0";
+                    document.body.appendChild(link);
+                    link.href = href;
+                    link.click();
+                    link.remove();
+                }
+
+                download(jpeg, 'candychart.jpg');
+            };
+            image.src = blobURL;
+        }
+
         let candies = [];
+
+        function drawCandy() {
             for (let i = 0; i < 100; i++) {
                 let c = Math.floor(Math.random() * 6);
                 let o = $('#candy-land').getBoundingClientRect();
@@ -369,33 +437,13 @@
                     mSide: (Math.random() >= 0.5 ? '#fff' : 'rgba(0,0,0,0)'),
                     location: 'cup'
                 });
-
-                    //.replace(/MVISIBLE/g, '#fff');
-                //$('#candy-land').innerHTML += html_str;
             }
 
-        for (let i = 0; i < candies.length; i++) {
-            $('#candy-land').innerHTML += `<div class="candy-container" id="candy${i}" style="top:${candies[i].cupTop}px;left:${candies[i].cupLeft};" onclick="pickup(${i})">${candies[i].html.replace(/MVISIBLE/g, candies[i].mSide)}</div>`;
+            for (let i = 0; i < candies.length; i++) {
+                $('#candy-land').innerHTML += `<div class="candy-container" id="candy${i}" style="top:${candies[i].cupTop}px;left:${candies[i].cupLeft};" onclick="pickup(${i})">${candies[i].html.replace(/MVISIBLE/g, candies[i].mSide)}</div>`;
+            }
         }
 
-        function graphValues() {
-            let trialCounts = [];
-            $$('.entry').forEach((e, i)=>{
-                let theCount = parseInt(e.innerText || '0');
-                let positionText = ((100-theCount) * 2 + 60).toString();
-                trialCounts.push((i * 40 + 40).toString() + ',' + positionText);
-                $('#circ' + i).setAttribute('cy', positionText);
-            });
-            $('#gLine').setAttribute('d', 'M' + trialCounts.join(' ')); 
-        }
-
-        let entryElements = $$('.entry');
-        for (let i = 0; i < entryElements.length; i++) {
-                entryElements[i].addEventListener('blur', (event)=>{
-                    event.target.innerText = event.target.innerText.replace(/[^0-9]/g,'');
-                graphValues();
-            });
-        }
     </script>
 </body>
 

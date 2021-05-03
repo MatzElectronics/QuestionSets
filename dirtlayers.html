@@ -1,0 +1,74 @@
+<html>
+    <head>
+
+    </head>
+    <body>
+        <svg width="800" height="600" viewBox="0 0 800 600">
+            <filter id='sand1' x='0%' y='0%' width='100%' height='100%' in="BackgroundImage">
+                <feTurbulence type="fractalNoise" baseFrequency='0.03' result='noise' numOctaves="5" />
+                <feDiffuseLighting in='noise' lighting-color='white' surfaceScale='6'>
+                    <feDistantLight azimuth='45' elevation='40' />
+                </feDiffuseLighting>
+            </filter>
+            <filter id='sand2' x='0%' y='0%' width='100%' height='100%' in="BackgroundImage">
+                <feTurbulence type="fractalNoise" baseFrequency='0.07' result='noise' numOctaves="4" />
+                <feDiffuseLighting in='noise' lighting-color='white' surfaceScale='4'>
+                    <feDistantLight azimuth='90' elevation='45' />
+                </feDiffuseLighting>
+            </filter>
+            <filter id='sand3' x='0%' y='0%' width='100%' height='100%' in="BackgroundImage">
+                <feTurbulence type="fractalNoise" baseFrequency='0.1' result='noise' numOctaves="6" />
+                <feDiffuseLighting in='noise' lighting-color='white' surfaceScale='4'>
+                    <feDistantLight azimuth='15' elevation='40' />
+                </feDiffuseLighting>
+            </filter>
+            <defs>
+                <pattern id="dirt1" patternUnits="userSpaceOnUse" width="100" height="100">
+                    <rect x="0" y="0" width="100%" height="100%" filter="url(#sand1)"/>
+                    <rect x="0" y="0" width="100%" height="100%" fill="hsl(10,100%,25%)" opacity="0.4"/>
+                </pattern>
+                <pattern id="dirt2" patternUnits="userSpaceOnUse" width="100" height="100">
+                    <rect x="0" y="0" width="100%" height="100%" filter="url(#sand2)"/>
+                    <rect x="0" y="0" width="100%" height="100%" fill="hsl(10,95%,40%)" opacity="0.4"/>
+                </pattern>
+                <pattern id="dirt3" patternUnits="userSpaceOnUse" width="100" height="100">
+                    <rect x="0" y="0" width="100%" height="100%" filter="url(#sand3)"/>
+                    <rect x="0" y="0" width="100%" height="100%" fill="hsl(10,55%,65%)" opacity="0.4"/>
+                </pattern>
+                <pattern id="dirt4" patternUnits="userSpaceOnUse" width="100" height="100">
+                    <rect x="0" y="0" width="100%" height="100%" filter="url(#sand1)"/>
+                    <rect x="0" y="0" width="100%" height="100%" fill="hsl(40,100%,25%)" opacity="0.4"/>
+                </pattern>
+                <pattern id="dirt5" patternUnits="userSpaceOnUse" width="100" height="100">
+                    <rect x="0" y="0" width="100%" height="100%" filter="url(#sand2)"/>
+                    <rect x="0" y="0" width="100%" height="100%" fill="hsl(40,95%,40%)" opacity="0.4"/>
+                </pattern>
+                <pattern id="dirt6" patternUnits="userSpaceOnUse" width="100" height="100">
+                    <rect x="0" y="0" width="100%" height="100%" filter="url(#sand3)"/>
+                    <rect x="0" y="0" width="100%" height="100%" fill="hsl(40,55%,65%)" opacity="0.4"/>
+                </pattern>
+                <pattern id="dirt7" patternUnits="userSpaceOnUse" width="100" height="100">
+                    <rect x="0" y="0" width="100%" height="100%" filter="url(#sand1)"/>
+                    <rect x="0" y="0" width="100%" height="100%" fill="hsl(340,100%,25%)" opacity="0.4"/>
+                </pattern>
+                <pattern id="dirt8" patternUnits="userSpaceOnUse" width="100" height="100">
+                    <rect x="0" y="0" width="100%" height="100%" filter="url(#sand2)"/>
+                    <rect x="0" y="0" width="100%" height="100%" fill="hsl(340,95%,40%)" opacity="0.4"/>
+                </pattern>
+                <pattern id="dirt9" patternUnits="userSpaceOnUse" width="100" height="100">
+                    <rect x="0" y="0" width="100%" height="100%" filter="url(#sand3)"/>
+                    <rect x="0" y="0" width="100%" height="100%" fill="hsl(340,55%,65%)" opacity="0.4"/>
+                </pattern>
+            </defs>
+            
+            <!--<rect x="0" y="0" width="100%" height="100%" filter="url(#roughpaper)"/>  --> 
+            <path d="m0,500 40,0 70,10 70,-10 70,5 70,-5 70,7 70,-7 70,12 70,-12 70,10 70,-10 40,0" stroke="url(#dirt1)" stroke-width="100" stroke-linejoin="bevel" stroke-linecap="butt"/>
+            <path d="m0,420 40,0 70,10 70,-10 70,5 70,-5 70,7 70,-7 70,12 70,-12 70,10 70,-10 40,0" stroke="url(#dirt2)" stroke-width="100" stroke-linejoin="bevel" stroke-linecap="butt"/>
+            <path d="m0,340 40,0 70,10 70,-10 70,5 70,-5 70,7 70,-7 70,12 70,-12 70,10 70,-10 40,0" stroke="url(#dirt3)" stroke-width="100" stroke-linejoin="bevel" stroke-linecap="butt"/>
+            <path d="m0,260 40,0 70,10 70,-10 70,5 70,-5 70,7 70,-7 70,12 70,-12 70,10 70,-10 40,0" stroke="url(#dirt4)" stroke-width="100" stroke-linejoin="bevel" stroke-linecap="butt"/>
+            <path d="m0,180 40,0 70,10 70,-10 70,5 70,-5 70,7 70,-7 70,12 70,-12 70,10 70,-10 40,0" stroke="url(#dirt5)" stroke-width="100" stroke-linejoin="bevel" stroke-linecap="butt"/>
+            <path d="m0,100 40,0 70,10 70,-10 70,5 70,-5 70,7 70,-7 70,12 70,-12 70,10 70,-10 40,0" stroke="url(#dirt6)" stroke-width="100" stroke-linejoin="bevel" stroke-linecap="butt"/>
+            <path d="m0,020 40,0 70,10 70,-10 70,5 70,-5 70,7 70,-7 70,12 70,-12 70,10 70,-10 40,0" stroke="url(#dirt7)" stroke-width="100" stroke-linejoin="bevel" stroke-linecap="butt"/>
+        </svg>
+    </body>
+</html>
