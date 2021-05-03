@@ -20,6 +20,11 @@
             padding: 20px;
             background: #fff;
             border-radius: 5px;
+            border-collapse: collapse;
+        }
+
+        #main-table {
+            padding: 20px;
         }
 
         .instructions {
@@ -70,7 +75,7 @@
 
         #candy-land {
             width: 700px;
-            height: 475px;
+            height: 500px;
         }
 
         .candy-container {
@@ -92,7 +97,6 @@
 
         .data-collection {
             margin-top: 25px;
-            border-collapse: collapse;
             width: 100%;
             text-align: center;
         }
@@ -146,24 +150,39 @@
             text-align: center;
         }
 
-        #cup-count {
-            width: 150px;
+        .total-counts {
+            width: 100%;
+            padding: 5px;
+            background: hsl(225, 25%, 85%);
             text-align: center;
-            font-size: 18px;
+            font-size: 12px;
+        }
+
+        .total-counts.count-cup {
+            width: 150px;
+        }
+
+        .total-counts.count-land {
+            width: calc(100% - 150px);
+        }
+
+        #cup-count {
             font-weight: 700;
+            font-size: 18px;
         }
 
         #land-count {
-            width: calc(100% - 150px);
-            text-align: center;
-            font-size: 18px;
             font-weight: 700;
+            font-size: 18px;
         }
 
         #counts {
             width: 100%;
         }
 
+        #check {
+            margin-top: 10px;
+        }
     </style>
     <script>
         let candyColors = [
@@ -188,9 +207,9 @@
                 <p class="instructions">Click the button to dump out the candy pieces.  Click a candy piece to put it back into the cup.<br>You can type numbers into the table at the bottom of the page to record your data.</p>
                 <div id="candy-land"></div>
                 <table id="counts">
-                    <tr style="background: hsl(225, 25%, 85%);">
-                        <td id="cup-count" style="padding: 10px;">100</td>
-                        <td id="land-count">0</td>
+                    <tr>
+                        <td class="total-counts count-cup">Parent Isotopes:<br><span id="cup-count">100</span></td>
+                        <td class="total-counts count-land">Daughter Isotopes:<br><span id="land-count">0</span></td>
                     </tr>
                 </table>
                 <div>
