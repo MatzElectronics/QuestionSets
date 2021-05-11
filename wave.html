@@ -151,7 +151,7 @@
         function checkAnswer() {
             var a = parseFloat($('#guessNumber').value);
             var u = $('#guessUnit').value;
-            var z = parseInt($('#score').innerHTML);
+            var z = getScore();
             if (currentProblem.type === 2 || currentProblem.type === 4) {
                 if (Math.abs(a - currentProblem.answerNumber) <= 0.3) {
                     z++;
@@ -191,7 +191,7 @@
         }
 
         function mathProblem() {
-            var currentScore = parseInt($('#score').innerHTML) || 0;
+            var currentScore = getScore() || 0;
             var currentProblemType = currentScore % 5;
 
             // 0 = freq, 1 = wavelength, 2 = speed

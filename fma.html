@@ -51,7 +51,7 @@
         function checkAnswer() {
             var a = parseInt($('#guessNumber').value);
             var u = $('#guessUnit').value.replace(/&sup2;/g,'\u00b2');
-            var z = parseInt($('#score').innerHTML);
+            var z = getScore();
             if (a == currentProblem.answerNumber && u == currentProblem.answerUnit) {
                 z++;
                 setScore(z, 'Force, Mass, and Acceleration');

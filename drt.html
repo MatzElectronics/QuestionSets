@@ -48,7 +48,7 @@
         function checkAnswer() {
             var a = parseInt($('#guessNumber').value);
             var u = $('#guessUnit').value;
-            var z = parseInt($('#score').innerHTML);
+            var z = getScore();
             if (a == currentProblem.answerNumber && u == currentProblem.answerUnit) {
                 z++;
                 setScore(z, 'Distance, Rate, and Time');

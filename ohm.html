@@ -52,7 +52,7 @@
         function checkAnswer() {
             var a = parseFloat($('#guessNumber').value);
             var u = $('#guessUnit').value.replace(/&Omega;/g,'\u03A9');
-            var z = parseInt($('#score').innerHTML);
+            var z = getScore();
             if (Math.abs(a - currentProblem.answerNumber) <= 0.1 && u == currentProblem.answerUnit) {
                 z++;
                 setScore(z, 'Ohm\'s Law (Series)');

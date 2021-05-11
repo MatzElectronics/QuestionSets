@@ -140,7 +140,7 @@
         function checkAnswer() {
             let a = compareGenotypes($('#dragon1').genes, $('#dragon2').genes);
 
-            let z = parseInt($('#score').innerHTML);
+            let z = getScore();
 
             if (a === 0) {
                 z++;
