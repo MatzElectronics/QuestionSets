@@ -145,7 +145,7 @@
             let rockSVG = svgContainer[0];
             rockLayerList.forEach((i, j) => {
                 rockSVG += rockLayerSvg[i].replace(/YYY/g, (j * 70).toString());
-                $('#rock-layer-' + j).innerHTML = 'Layer ' + String.fromCharCode(i + 65);
+                $('#rock-layer-' + j).innerHTML = 'Sample ' + String.fromCharCode(i + 65);
             });
             rockSVG += svgContainer[1];
 
