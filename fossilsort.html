@@ -102,6 +102,29 @@
         #layer-jpg, #graph-jpg {
             margin-left: 90px;
         }
+
+        .fossil-label {
+            font-size: 13px;
+            font-style: italic;
+            text-align: center;
+            transform: rotate(-90deg) translate(0, -4px);
+            height: 70px;
+            max-width: 30px;
+        }
+
+        #fossil-label-table {
+            width: 350px;
+            margin: 9px 0px -6px 10px;
+            text-align: center;
+        }
+
+        .directions {
+            white-space: unset;
+        }
+
+        .directions>p {
+            max-width: 350px;
+        }
     </style>
 
 
@@ -287,7 +310,13 @@
             <td>
                 <h3>Fossil Sample Sort - Relative Dating</h3>
                 <hr>
+                
                 <table>
+                    <tr>
+                        <td colspan="2" class="directions"><p>Arrange the fossil samples by clicking the up or down arrows next to the samples. Begin with Sample B at the bottom, because Sample B sample is the oldest.</p></td>
+                        <td></td>
+                        <td class="directions"><p>Click the dots on the graph below to move them up or down.</p></td>
+                    </tr>
                     <tr>
                         <td colspan="2"><h4>Youngest</h4></td>
                         <td colspan="2"><h4>Youngest</h4></td>
@@ -314,6 +343,21 @@
                         <td id="bottom-label" colspan="2"><h4>Oldest</h4></td>
                         <td></td>
                         <td></td>
+                    </tr>
+                    <tr>
+                        <td colspan="3"></td>
+                        <td>
+                            <table id="fossil-label-table">
+                                <tr>
+                                    <td class="fossil-label">Globus<br>slimius</td>
+                                    <td class="fossil-label">Microbius<br>hairiensis</td>
+                                    <td class="fossil-label">Fungus<br>amoungius</td>
+                                    <td class="fossil-label">Circus<br>bozoensis</td>
+                                    <td class="fossil-label">Bogus<br>biggus</td>
+                                    <td class="fossil-label">Bananabana<br>bobana</td>
+                                </tr>
+                            </table>
+                        </td>
                     </tr>
                 </table>
                 <div id="question"></div><br>
