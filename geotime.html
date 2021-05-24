@@ -11,10 +11,6 @@
             font-style: normal;
         }
 
-        html {
-            /* scroll-behavior: smooth; */
-        }
-
         body {
             margin: 0;
             padding: 0;
@@ -29,7 +25,7 @@
             flex-direction: row;
             justify-content: left;
             flex-wrap: nowrap;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='491px' viewBox='0 0 375 35'%3E%3Cpath fill='none' stroke='%23fff' stroke-miterlimit='10' stroke-width='2' d='M1,1v30 m15,-20v20 m15,-20v20 m15,-20v20 m15,-20v20 m15,-20v20 m15,-20v20 m15,-20v20 m15,-20v20 m15,-20v20 m15,-20v20 m15,-20v20 m15,-20v20 m15,-20v20 m15,-20v20 m15,-20v20 m15,-20v20 m15,-20v20 m15,-20v20 m15,-20v20 m15,-20v20 m15,-20v20 m15,-20v20 m15,-20v20 m15,-20v20'/%3E%3C/svg%3E");
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='500px' viewBox='0 0 375 35'%3E%3Cpath fill='none' stroke='%23fff' stroke-miterlimit='10' stroke-width='2' d='M1,1v30 m15,-20v20 m15,-20v20 m15,-20v20 m15,-20v20 m15,-20v20 m15,-20v20 m15,-20v20 m15,-20v20 m15,-20v20 m15,-20v20 m15,-20v20 m15,-20v20 m15,-20v20 m15,-20v20 m15,-20v20 m15,-20v20 m15,-20v20 m15,-20v20 m15,-20v20 m15,-20v20 m15,-20v20 m15,-20v20 m15,-20v20 m15,-20v20'/%3E%3C/svg%3E");
             background-repeat: repeat-x;
             background-position: left bottom;
         }
@@ -47,6 +43,16 @@
             height: 70vh;
         }
 
+        .era.intro {
+            width: 998px;
+            height: 100%;
+            background-color: #000;
+            font-size: 65px;
+            color: #fff;
+            padding-top: calc(20vh - 40px);
+            text-align: center;
+        }
+        
         .era.precambrian {
             width: 4056000px;
             background-color: #a5f;
@@ -91,6 +97,9 @@
     <!--<div class="time-label" style="left:80000px">Something the size of Mars<br>hits the Earth.<br>The debris that flies off from<br>the collision becomes the Moon.</div>-->
 
     <div id="big-time-scale">
+        <div class="era intro">
+            If each pixel was 1000 years
+        </div>
         <div class="era cenozoic"></div>
         <div class="era mesozoic"></div>
         <div class="era paleozoic"></div>
@@ -124,7 +133,10 @@
         }
 
         setInterval(() => {
-            let pos = document.body.scrollLeft;
+            let pos = document.body.scrollLeft - 412;
+            if (pos < 0) {
+                pos = 0;
+            }
             pos = Math.round(pos / 10) / 100
             document.getElementById('time-years').innerHTML = pos;
         }, 100);
@@ -317,7 +329,7 @@
 
         eventData.forEach((info) => {
             document.getElementById('event-list').innerHTML += '<div class="time-label" style="left:' + (
-                4600000 - info[0]) + 'px;' + (info[2] ? ('top:' + info[2]) : '') + '">' + info[1].replace(
+                4600998 - info[0]) + 'px;' + (info[2] ? ('top:' + info[2]) : '') + '">' + info[1].replace(
                 /\[.*?\]/g, '') + '</div>';
         });
     </script>
