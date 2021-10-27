@@ -25,7 +25,7 @@
             }
 
             timerControl.current = timerControl.start;
-            timerControl.running = this.controls ? true : false;
+            timerControl.running = this.controls === false ? true : false;
             
         </script>
 
@@ -137,7 +137,7 @@
                     $('#start-stop').innerText = 'Start';
                     timerControl.running = false;
                 }
-                
+
                 $('#time-display').innerText = timeDisplay;
 
                 if (timeDisplay.length < 9) {
