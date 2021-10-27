@@ -132,6 +132,12 @@
                     timeDisplay += '.' + (pp < 10 ? '0' : '') + pp.toString(10);
                 }
 
+                if (timeDisplay === '') {
+                    timeDisplay = "Time's Up!";
+                    $('#start-stop').innerText = 'Start';
+                    timerControl.running = false;
+                }
+                
                 $('#time-display').innerText = timeDisplay;
 
                 if (timeDisplay.length < 9) {
