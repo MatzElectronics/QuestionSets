@@ -1,0 +1,155 @@
+<html>
+    <head>
+        <title>Countdown Timer / Stopwatch</title>
+        <script src="common_utils.js"></script>
+
+        <script>
+            window.timerControl = {
+                running: false,
+                direction: getParameter('d') === 'up' ? 1 : -1,
+                background: getParameter('bkg') ? getParameter('bkg').replace(/#/g,'') : 'fff',
+                color: getParameter('color') ? getParameter('color').replace(/#/g,'') : '000',
+                controls: getParameter('controls') === 'false' ? false : true,
+                start: 0,
+                current: 0,
+                running: false,
+                mark: 0
+            }
+
+            if (timerControl.direction !== 1) {
+                timerControl.start = (getParameter('t') ? parseFloat(getParameter('t')) : 5 * 60) * 1000;
+            }
+
+            if (timerControl.start === 0) {
+                timerControl.direction = 1;
+            }
+
+            timerControl.current = timerControl.start;
+            timerControl.running = this.controls ? true : false;
+            
+        </script>
+
+        <style>
+            * {
+                font-family: Arial, Helvetica, Tahoma, 'Roboto', sans-serif;
+                box-sizing: border-box;
+            }
+
+            body {
+                display: flex;
+                flex-direction: column;
+                align-content: center;
+                justify-content: center;
+                align-items: center;
+                height: 100vh;
+                overflow: hidden;
+            }
+
+            #time-display {
+                font-size: 24vw;
+            }
+
+            #time-controls {
+                display: none;
+                height: 25px;
+            }
+
+            #start-stop {
+                margin-right: 20px;
+            }
+
+            button {
+                border: 3px solid black;
+                border-radius: 18px;
+                background-color: white;
+                color: black;
+                font-family: Arial, Helvetica, Tahoma, 'Roboto', sans-serif;
+                font-size: 15px;
+                padding: 5px 10px;
+            }
+
+            button:hover {
+                font-weight: 700;
+                border-width: 5px;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="time-display">00</div>
+        <div id="time-controls">
+            <button id="start-stop">Start</button>
+            <button id="reset-timer">Reset</button>
+        </div>
+        
+        <script>
+            $('#start-stop').addEventListener('click', (event) => {
+                if (event.target.innerText === 'Start') {
+                    event.target.innerText = 'Stop';
+                    timerControl.running = true;
+                } else {
+                    event.target.innerText = 'Start';
+                    timerControl.running = false;
+                }
+            });
+
+            $('#reset-timer').addEventListener('click', () => {
+                timerControl.current = timerControl.start;
+            });
+
+            $('body').style.backgroundColor = '#' + timerControl.background;
+            $('body').style.color = '#' + timerControl.color;
+
+            $('#start-stop').style.backgroundColor = '#' + timerControl.background;
+            $('#start-stop').style.color = '#' + timerControl.color;
+            $('#start-stop').style.borderColor = '#' + timerControl.color;
+
+            $('#reset-timer').style.backgroundColor = '#' + timerControl.background;
+            $('#reset-timer').style.color = '#' + timerControl.color;
+            $('#reset-timer').style.borderColor = '#' + timerControl.color;
+
+            if (timerControl.controls) {
+                $('#time-controls').style.display = 'unset';
+            }
+
+            function updateTimer() {
+                let hh = Math.floor(timerControl.current / 3600000);
+                let mm = Math.floor(timerControl.current / 60000) % 60;
+                let ss = Math.floor(timerControl.current / 1000) % 60;
+                let pp = Math.floor(timerControl.current / 10) % 100;
+
+                let timeDisplay = '';
+
+                if (hh > 0) {
+                    timeDisplay += (hh < 10 ? '0' : '') + hh.toString(10) + ':';
+                }
+                if (mm > 0 || hh > 0) {
+                    timeDisplay += (mm < 10 ? '0' : '') + mm.toString(10) + ':';
+                }
+                if (ss > 0 || mm > 0 || hh > 0) {
+                    timeDisplay += (ss < 10 ? '0' : '') + ss.toString(10);
+                }
+                if (timerControl.direction === 1) {
+                    timeDisplay += '.' + (pp < 10 ? '0' : '') + pp.toString(10);
+                }
+
+                $('#time-display').innerText = timeDisplay;
+
+                if (timeDisplay.length < 9) {
+                    $('#time-display').style.fontSize = '23vw';
+                } else {
+                    $('#time-display').style.fontSize = (23 - (timeDisplay.length - 8) * 2.5) + 'vw';
+                }
+
+                let oldMark = timerControl.mark;
+                timerControl.mark = Date.now();
+
+                if (timerControl.running) {
+                    timerControl.current += (timerControl.mark - oldMark) * timerControl.direction;
+                }
+            }
+
+            timerControl.mark = Date.now();
+            setInterval(updateTimer, timerControl.direction === 1 ? 50 : 250);
+        </script>
+    </body>
+</html>
