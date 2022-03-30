@@ -105,7 +105,7 @@
             if (a == currentProblem.answerNumber) {
                 z++;
                 setScore(z, 'Simple Machines');
-                $('#score_qr').src = 'https://api.qrserver.com/v1/create-qr-code/?size=75x75&data=score%20is%20' + z;
+                $('#score_qr').src = 'https://api.qrserver.com/v1/create-qr-code/?size=75x75&data=Simple%20Machines%3A%20Score%20%3D%20' + z;
                 currentProblem = mathProblem();
                 $('#question').innerHTML = currentProblem.problem;
                 $('#tryagain').innerHTML = 'Correct!';
@@ -201,7 +201,7 @@
                 <button id="skip" onclick="skipAnswer()">skip</button><br><br><br>
                 <script>
                     setScoreFromCookie('Simple Machines', (checkScoreCookie) => {
-                        $('#score_qr').src = 'https://api.qrserver.com/v1/create-qr-code/?size=75x75&data=score%20is%20' + checkScoreCookie;
+                        $('#score_qr').src = 'https://api.qrserver.com/v1/create-qr-code/?size=75x75&data=Simple%20Machines%3A%20Score%20%3D%20' + checkScoreCookie;
                     });
 
                     currentProblem = mathProblem();
@@ -217,7 +217,7 @@
                             </h2>
                         </td>
                         <td>
-                            <img id="score_qr" src="https://api.qrserver.com/v1/create-qr-code/?size=75x75&data=score%20is%200"/>
+                            <img id="score_qr" src="https://api.qrserver.com/v1/create-qr-code/?size=75x75&data=Simple%20Machines%3A%20Score%20%3D%200"/>
                         </td>
                     </tr>
                 </table>
