@@ -1,0 +1,229 @@
+<html>
+
+<head>
+    <title>Simple Machines practice</title>
+    <script src="common_utils.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css?family=Roboto');
+
+        * {
+            font-family: 'Roboto', sans-serif;
+            box-sizing: border-box;
+        }
+
+        body {
+            padding: 50px;
+            background: url('polyBkgPurple.svg');
+            background-size: cover;
+        }
+
+        table {
+            padding: 20px;
+            background: #fff;
+            border-radius: 5px;
+        }
+
+        h1 {
+            margin: 0px 40px 0px 40px;
+            color: #ddd;
+            font-size: 1.8em;
+            text-align: center;
+        }
+
+        button {
+            display: inline-block;
+            padding: 6px 12px;
+            margin-bottom: 0;
+            font-size: 12px !important;
+            font-weight: 400;
+            line-height: 17px;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: middle;
+            -ms-touch-action: manipulation;
+            touch-action: manipulation;
+            cursor: pointer;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            background-image: none;
+            border: 1px solid transparent;
+            border-radius: 4px;
+            color: #fff;
+            background-color: #337ab7;
+            border-color: #2e6da4;
+        }
+
+
+        button:focus,
+        button:hover {
+            outline: none;
+            filter: brightness(0.85);
+        }
+
+    </style>
+    <script>
+        var currentProblem = {
+            problem: '',
+            answerNumber: 0,
+            answerUnit: '',
+            diagramUrl: 'images/simple-machine-lever.png'
+        }
+
+        var questionStrings = [
+            // j = friend 1 name
+            // k = friend 2 name
+            // d = output distance
+            // e = input distance
+            // w = output force
+            // f = input force
+            // m = machine name
+            // n = machine input name
+            // v = mechanical advantace
+
+            '(j) lifts a (w) pound weight up (d) feet.<br>(k) lifts it using a (m).<br><br>If the mechanical advantage of the (m) is (v), how many pounds of force does (k) have to use to lift the weight?',
+            '(j) lifts a (w) pound weight up (d) feet.<br>(k) lifts it using a (m).<br><br>If the mechanical advantage of the (m) is (v), how many feet does (k) have to move the (n) for the (m) to lift the weight?',
+            '(j) lifts a (w) pound weight up (d) feet.<br>(k) lifts it using a (m).<br><br>If (k) puts (f) pounds of force into the (n), what is the (m)&apos;s mechanical advantage?',
+            '(j) lifts a (w) pound weight up (d) feet.<br>(k) lifts it using a (m).<br><br>If (k) moves the (n) (e) feet, what is the (m)&apos;s mechanical advantage?',
+            '(j) lifts a (w) pound weight up (d) feet.<br>(k) lifts it using a (m).<br><br>If (k) puts (f) pounds of force into the (n), how far does (k) have to move the (n)?<br><span style="font-size:10px"><em>Hint: You will need to find the mechanical advantage first, then use that to find the answer.</em></span>',
+            '(j) lifts a (w) pound weight up (d) feet.<br>(k) lifts it using a (m).<br><br>If (k) moves the (n) (e) feet, how much force does (k) have to apply to the (n)?<br><span style="font-size:10px"><em>Hint: You will need to find the mechanical advantage first, then use that to find the answer.</em></span>',
+        ]
+        
+        var diagrams = [
+            // ramp
+            '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 429.2 80.1"><path fill="#4c4c4c" d="M217.5 79.8h158.7v-53Z"/><path fill="#986300" d="M376.2 79.8v-53h53v53z"/><path fill="#00f" d="m171 79.8-.1-26.4 39.7-.1v26.5z"/><path fill="#00f" fill-opacity=".1" stroke="#00f" stroke-dasharray="2.4 2.4" stroke-linecap="round" stroke-width=".8" d="M381 26.8V.4h39.7V27z"/><path fill="#986300" d="M50.3 79.8V27h52.9v53z"/><path fill="#00f" fill-opacity=".1" stroke="#00f" stroke-dasharray="2.4 2.4" stroke-linecap="round" stroke-width=".8" d="M55 27V.3l39.8.1V27z"/><path fill="#00f" d="M0 79.7V53.3h39.8l-.1 26.5z"/><path fill="#00c039" stroke="#00c13a" stroke-linecap="round" stroke-width="1.3" d="m213.9 71.8 150.7-50-1.2-3.4 10.2.5-7.8 6.5-1.2-3.5"/><path fill="red" stroke="red" stroke-linecap="round" stroke-width=".8" d="m44 79.7.3-45.5h-4l4-7.8 4 7.8h-4"/></svg>',
+
+            // 
+
+
+        ]
+
+        function checkAnswer() {
+            var a = parseInt($('#guessNumber').value);
+            var z = getScore();
+            if (a == currentProblem.answerNumber) {
+                z++;
+                setScore(z, 'Simple Machines');
+                $('#score_qr').src = 'https://api.qrserver.com/v1/create-qr-code/?size=75x75&data=score%20is%20' + z;
+                currentProblem = mathProblem();
+                $('#question').innerHTML = currentProblem.problem;
+                $('#tryagain').innerHTML = 'Correct!';
+                $('#guessNumber').value = '';
+                $('#unit').innerHTML = currentProblem.answerUnit;
+                $('#diagram').src = currentProblem.diagramUrl;
+            } else {
+                $('#tryagain').innerHTML = 'Incorrect, try again.';
+            }
+        }
+
+        function skipAnswer() {
+            $('#guessNumber').value = '';
+            currentProblem = mathProblem();
+            $('#question').innerHTML = currentProblem.problem;
+            $('#unit').innerHTML = currentProblem.answerUnit;
+            $('#diagram').src = currentProblem.diagramUrl;
+            $('#tryagain').innerHTML = '&nbsp;';
+        }
+
+        function mathProblem() {
+            // j = friend 1 name
+            // k = friend 2 name
+            // d = output distance
+            // e = input distance
+            // w = output force
+            // f = input force
+            // m = machine name
+            // n = machine input name
+            // v = mechanical advantage
+
+            let _j = randomName();
+            let _k = randomName();
+
+            let _v = Math.floor((Math.random() *  5) + 3);
+            let _d = Math.floor((Math.random() * 12) + 2);
+            let _e = _d * _v;
+            let _f = Math.floor((Math.random() * 30) + 5);
+            let _w = _f * _v;
+
+            let __m = Math.floor(Math.random() * 3);
+            let _m = ['lever', 'ramp', 'wheel and axle'][__m];
+            let _n = ['handle', 'moving the weight up the ramp', 'handle'][__m];
+            let _i = ['lever', 'ramp', 'wheel'][__m];
+
+            let _q = Math.floor(Math.random() * questionStrings.length);
+
+            let _p = questionStrings[_q]
+                .replace(/\(n\)/g, _n)
+                .replace(/\(m\)/g, _m)
+                .replace(/\(v\)/g, _v)
+                .replace(/\(j\)/g, _j)
+                .replace(/\(k\)/g, _k)
+                .replace(/\(d\)/g, _d)
+                .replace(/\(e\)/g, _e)
+                .replace(/\(w\)/g, _w)
+                .replace(/\(f\)/g, _f)
+
+            let _a = [_f, _e, _v, _v, _e, _f][_q];
+
+            let _u = ['pounds', 'feet', '', '', 'feet', 'pounds'][_q];
+
+            return {
+                problem: _p,
+                answerNumber: _a,
+                answerUnit: _u,
+                diagramUrl: 'images/simple-machine-' + _i + '.png'
+            }
+        }
+    </script>
+</head>
+
+<body>
+    <table border="0">
+        <tr>
+            <td>
+                <h3>Simple Machine practice problems</h3>
+                <table style="margin:0;padding:0;"><tr><td>Helpful formulas:
+                <td style="padding-left:25px;"><em>
+                <table style="margin:0;padding:0;">
+                    <tr><td style="text-align: right"><em>input distance</em></td><td> = </td><td><em>output distance</em> &times; <em>mechanical advantage</em></td></tr>
+                    <tr><td style="text-align: right"><em>input force</em></td><td> = </td><td><em>output force</em> &div; <em>mechanical advantage</em></td></tr>
+                    <tr><td style="text-align: right"><em>mechanical advantage</em></td><td> = </td><td><em>output force</em> &div; <em>input force</em></td></tr>
+                    <tr><td style="text-align: right"><em>mechanical advantage</em></td><td> = </td><td><em>input distance</em> &div; <em>output distance</em></td></tr>
+                </table>
+                </em></td></tr></table>
+                <hr>
+                <img id="diagram" src="images/simple-machine-lever.png" style="height:30vh;"/><hr>
+                <div id="question"></div><br>
+                <div id="tryagain" style="font-size:12px;color:#aa0000;">&nbsp;</div>
+                <input type="text" id="guessNumber" onFocus="$('#tryagain').innerHTML='&nbsp;';" />&nbsp;<span id="unit"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <button id="check" onclick="checkAnswer()">check answer</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <button id="skip" onclick="skipAnswer()">skip</button><br><br><br>
+                <script>
+                    setScoreFromCookie('Simple Machines', (checkScoreCookie) => {
+                        $('#score_qr').src = 'https://api.qrserver.com/v1/create-qr-code/?size=75x75&data=score%20is%20' + checkScoreCookie;
+                    });
+
+                    currentProblem = mathProblem();
+                    $('#unit').innerHTML = currentProblem.answerUnit;
+                    $('#question').innerHTML = currentProblem.problem;
+                    $('#diagram').src = currentProblem.diagramUrl;
+                </script>
+                <table style="margin:0;padding:0;">
+                    <tr>
+                        <td width="75%">
+                            <h2>
+                                Score: <span id="score">0</span><span style="display:none;"> - <span id="codeZ" ></span></span>
+                            </h2>
+                        </td>
+                        <td>
+                            <img id="score_qr" src="https://api.qrserver.com/v1/create-qr-code/?size=75x75&data=score%20is%200"/>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+
+</html>
