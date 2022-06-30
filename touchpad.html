@@ -1,0 +1,321 @@
+<html>
+
+<head>
+    <title>Touchpad Gesture Practice</title>
+    <style>
+        .frame {
+            position: absolute;
+            left: calc(50% - 100px);
+            top: calc(50% - 100px);
+            width: 150px;
+            height: 150px;
+            display: flex;
+            background: #aaa;
+            align-content: center;
+            align-items: center;
+            border-radius: 20px;
+            font-size: 25px;
+            color: #fff;
+            opacity: 0.5;
+            border: 2px solid black;
+        }
+
+        .active {
+            background: yellow;
+            color: black;
+            opacity: 0.7;
+            font-size: 20px;
+        }
+
+        p {
+            margin: 0 auto;
+            text-align: center;
+            width: 80%;
+            user-select: none;
+            pointer-events: none;
+        }
+
+        body {
+            height: 100%;
+            font-family: Arial, Helvetica, sans-serif;
+            touch-action: none;
+            overflow: hidden;
+            margin: 0;
+        }
+
+        html {
+            margin: 0;
+        }
+
+        .target {
+            position: absolute;
+            color: white;
+            display: flex;
+            align-content: center;
+            align-items: center;
+            font-size: 100px;
+        }
+
+        .A {
+            background: #9b9;
+            border-radius: 1vh;
+            height: 10vh;
+            width: 10vh;
+        }
+
+        .B {
+            background: #b99;
+            border-radius: 2.5vh;
+            height: 25vh;
+            width: 25vh;
+        }
+
+        .C {
+            background: #99b;
+            border-radius: 5vh;
+            height: 50vh;
+            width: 50vh;
+        }
+
+        .instructions {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            left: 0;
+            height: 65px;
+            width: 100%;
+            display: flex;
+            align-content: center;
+            align-items: center;
+            background: black;
+            color: white;
+            font-size: 18px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="target A">
+        <p>A</p>
+    </div>
+    <div class="target B">
+        <p>B</p>
+    </div>
+    <div class="target C">
+        <p>C</p>
+    </div>
+
+    <div class="frame f1">
+        <p>(A)<br>Right-click to activate me.</p>
+    </div>
+    <div class="frame f2">
+        <p>(B)<br>Right-click to activate me.</p>
+    </div>
+    <div class="frame f3">
+        <p>(C)<br>Right-click to activate me.</p>
+    </div>
+
+    <div class="instructions">
+        <p>
+            Use your laptop&apos;s trackpad to move and resize the grey boxes to cover up the A, B, and C boxes.<br>
+            <b>Click here and take a screenshot when finished.</b>
+        </p>
+    </div>
+
+    <script>
+        var node;
+        var gestureStartScale = 0;
+        var scale = 1;
+        var posX = 0;
+        var posY = 0;
+        var startX;
+        var startY;
+
+        function checkVisible(elm) {
+            var rect = elm.getBoundingClientRect();
+            var viewHeight = Math.max(document.documentElement.clientHeight, window.innerHeight);
+            return !(rect.bottom < 0 || rect.top - viewHeight >= 0);
+        }
+
+        function collision($div1, $div2) {
+            var x1 = $div1.getBoundingClientRect().left;
+            var y1 = $div1.getBoundingClientRect().top;
+            var h1 = $div1.getBoundingClientRect().height;
+            var w1 = $div1.getBoundingClientRect().width;
+            var b1 = y1 + h1;
+            var r1 = x1 + w1;
+            var x2 = $div2.getBoundingClientRect().left;
+            var y2 = $div2.getBoundingClientRect().top;
+            var h2 = $div2.getBoundingClientRect().height;
+            var w2 = $div2.getBoundingClientRect().width;
+            var b2 = y2 + h2;
+            var r2 = x2 + w2;
+
+            if (b1 < y2 || y1 > b2 || r1 < x2 || x1 > r2) return false;
+            return true;
+        }
+
+        $('.C').style.top = (Math.random() * 40 + 2) + 'vh';
+        $('.C').style.left = (Math.random() * 48 + 2) + 'vw';
+
+        while (true) {
+            $('.B').style.top = (Math.random() * 65 + 2) + 'vh';
+            $('.B').style.left = (Math.random() * 73 + 2) + 'vw';
+
+            if (!collision($('.B'), $('.C'))) break;
+        }
+
+        while (true) {
+            $('.A').style.top = (Math.random() * 80 + 2) + 'vh';
+            $('.A').style.left = (Math.random() * 88 + 2) + 'vw';
+
+            if (!collision($('.A'), $('.C')) && !collision($('.A'), $('.B'))) break;
+        }
+
+        let pw = window.innerWidth - 170;
+        let ph = window.innerHeight - 250;
+
+        while (true) {
+            let fx = Math.random() * pw + 30 - pw / 2;
+            let fy = Math.random() * ph - 32 - ph / 2;
+            $('.f1').style.transform = `translate3D(${fx}px, ${fy}px, 0px) scale(1)`;
+            $('.f1').user_posX = fx;
+            $('.f1').user_posY = fy;
+
+            if (!collision($('.f1'), $('.C')) && !collision($('.f1'), $('.B')) && !collision($('.f1'), $('.A'))) break;
+        }
+
+        while (true) {
+            let fx = Math.random() * pw + 30 - pw / 2;
+            let fy = Math.random() * ph - 32 - ph / 2;
+            $('.f2').style.transform = `translate3D(${fx}px, ${fy}px, 0px) scale(1)`;
+            $('.f2').user_posX = fx;
+            $('.f2').user_posY = fy;
+
+            if (!collision($('.f2'), $('.C')) && !collision($('.f2'), $('.B')) && !collision($('.f2'), $('.A')) && !collision($('.f2'), $('.f1'))) break;
+        }
+
+        while (true) {
+            let fx = Math.random() * pw + 30 - pw / 2;
+            let fy = Math.random() * ph - 32 - ph / 2;
+            $('.f3').style.transform = `translate3D(${fx}px, ${fy}px, 0px) scale(1)`;
+            $('.f3').user_posX = fx;
+            $('.f3').user_posY = fy;
+
+            if (!collision($('.f3'), $('.C')) && !collision($('.f3'), $('.B')) && !collision($('.f3'), $('.A')) && !collision($('.f3'), $('.f1')) && !collision($('.f2'), $('.f3'))) break;
+        }
+
+        function $(e_str) {
+            return document.querySelector(e_str);
+        }
+
+        var node = null; //$('.frame.f1')
+
+        var render = () => {
+
+            window.requestAnimationFrame(() => {
+                if (node) {
+                    var val = `translate3D(${posX}px, ${posY}px, 0px) scale(${scale})`
+                    node.style.transform = val
+                    node.user_posX = posX;
+                    node.user_posY = posY;
+                    node.user_gest = gestureStartScale;
+                    node.user_scale = scale;
+                }
+            })
+
+        }
+
+        function clearAll() {
+            $('.f1').innerHTML = '<p>(A)<br>Right-click to activate me.</p>';
+            $('.f2').innerHTML = '<p>(B)<br>Right-click to activate me.</p>';
+            $('.f3').innerHTML = '<p>(C)<br>Right-click to activate me.</p>';
+            $('.f1').classList.remove('active');
+            $('.f2').classList.remove('active');
+            $('.f3').classList.remove('active');
+            node = null;
+        }
+
+        ['.f1', '.f2', '.f3'].forEach(e => {
+            $(e).addEventListener('contextmenu', evt => {
+                evt.preventDefault();
+                clearAll();
+                node = evt.target;
+                gestureStartScale = node.user_gest || 0;
+                scale = node.user_scale || 1;
+                posX = node.user_posX || 0;
+                posY = node.user_posY || 0;
+                evt.target.innerHTML = `<p>Move and resize me to cover box ${e == '.f1' ? 'A' : e == '.f2' ? 'B' : 'C'}</p>`;
+                evt.target.classList.add('active');
+            }, {
+            passive: false
+            });
+        });
+
+        $('.instructions').addEventListener('click', clearAll);
+
+        window.addEventListener('wheel', (e) => {
+            e.preventDefault();
+
+            let oldPosX = posX;
+            let oldPosY = posY;
+
+            if (e.ctrlKey) {
+                scale -= e.deltaY * 0.01;
+            } else {
+                posX -= e.deltaX * 2;
+                posY -= e.deltaY * 2;
+            }
+
+            if (window.innerWidth / 2 - Math.abs(posX) - 10 < 0) {
+                posX = oldPosX;
+            }
+            if (window.innerHeight / 2 - Math.abs(posY) - 10 < 0) {
+                posY = oldPosY;
+            }
+
+            render();
+        }, {
+            passive: false
+        });
+
+
+        window.addEventListener("gesturestart", function (e) {
+            e.preventDefault();
+            startX = e.pageX - posX;
+            startY = e.pageY - posY;
+            gestureStartScale = scale;
+        }, {
+            passive: false
+        });
+
+        window.addEventListener("gesturechange", function (e) {
+            e.preventDefault();
+
+            scale = gestureStartScale * e.scale;
+
+            let oldPosX = posX;
+            let oldPosY = posY;
+            posX = e.pageX - startX;
+            posY = e.pageY - startY;
+
+            if (window.innerWidth / 2 - Math.abs(posX) - 10 < 0) {
+                posY = oldPosY;
+            }
+            if (window.innerHeight / 2 - Math.abs(posY) - 10 < 0) {
+                posY = oldPosY;
+            }
+
+            render();
+
+        })
+
+        window.addEventListener("gestureend", function (e) {
+            e.preventDefault();
+        }, {
+            passive: false
+        });
+    </script>
+</body>
+
+</html>
