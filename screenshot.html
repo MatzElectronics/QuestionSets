@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Screenshot Practice</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    <style>
+        *, body {
+            font-family: 'Lato', sans-serif;
+        }
+
+        #sampleCanvas {
+            height: 480px;
+            width: 640px;
+        }
+
+        #imageCanvas, 
+        #frameCanvas {
+            display: none;
+        }
+
+        .image-row {
+            display: flex;
+            justify-content: space-evenly;
+            align-items: center;
+        }
+
+        h2, 
+        p {
+            text-align: center;
+        }
+
+        h2 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .mac-keys {
+            width: 20vw;
+            margin: 15px;
+        }
+
+        .results {
+            font-size: 20px;
+        }
+
+        .drop-shadow {
+            box-shadow: 4px 4px 12px 2px rgb(0 0 0 / 50%);
+            border: 1px solid white;
+        }
+
+        #image-loader {
+            display: none;
+        }
+
+        button,
+        label[for="image-loader"] {
+            display: inline-block;
+            padding: 12px 24px;
+            margin: 0;
+            font-size: 20px !important;
+            font-weight: 400;
+            line-height: 17px;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: middle;
+            -ms-touch-action: manipulation;
+            touch-action: manipulation;
+            cursor: pointer;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            background-image: none;
+            border: 1px solid transparent;
+            border-radius: 4px;
+            color: #fff;
+            background-color: #337ab7;
+            border-color: #2e6da4;
+            font-weight: 700;
+        }
+
+
+        button:focus,
+        button:hover,
+        label[for="image-loader"]:hover,
+        label[for="image-loader"]:focus {
+            outline: none;
+            filter: brightness(0.85);
+        }
+    </style>
+
+    <script src="resemble.js"></script>
+    <script src="common_utils.js"></script>
+
+
+</head>
+
+<body>
+
+    <h2>
+        Screenshot Practice
+    </h2>
+    <div class="instructions">
+        <p>
+            Use the <br>
+            <img class="mac-keys" src="https://support.apple.com/library/content/dam/edam/applecare/images/en_US/accessories/Keyboards/mac-key-combo-diagram-shift-command-4.png"/><br>
+            keys to take a capture of the area <i>just inside of</i> the box in the image below:
+        </p>
+    </div>
+    <div class="image-row">
+        <canvas id="sampleCanvas" class="drop-shadow"></canvas>
+        <canvas id="frameCanvas"></canvas>
+    </div>
+
+    <div class="instructions">
+        <p>Then, click</p>
+        <p><label for="image-loader">Upload Image</label>
+        <input type="file" id="image-loader" name="image-loader"/></p>
+        <p>to upload the screenshot you<br/>took and see how well you did!</p>
+    </div>
+
+    <canvas id="imageCanvas"></canvas>
+
+    <br/>
+
+    <div class="image-row">
+        <div id="div-select">
+            <p>Your Selection:</p>
+            <img class="drop-shadow" id="img-select"/>
+        </div>
+        <div id="div-frame">
+            <p>Target Selection:</p>
+            <img class="drop-shadow" id="img-frame"/>
+        </div>
+        <div id="div-output">
+            <p>Difference:</p>
+            <img class="drop-shadow" id="img-output"/>
+        </div>
+    </div>
+
+    <div class="results">
+        <p style="margin-top: 55px;">Your screenshot is a <b><span id="diff-value">0</span>%</b> match to the target.</p>
+        <p>
+            <span class="feedback" id="feedback-great">You did great!</span>
+            <span class="feedback" id="feedback-good">You did well!  Keep practicing to try and get even closer to the edges of the target!</span>
+            <span class="feedback" id="feedback-okay">You did okay - keep practicing to get closer to the edges of the target!</span>
+            <span class="feedback" id="feedback-poor">Make sure you selected <b>inside</b> the box<br/>and make sure that you uploaded the correct file.</span>
+        </p>
+        <p id="stars"></p>
+        <p><button id="try-again">Try another!</button></p>
+    </div>
+
+    <script>
+        let imageLoader = $('#image-loader');
+        imageLoader.addEventListener('change', handleImage, false);
+
+        $('#try-again').addEventListener('click', setupImages);
+
+        let imgCanvas = $('#imageCanvas');
+        let imgCtx = imgCanvas.getContext('2d');
+
+        let sampCanvas = $('#sampleCanvas');
+        let sampCtx = sampCanvas.getContext('2d');
+
+        let frameCanvas = $('#frameCanvas');
+        let frameCtx = frameCanvas.getContext('2d');
+
+        let file = null;
+
+        let randomBox = { left: 0, top: 0, width: 0, height: 0 };
+
+        function handleImage(e) {
+            var reader = new FileReader();
+            reader.onload = function (event) {
+                var img = new Image();
+                img.crossOrigin="anonymous";
+                img.onload = function () {
+                    let scale = 400 / img.width;
+                    let w = 400;
+                    let h = Math.floor(img.height * scale);
+                    if (img.height > (img.width * .75)) {
+                        scale = 300 / img.height;
+                        h = 300;
+                        w = Math.floor(img.width * scale);
+                    }
+                    imgCanvas.width = w // img.width;
+                    imgCanvas.height = h;
+                    imgCtx.drawImage(img, 0, 0, 400, 300);
+
+                }
+                img.src = event.target.result;
+                $('#img-select').src = event.target.result;
+            }
+            reader.readAsDataURL(e.target.files[0]);
+            file = e.target.files[0];
+
+            compareImages();
+        }
+
+        function setupImages() {
+            $('#div-frame').style.display = 'none';
+            $('#div-select').style.display = 'none';
+            $('#div-output').style.display = 'none';
+            sampCanvas.style.display = 'unset';
+
+            $('.results').style.display = 'none';
+            let feedbackElements = $$('.feedback');
+            for (let i = 0; i < feedbackElements.length; i++) {
+                feedbackElements[i].style.display = 'none';
+            };
+
+            let instructionsElements = $$('.instructions');
+            for (let i = 0; i < instructionsElements.length; i++) {
+                instructionsElements[i].style.display = 'unset';
+            };
+
+            randomBox.left = Math.floor(Math.random() * 150 + 50);
+            randomBox.top = Math.floor(Math.random() * 150 + 50);
+            randomBox.width = Math.floor(Math.random() * 240 + 200);
+            randomBox.height = Math.floor(Math.random() * 180 + 100);
+
+            let sampImg = new Image();
+            sampImg.crossOrigin="anonymous";
+            sampImg.onload = function() {
+                sampCanvas.height = 480;
+                sampCanvas.width = 640;
+
+                frameCanvas.height = randomBox.height;
+                frameCanvas.width = randomBox.width;
+
+                sampCtx.drawImage(sampImg, 0, 0, 640, 480);
+                frameCtx.drawImage(sampImg, -1 * randomBox.left, -1 * randomBox.top, 640, 480);
+
+                let gradient = imgCtx.createLinearGradient(randomBox.left, randomBox.top, randomBox.width, randomBox.height);
+                gradient.addColorStop("0", "#00ff00");
+                gradient.addColorStop("0.45", "#ffff00");
+                gradient.addColorStop("0.67", "#ffff00");
+                gradient.addColorStop("1.0", "red");
+
+                sampCtx.strokeStyle = 'white';
+                sampCtx.lineWidth = 6;
+                sampCtx.strokeRect(randomBox.left - 5, randomBox.top - 5, randomBox.width + 10, randomBox.height + 10);
+
+                // Fill with gradient
+                sampCtx.strokeStyle = gradient;
+                sampCtx.lineWidth = 2;
+                sampCtx.strokeRect(randomBox.left - 5, randomBox.top - 5, randomBox.width + 10, randomBox.height + 10);
+            };
+            
+            sampImg.src = 'https://loremflickr.com/640/480/' + ['city', 'cats', 'abstract', 'dogs', 'food', 'cars', 'farm'][Math.floor(Math.random() * 7)];
+        }
+
+
+        function compareImages() {
+            let diffValue = 0;
+
+            $('#img-frame').style.height = Math.floor(randomBox.height * 0.66) + 'px';
+            $('#img-select').style.height = Math.floor(randomBox.height * 0.66) + 'px';
+            $('#img-output').style.height = Math.floor(randomBox.height * 0.66) + 'px';
+
+            $('#img-frame').src = frameCanvas.toDataURL();
+            $('#div-select').style.display = 'unset';
+            $('#div-frame').style.display = 'unset';
+            $('#div-output').style.display = 'unset';
+            sampCanvas.style.display = 'none';
+
+            let instructionsElements = $$('.instructions');
+            for (let i = 0; i < instructionsElements.length; i++) {
+                instructionsElements[i].style.display = 'none';
+            };
+
+            frameCanvas.toBlob((blob1) => {
+                let file1 = new File([blob1], "startImage.png", { type: "image/png" });
+
+                resembleControl = resemble(file1)
+                    .compareTo(file)
+                    .scaleToSameSize()
+                    .ignoreAntialiasing()
+                    .outputSettings({
+                        errorType: "diffOnly"
+                    })
+                    .onComplete(data => {
+                        console.log(data);
+
+                        $('#diff-value').innerText = (100 - data.rawMisMatchPercentage).toFixed(1);
+                        $('.results').style.display = 'unset';
+
+                        if (data.rawMisMatchPercentage <= 5) {
+                            $('#feedback-great').style.display = 'unset';
+                            $('#stars').innerHTML = '\u2605 \u2605 \u2605 \u2605';
+                        } else if (data.rawMisMatchPercentage <= 10) {
+                            $('#feedback-good').style.display = 'unset';
+                            $('#stars').innerHTML = '\u2605 \u2605 \u2605 \u2606';
+                        } else if (data.rawMisMatchPercentage <= 15) {
+                            $('#feedback-okay').style.display = 'unset';
+                            $('#stars').innerHTML = '\u2605 \u2605 \u2606 \u2606';
+                        } else {
+                            $('#feedback-poor').style.display = 'unset';
+                            $('#stars').innerHTML = '\u2605 \u2606 \u2606 \u2606';
+                        }
+                        
+                        $('#img-output').src = data.getImageDataUrl();
+                    });
+
+            }, 'image/png');
+        };
+
+        setupImages();
+    </script>
+</body>
+
+</html>
