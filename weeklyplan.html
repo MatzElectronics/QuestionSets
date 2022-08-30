@@ -1,88 +1,172 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <style>
-            * {
-                font-family: LatoWeb, "Lato Extended", Lato, "Helvetica Neue", Helvetica, Arial, sans-serif;
+
+<head>
+
+    <link rel="preload" href="https://du11hjcvx0uqb.cloudfront.net/dist/fonts/lato/extended/Lato-Regular-bd03a2cc27.woff2" as="font" type="font/woff2" crossorigin="anonmyous">
+    <link rel="preload" href="https://du11hjcvx0uqb.cloudfront.net/dist/fonts/lato/extended/Lato-Bold-cccb897485.woff2" as="font" type="font/woff2" crossorigin="anonmyous">
+    <link rel="preload" href="https://du11hjcvx0uqb.cloudfront.net/dist/fonts/lato/extended/Lato-Italic-4eb103b4d1.woff2" as="font" type="font/woff2" crossorigin="anonmyous">
+    <link rel="stylesheet" media="screen" href="https://du11hjcvx0uqb.cloudfront.net/dist/brandable_css/no_variables/bundles/fonts-43e9c545fc.css" />    
+    <link rel="stylesheet" media="all" href="https://du11hjcvx0uqb.cloudfront.net/dist/brandable_css/fc5e033501f6ff789f3cf09109487f37/variables-7dd4b80918af0e0218ec0229e4bd5873.css" />
+    <link rel="stylesheet" media="all" href="https://du11hjcvx0uqb.cloudfront.net/dist/brandable_css/new_styles_normal_contrast/bundles/common-a55861f35f.css" />
+    <link rel="stylesheet" media="all" href="https://du11hjcvx0uqb.cloudfront.net/dist/brandable_css/new_styles_normal_contrast/bundles/dashboard-a1e00d4f9c.css" />
+    <link rel="stylesheet" media="all" href="https://du11hjcvx0uqb.cloudfront.net/dist/brandable_css/new_styles_normal_contrast/bundles/react_todo_sidebar-1ea6c57ca3.css" />
+    <link rel="stylesheet" media="all" href="https://du11hjcvx0uqb.cloudfront.net/dist/brandable_css/new_styles_normal_contrast/bundles/wiki_page-31f06229db.css" />
+    <link rel="stylesheet" media="all" href="https://du11hjcvx0uqb.cloudfront.net/dist/brandable_css/new_styles_normal_contrast/bundles/tinymce-59c32fac15.css" />
+    <link rel="stylesheet" media="all" href="https://du11hjcvx0uqb.cloudfront.net/dist/brandable_css/new_styles_normal_contrast/bundles/course_show-122a409de2.css" />
+    <link rel="stylesheet" media="all" href="https://du11hjcvx0uqb.cloudfront.net/dist/brandable_css/new_styles_normal_contrast/bundles/new_user_tutorials-2950c871dd.css" />
+  
+    <style>
+        * {
+            font-family: LatoWeb, "Lato Extended", Lato, "Helvetica Neue", Helvetica, Arial, sans-serif;
+        }
+
+        h3 {
+            font-weight: 400;
+            font-size: 28.8px;
+        }
+
+        .parent {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            grid-template-rows: 1fr 5fr;
+            grid-column-gap: 0px;
+            grid-row-gap: 0px;
+        }
+
+        .div1 {
+            grid-area: 1 / 1 / 2 / 6;
+        }
+
+        .div2 {
+            grid-area: 2 / 1 / 3 / 2;
+        }
+
+        .div3 {
+            grid-area: 2 / 2 / 3 / 3;
+        }
+
+        .div4 {
+            grid-area: 2 / 3 / 3 / 4;
+        }
+
+        .div5 {
+            grid-area: 2 / 4 / 3 / 5;
+        }
+
+        .div6 {
+            grid-area: 2 / 5 / 3 / 6;
+        }
+    </style>
+    <script>
+        let modulesContent = {};
+
+        function _$(e) {
+            return document.querySelector(e);
+        }
+
+        async function fetchJSON(url) {
+            const resp = await fetch(url);
+            const json = await resp.json();
+            return json;
+        }
+
+        function getCourseId() {
+            return window.location.href.replace(/^.*?courses\/([0-9]+).*?$/gm, '$1');
+        }
+
+        async function getModules() {
+            modulesContent = await fetchJSON('/api/v1/courses/' + getCourseId() + '/modules?per_page=50');
+        }
+
+        async function getModuleItems() {
+            await getModules();
+            for (let i = 0; i < modulesContent.length; i++) {
+                let mod_items = await fetchJSON(modulesContent[i].items_url);
+                modulesContent[i].items = mod_items;
+            }
+        }
+
+        async function fillSchedule() {
+            await getModuleItems();
+
+            let currentModule = 0;
+            if (window.location.href.indexOf('last=true') > -1) {
+                currentModule = modulesContent.length - 1;
             }
 
-            h3 {
-                font-weight: 400;
-                font-size: 28.8px;
-            }
+            let weekItems = modulesContent[currentModule].items;
+            let marker = 0;
+            for (let i = 0; i < weekItems.length; i++) {
+                if (weekItems[i].type === 'SubHeader') {
+                    if (weekItems[i].title.toLowerCase().indexOf('goal') > -1) {
+                        marker = 1;
+                    } else if (weekItems[i].title.toLowerCase().indexOf('monday') > -1) {
+                        marker = 2;
+                    } else if (weekItems[i].title.toLowerCase().indexOf('tuesday') > -1) {
+                        marker = 3;
+                    } else if (weekItems[i].title.toLowerCase().indexOf('wednesday') > -1) {
+                        marker = 4;
+                    } else if (weekItems[i].title.toLowerCase().indexOf('thursday') > -1) {
+                        marker = 5;
+                    } else if (weekItems[i].title.toLowerCase().indexOf('friday') > -1) {
+                        marker = 6;
+                    }
+                }
 
-.parent {
-display: grid;
-grid-template-columns: repeat(5, 1fr);
-grid-template-rows: 1fr 5fr;
-grid-column-gap: 0px;
-grid-row-gap: 0px;
-}
+                switch (marker) {
+                    case 1: // Learning Goals
+                        const pageItem = await fetchJSON(weekItems[i].url);
+                        _$('#goals').innerHTML = pageItem.body;
+                        break;
 
-.div1 { grid-area: 1 / 1 / 2 / 6; }
-.div2 { grid-area: 2 / 1 / 3 / 2; }
-.div3 { grid-area: 2 / 2 / 3 / 3; }
-.div4 { grid-area: 2 / 3 / 3 / 4; }
-.div5 { grid-area: 2 / 4 / 3 / 5; }
-.div6 { grid-area: 2 / 5 / 3 / 6; }
-        </style>
-        <script>
-            var modulesContent = {};
-
-            function $(e) {return document.querySelector(e);}
-
-            async function fetchJSON(url) {
-                const resp = await fetch(url);
-                const json = await resp.json();
-                return json;
-            }
-
-            function getCourseId() {
-                return window.location.href.replace(/^.*?courses\/([0-9]+).*?$/gm,'$1');
-            }
-
-            async function getModules() {
-                modulesContent = await fetchJSON('/api/v1/courses/' + getCourseId() + '/modules');
-            }
-            
-            async function getModuleItems() {
-                for (let i = 0; i < modulesContent.length; i++) {
-                    let mod_items = await fetchJSON(modulesContent[i].items_url);
-                    modulesContent[i].items = mod_items;
+                    case 2: // Monday
+                    case 3: // Tuesday
+                    case 3: // Wednesday
+                    case 3: // Thursday
+                    case 3: // Friday
+                        if (weekItems[i].type !== 'SubHeader') {
+                            _$('#day' + (marker - 2)).innerHTML += '<p>' + weekItems[i].title + '</p>';
+                        }
+                        break;
                 }
             }
+        }
 
-//[{"id":372046,"name":"Week 8 - Electronics Prototyping (Continued)","position":1,"unlock_at":null,"require_sequential_progress":false,"publish_final_grade":false,"prerequisite_module_ids":[],"published":true,"items_count":12,"items_url":"https://sk.instructure.com/api/v1/courses/73767/modules/372046/items"},{"id":372047,"name":"Week 7 - Basic Electronics Prototyping","position":2,"unlock_at":null,"require_sequential_progress":false,"publish_final_grade":false,"prerequisite_module_ids":[],"published":true,"items_count":15,"items_url":"https://sk.instructure.com/api/v1/courses/73767/modules/372047/items"},{"id":372048,"name":"Week 6 - Mechanisms, Structures, and Building Techniques","position":3,"unlock_at":null,"require_sequential_progress":false,"publish_final_grade":false,"prerequisite_module_ids":[],"published":true,"items_count":14,"items_url":"https://sk.instructure.com/api/v1/courses/73767/modules/372048/items"},{"id":372049,"name":"Week 5 - Design for Manufacture","position":4,"unlock_at":null,"require_sequential_progress":false,"publish_final_grade":false,"prerequisite_module_ids":[],"published":true,"items_count":13,"items_url":"https://sk.instructure.com/api/v1/courses/73767/modules/372049/items"},{"id":372050,"name":"Week 4 - Materials and Reverse Engineering","position":5,"unlock_at":null,"require_sequential_progress":false,"publish_final_grade":false,"prerequisite_module_ids":[],"published":true,"items_count":15,"items_url":"https://sk.instructure.com/api/v1/courses/73767/modules/372050/items"},{"id":372051,"name":"Week 3 - The Design Process","position":6,"unlock_at":null,"require_sequential_progress":false,"publish_final_grade":false,"prerequisite_module_ids":[],"published":true,"items_count":14,"items_url":"https://sk.instructure.com/api/v1/courses/73767/modules/372051/items"},{"id":382501,"name":"Week 2 - Simple Machines","position":7,"unlock_at":null,"require_sequential_progress":false,"publish_final_grade":false,"prerequisite_module_ids":[],"published":true,"items_count":12,"items_url":"https://sk.instructure.com/api/v1/courses/73767/modules/382501/items"},{"id":372052,"name":"Week 1 - Prototyping","position":8,"unlock_at":null,"require_sequential_progress":false,"publish_final_grade":false,"prerequisite_module_ids":[],"published":true,"items_count":14,"items_url":"https://sk.instructure.com/api/v1/courses/73767/modules/372052/items"},{"id":372053,"name":"Week 0 - Welcome and Introduction to Engineering","position":9,"unlock_at":null,"require_sequential_progress":false,"publish_final_grade":false,"prerequisite_module_ids":[],"published":true,"items_count":11,"items_url":"https://sk.instructure.com/api/v1/courses/73767/modules/372053/items"},{"id":372045,"name":"Week 9 - Servos and Motion","position":10,"unlock_at":null,"require_sequential_progress":false,"publish_final_grade":false,"prerequisite_module_ids":[],"published":false,"items_count":13,"items_url":"https://sk.instructure.com/api/v1/courses/73767/modules/372045/items"}]
+    </script>
+</head>
 
-        </script>
-    </head>
-    <body>
-        <h2>Week at a glance</h2>
-        <div class="parent">
-            <div class="div1">Plan for the week</div>
-            <div class="div2">
-                <h3>Monday</h3>
-                <p>Stuff</p>
-            </div>
-            <div class="div3">
-                <h3>Tuesday</h3>
-                <p>stuff</p>
-            </div>
-            <div class="div4">
-                <h3>Wednesday</h3>
-                <p>Stuff</p>
-            </div>
-            <div class="div5">
-                <h3>Thursday</h3>
-                <p>Stuff</p>
-            </div>
-            <div class="div6">
-                <h3>Friday</h3>
-                <p>Stuff</p>
-            </div>
-            </div>
-        <script>
+<body>
+    <h2>Week at a glance</h2>
+    <div class="parent">
+        <div class="div1">
+            <h3>Plan for the week</h3>
+            <p id="goals">stuff</p>
+        </div>
+        <div class="div2">
+            <h3>Monday</h3>
+            <p id="day0">Stuff</p>
+        </div>
+        <div class="div3">
+            <h3>Tuesday</h3>
+            <p id="day1">stuff</p>
+        </div>
+        <div class="div4">
+            <h3>Wednesday</h3>
+            <p id="day2">Stuff</p>
+        </div>
+        <div class="div5">
+            <h3>Thursday</h3>
+            <p id="day3">Stuff</p>
+        </div>
+        <div class="div6">
+            <h3>Friday</h3>
+            <p id="day4">Stuff</p>
+        </div>
+    </div>
+    <script>
+        fillSchedule();
+    </script>
+</body>
 
-        </script>
-    </body>
 </html>
