@@ -37,9 +37,9 @@
             answerUnit: ''
         }
         var questionTextStrings = [
-            '(n) measures a circuit. The current is (i) and the resistance of the light bulb is (r).<br><br>What is the battery\'s output?',  // Find V
+            '(n) measures a circuit. The current is (i) and the resistance of the light bulb is (r).<br><br>What is the battery\'s output?', // Find V
             '(n) powers their circuit with a battery that outputs (v). Then, (n) measured the current in the circuit to be (i).<br><br>What is the resistance of the light bulb?', // Find R
-            '(n) builds a circuit using a light bulb that has a resistance of (r) and a battery with an output of (v).<br><br>How much current is flowing through the circuit?'  // Find I
+            '(n) builds a circuit using a light bulb that has a resistance of (r) and a battery with an output of (v).<br><br>How much current is flowing through the circuit?' // Find I
         ]
         var questionTextUnits = [
             ['V (Volts)'],
@@ -47,11 +47,11 @@
             ['A (Amps)']
         ]
 
-        var circuitDiagramSVG = '';  // Grab from innerHTML at page load.
+        var circuitDiagramSVG = ''; // Grab from innerHTML at page load.
 
         function checkAnswer() {
             var a = parseFloat($('#guessNumber').value);
-            var u = $('#guessUnit').value.replace(/&Omega;/g,'\u03A9');
+            var u = $('#guessUnit').value.replace(/&Omega;/g, '\u03A9');
             var z = getScore();
             if (Math.abs(a - currentProblem.answerNumber) <= 0.1 && u == currentProblem.answerUnit) {
                 z++;
@@ -93,13 +93,16 @@
             var htmlString = circuitDiagramSVG;
 
             if (n !== 0) {
-                htmlString = htmlString.replace(/Voltage/g, p[0].toFixed(1) + ' ' + questionTextUnits[0][o].split(' ')[0]);
+                htmlString = htmlString.replace(/Voltage/g, p[0].toFixed(1) + ' ' + questionTextUnits[0][o].split(' ')[
+                    0]);
             }
             if (n !== 1) {
-                htmlString = htmlString.replace(/Resistance/g, p[1].toFixed(0) + ' ' + questionTextUnits[1][o].split(' ')[0]);
+                htmlString = htmlString.replace(/Resistance/g, p[1].toFixed(0) + ' ' + questionTextUnits[1][o].split(
+                    ' ')[0]);
             }
             if (n !== 2) {
-                htmlString = htmlString.replace(/Current/g, p[2].toFixed(1) + ' ' + questionTextUnits[2][o].split(' ')[0]);
+                htmlString = htmlString.replace(/Current/g, p[2].toFixed(1) + ' ' + questionTextUnits[2][o].split(' ')[
+                    0]);
             }
 
             htmlString = htmlString.replace(/Voltage/g, '???').replace(/Resistance/g, '???').replace(/Current/g, '???');
@@ -118,39 +121,51 @@
         <tr>
             <td>
                 <h3>Ohm&apos;s Law Practice Problems (Series Circuits)</h3>
-                <p>Helpful formulas:</p><p><em>
-                    Volatge = Current &times; Resistance<br>
-                    Current = Voltage &div; Resistance<br>
-                    Resistance = Voltage &div; Current</em>
-                <hr>
+                <p>Helpful formulas:</p>
+                <p><em>
+                        Volatge = Current &times; Resistance<br>
+                        Current = Voltage &div; Resistance<br>
+                        Resistance = Voltage &div; Current</em></p>
+                <hr/>
                 <h2>
                     Score: <span id="score">0
                     </span> - <span id="codeZ">
                     </span></h2>
-                <br>
+                <br/>
                 <div id="question">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="-2 -2 210 107" height="180px">
                         <g transform="translate(7 -101)">
-                          <path fill="none" stroke="#000" stroke-width="1.3" d="M40.4 179.4V203h61.4v-46.8l26-.2M40.2 136V115h84V156"/>
-                          <rect width="9.2" height="23.2" x="35.4" y="124.4" fill="#d4dcdc" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width=".8" ry="1.8"/>
-                          <rect width="19.2" height="69.2" x="30.4" y="127.4" fill="#d4dcdc" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width=".8" ry="3.4"/>
-                          <rect width="19.6" height="40.1" x="30.2" y="143.1" ry="0"/>
-                          <rect width="19.6" height="20.8" x="30.2" y="175.8" ry="4.1"/>
-                          <path fill="#d4dcdc" d="M35 187.9h10v2H35z"/>
-                          <path d="M35 134.6h10v2H35z"/>
-                          <path d="M41 130.6v10h-2v-10z"/>
-                          <path fill="#f5ef00" fill-opacity=".2" fill-rule="evenodd" stroke="#000" stroke-width=".8" d="M118 151.7l15-.2c6.7-14.6 36.4-15.5 36.7 4.3.2 19.8-29.3 19.7-36.8 5.8l-15.1.3"/>
-                          <path fill="none" stroke="#000" stroke-width=".3" d="M132.8 154.4s22.5-7.7 19.6 0c-3.7 10-3.4-5.3 0 3.6 3.5 9.5-19.7 1.2-19.7 1.2"/>
-                          <rect width="3.1" height="5" x="112.8" y="153.8" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width=".8" ry="1.1"/>
-                          <path fill="#d97b00" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width=".8" d="M114.5 150.5h18.9v12.2h-18.9z"/>
-                          <path fill="#f7f7f7" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width=".8" d="M69 115.3a14.1 13.6 0 0114.1-13.5 14.1 13.6 0 0114.2 13.5 14.1 13.6 0 01-14 13.6A14.1 13.6 0 0169 115.4"/>
-                          <path fill="#fd0707" fill-rule="evenodd" stroke="#fd0505" stroke-width=".2" d="M82.6 122.6l-3-16.2 5.3 15.1c-.2 1.8-.6 3-2.3 1.1z"/>
-                          <text x="70.9" y="139.3" font-size="10">Current</text>
-                          <path fill="none" stroke="#000" stroke-width=".3" d="M71.5 110.7l2.5 4v0M94.1 110.6l-2.3 3.8M75.8 107l1.1 3.7M89 106.9l-1.1 3.3M82.9 105.2v3.1"/>
-                          <text x="136.1" y="133.2" font-size="10">Resistance</text>
-                          <text x="-8" y="164.4" font-size="10">Voltage</text>
+                            <path fill="none" stroke="#000" stroke-width="1.3"
+                                d="M40.4 179.4V203h61.4v-46.8l26-.2M40.2 136V115h84V156" />
+                            <rect width="9.2" height="23.2" x="35.4" y="124.4" fill="#d4dcdc" stroke="#000"
+                                stroke-linecap="round" stroke-linejoin="round" stroke-width=".8" ry="1.8" />
+                            <rect width="19.2" height="69.2" x="30.4" y="127.4" fill="#d4dcdc" stroke="#000"
+                                stroke-linecap="round" stroke-linejoin="round" stroke-width=".8" ry="3.4" />
+                            <rect width="19.6" height="40.1" x="30.2" y="143.1" ry="0" />
+                            <rect width="19.6" height="20.8" x="30.2" y="175.8" ry="4.1" />
+                            <path fill="#d4dcdc" d="M35 187.9h10v2H35z" />
+                            <path d="M35 134.6h10v2H35z" />
+                            <path d="M41 130.6v10h-2v-10z" />
+                            <path fill="#f5ef00" fill-opacity=".2" fill-rule="evenodd" stroke="#000" stroke-width=".8"
+                                d="M118 151.7l15-.2c6.7-14.6 36.4-15.5 36.7 4.3.2 19.8-29.3 19.7-36.8 5.8l-15.1.3" />
+                            <path fill="none" stroke="#000" stroke-width=".3"
+                                d="M132.8 154.4s22.5-7.7 19.6 0c-3.7 10-3.4-5.3 0 3.6 3.5 9.5-19.7 1.2-19.7 1.2" />
+                            <rect width="3.1" height="5" x="112.8" y="153.8" stroke="#000" stroke-linecap="round"
+                                stroke-linejoin="round" stroke-width=".8" ry="1.1" />
+                            <path fill="#d97b00" stroke="#000" stroke-linecap="round" stroke-linejoin="round"
+                                stroke-width=".8" d="M114.5 150.5h18.9v12.2h-18.9z" />
+                            <path fill="#f7f7f7" stroke="#000" stroke-linecap="round" stroke-linejoin="round"
+                                stroke-width=".8"
+                                d="M69 115.3a14.1 13.6 0 0114.1-13.5 14.1 13.6 0 0114.2 13.5 14.1 13.6 0 01-14 13.6A14.1 13.6 0 0169 115.4" />
+                            <path fill="#fd0707" fill-rule="evenodd" stroke="#fd0505" stroke-width=".2"
+                                d="M82.6 122.6l-3-16.2 5.3 15.1c-.2 1.8-.6 3-2.3 1.1z" />
+                            <text x="70.9" y="139.3" font-size="10">Current</text>
+                            <path fill="none" stroke="#000" stroke-width=".3"
+                                d="M71.5 110.7l2.5 4v0M94.1 110.6l-2.3 3.8M75.8 107l1.1 3.7M89 106.9l-1.1 3.3M82.9 105.2v3.1" />
+                            <text x="136.1" y="133.2" font-size="10">Resistance</text>
+                            <text x="-8" y="164.4" font-size="10">Voltage</text>
                         </g>
-                      </svg>
+                    </svg>
                 </div><br>
                 <div id="tryagain" style="font-size:12px;color:#aa0000;">&nbsp;</div>
                 <input type="text" id="guessNumber" onFocus="$('#tryagain').innerHTML='&nbsp;';" />

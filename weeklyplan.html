@@ -59,10 +59,16 @@
         }
     </style>
     <script>
-        let modulesContent = {};
 
         function _$(e) {
             return document.querySelector(e);
+        }
+
+        let modulesContent = {};
+        let isEditPage = false;
+        let urlParts = window.location.href.split('/');
+        if (urlParts[urlParts.length - 1] === "edit") {
+            isEditPage = true;
         }
 
         async function fetchJSON(url) {
@@ -71,18 +77,23 @@
             return json;
         }
 
+        function getHostname() {
+            //return urlParts[0] + '//' + urlParts[2];
+            return urlParts[0] + '//sk.instructure.com';
+        }
+
         function getCourseId() {
             return window.location.href.replace(/^.*?courses\/([0-9]+).*?$/gm, '$1');
         }
 
         async function getModules() {
-            modulesContent = await fetchJSON('/api/v1/courses/' + getCourseId() + '/modules?per_page=50');
+            modulesContent = await fetchJSON(getHostname() + '/api/v1/courses/' + getCourseId() + '/modules?per_page=50');
         }
 
         async function getModuleItems() {
             await getModules();
             for (let i = 0; i < modulesContent.length; i++) {
-                let mod_items = await fetchJSON(modulesContent[i].items_url);
+                let mod_items = await fetchJSON(modulesContent[i].items_url + '?per_page=50');
                 modulesContent[i].items = mod_items;
             }
         }
@@ -91,15 +102,14 @@
             await getModuleItems();
 
             let currentModule = 0;
-            if (window.location.href.indexOf('last=true') > -1) {
-                currentModule = modulesContent.length - 1;
-            }
+            //let currentModule = modulesContent.length - 1;
 
             let weekItems = modulesContent[currentModule].items;
             let marker = 0;
+            weekContent = ['', '', '', '', '', '', '', ''];
             for (let i = 0; i < weekItems.length; i++) {
                 if (weekItems[i].type === 'SubHeader') {
-                    if (weekItems[i].title.toLowerCase().indexOf('goal') > -1) {
+                    if (weekItems[i].title.toLowerCase().indexOf('plan') > -1 && weekItems[i].title.toLowerCase().indexOf('week') > -1) {
                         marker = 1;
                     } else if (weekItems[i].title.toLowerCase().indexOf('monday') > -1) {
                         marker = 2;
@@ -114,59 +124,100 @@
                     }
                 }
 
-                switch (marker) {
-                    case 1: // Learning Goals
+                if (weekItems[i].type !== 'SubHeader') {
+                    if (marker === 1) {
                         const pageItem = await fetchJSON(weekItems[i].url);
-                        _$('#goals').innerHTML = pageItem.body;
-                        break;
-
-                    case 2: // Monday
-                    case 3: // Tuesday
-                    case 3: // Wednesday
-                    case 3: // Thursday
-                    case 3: // Friday
-                        if (weekItems[i].type !== 'SubHeader') {
-                            _$('#day' + (marker - 2)).innerHTML += '<p>' + weekItems[i].title + '</p>';
-                        }
-                        break;
+                        weekContent[0] = pageItem.body;
+                    } else {
+                        weekContent[marker - 1] += '<p style="font-size:10px;">' + weekItems[i].title + '</p>';
+                    }
+                } else if (marker > 1) {
+                    if (weekItems[i].title.toLowerCase().indexOf('day - ') > -1) {
+                        weekContent[marker - 1] += '<p><strong>' + weekItems[i].title.split(' - ')[1] + '</strong></p>';
+                    }
+                    if (weekItems[i].title.split(' - ').length > 2) {
+                        let infoTextItems = weekItems[i].title.split(' - ');
+                        infoTextItems.splice(0,2);
+                        weekContent[marker - 1] += '<p><strong><em>' + infoTextItems.join('<br>') + '</em></strong></p>';
+                    } 
                 }
             }
+
+            return `<table style="width:800px;margin:0 auto;">
+                <tr>
+                    <td style="background:#ddd;border-radius:8px;" colspan="9"><h4><strong>Learning Goals</strong></h4><div style="font-size:10pt;">${weekContent[0].replace(/<h2>.*?<\/h2>/, '')}</div></td>
+                </tr>
+                <tr style="height:0px;"><td style="height:0px" colspan="9"></td></tr>
+                <tr>
+                    <td style="width:20%;vertical-align:top;padding-right:10px;background:#eee;border-radius:8px;"><h3 style="border-bottom:1px solid #c7cdd1;width:75%;white-space:nowrap;">Monday</h3><div>${weekContent[1]}</div></td><td style="width:0;"></td>
+                    <td style="width:20%;vertical-align:top;padding-right:10px;background:#eee;border-radius:8px;"><h3 style="border-bottom:1px solid #c7cdd1;width:75%;white-space:nowrap;">Tuesday</h3><div>${weekContent[2]}</div></td><td style="width:0;"></td>
+                    <td style="width:20%;vertical-align:top;padding-right:10px;background:#eee;border-radius:8px;"><h3 style="border-bottom:1px solid #c7cdd1;width:75%;white-space:nowrap;">Wednesday</h3><div>${weekContent[3]}</div></td><td style="width:0;"></td>
+                    <td style="width:20%;vertical-align:top;padding-right:10px;background:#eee;border-radius:8px;"><h3 style="border-bottom:1px solid #c7cdd1;width:75%;white-space:nowrap;">Thursday</h3><div>${weekContent[4]}</div></td><td style="width:0;"></td>
+                    <td style="width:20%;vertical-align:top;padding-right:10px;background:#eee;border-radius:8px;"><h3 style="border-bottom:1px solid #c7cdd1;width:75%;white-space:nowrap;">Friday</h3><div>${weekContent[5]}</div></td>
+                </tr>
+            </table>`;
         }
+
+        async function buildTable() {
+            let div = document.createElement("div");
+
+            div.style.alignItems = "center";
+            div.style.position = "absolute";
+            div.style.top = "0";
+            div.style.left = "0";
+            div.style.width = "100vw";
+            div.style.height = "100vh";
+            div.style.background = "rgba(255,255,255,0.7)";
+            div.id = "week-table-box";
+
+            div.style.display = "flex";
+            div.style.justifyContent = "center";
+            div.style.outline = "none";
+            div.style.overflow = "auto";
+            div.style.zIndex = "99999";
+            let lastChild = document.body.lastChild;
+            document.body.insertBefore(div, lastChild.nextSibling);
+
+            let divBox = document.createElement('div');
+            divBox.style.border = "1px solid black";
+            divBox.style.background = "#fff";
+            divBox.style.borderRadius = "8px";
+            divBox.style.width = "50vw";
+            divBox.style.height = "20vh";
+            divBox.style.display = "flex";
+            divBox.style.alignItems = "center";
+            divBox.style.justifyContent = "center";
+            divBox.innerHTML = '<h2>Working...</h2>';
+            div.appendChild(divBox);
+
+            let weekTableContent = await fillSchedule();
+            document.querySelector('[data-btn-id="rce-edit-btn"]').click()
+
+            setTimeout(() => {
+                document.querySelector('[data-btn-id="rce-editormessage-btn"]').click();
+                setTimeout(() => {
+                    let currentHTML = document.getElementById('wiki_page_body');
+                    let newHTML = currentHTML.value.replace(/This Week:<\/h2>([\s\S]+?)\n<p.*?>&nbsp;<\/p>\n/g,`This Week:</h2>\n${weekTableContent}\n<p>&nbsp;</p>\n`);
+                    currentHTML.value = newHTML;
+                    document.getElementById('week-table-box').remove();
+                    document.querySelector('.btn.btn-primary.submit').click();
+                    console.log("done!");
+                }, 500);
+            }, 500);
+        }
+
+        if (isEditPage) {
+            buildTable();
+        } else {
+            alert('Please click the "Edit" button before running this script.');
+        }
+
 
     </script>
 </head>
 
 <body>
-    <h2>Week at a glance</h2>
-    <div class="parent">
-        <div class="div1">
-            <h3>Plan for the week</h3>
-            <p id="goals">stuff</p>
-        </div>
-        <div class="div2">
-            <h3>Monday</h3>
-            <p id="day0">Stuff</p>
-        </div>
-        <div class="div3">
-            <h3>Tuesday</h3>
-            <p id="day1">stuff</p>
-        </div>
-        <div class="div4">
-            <h3>Wednesday</h3>
-            <p id="day2">Stuff</p>
-        </div>
-        <div class="div5">
-            <h3>Thursday</h3>
-            <p id="day3">Stuff</p>
-        </div>
-        <div class="div6">
-            <h3>Friday</h3>
-            <p id="day4">Stuff</p>
-        </div>
-    </div>
-    <script>
-        fillSchedule();
-    </script>
+
 </body>
 
 </html>

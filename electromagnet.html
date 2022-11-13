@@ -1,0 +1,528 @@
+<html>
+
+<head>
+    <title>Electromagnet Simulator</title>
+    <script src="common_utils.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css?family=Roboto');
+
+        * {
+            font-family: 'Roboto', sans-serif;
+            box-sizing: border-box;
+        }
+
+        body {
+            padding: 50px;
+            background: url('polyBkgYellow.svg');
+            background-size: cover;
+        }
+
+        table {
+            padding: 20px;
+            background: #fff;
+            border-radius: 5px;
+        }
+
+        h1 {
+            margin: 0px 40px 0px 40px;
+            color: #ddd;
+            font-size: 1.8em;
+            text-align: center;
+        }
+
+        .draggable,
+        .draggable-group {
+            cursor: move;
+        }
+
+        #switch {
+            cursor: pointer;
+        }
+
+        #simulation {
+            height: calc(80vh - 150px);
+        }
+
+        .settings {
+            display: flex;
+            justify-content: space-around;
+        }
+    </style>
+    <script>
+        let magForce = 0;
+        let battCount = 1;
+        let coilCount = 5;
+        let clipDistances = [];
+        const MIN_DISTANCE = 2;
+        const CLIP_WEIGHT = 0.04; // Newtons
+        let magnetOn = false;
+
+        function makeDraggable(evt) {
+            var svg = evt.target;
+            svg.addEventListener('mousedown', startDrag);
+            svg.addEventListener('mousemove', drag);
+            svg.addEventListener('mouseup', endDrag);
+            svg.addEventListener('mouseleave', endDrag);
+            svg.addEventListener('touchstart', startDrag);
+            svg.addEventListener('touchmove', drag);
+            svg.addEventListener('touchend', endDrag);
+            svg.addEventListener('touchleave', endDrag);
+            svg.addEventListener('touchcancel', endDrag);
+
+            function getMousePosition(evt) {
+                var CTM = svg.getScreenCTM();
+                if (evt.touches) {
+                    evt = evt.touches[0];
+                }
+                return {
+                    x: (evt.clientX - CTM.e) / CTM.a,
+                    y: (evt.clientY - CTM.f) / CTM.d
+                };
+            }
+            var selectedElement, offset, transform;
+
+            function initialiseDragging(evt) {
+                offset = getMousePosition(evt);
+                // Make sure the first transform on the element is a translate transform
+                var transforms = selectedElement.transform.baseVal;
+                if (transforms.length === 0 || transforms.getItem(0).type !== SVGTransform.SVG_TRANSFORM_TRANSLATE) {
+                    // Create an transform that translates by (0, 0)
+                    var translate = svg.createSVGTransform();
+                    translate.setTranslate(0, 0);
+                    selectedElement.transform.baseVal.insertItemBefore(translate, 0);
+                }
+                // Get initial translation
+                transform = transforms.getItem(0);
+                offset.x -= transform.matrix.e;
+                offset.y -= transform.matrix.f;
+            }
+
+            function startDrag(evt) {
+                if (evt.target.classList.contains('draggable')) {
+                    selectedElement = evt.target;
+                    initialiseDragging(evt);
+                } else if (evt.target.parentNode.classList.contains('draggable-group')) {
+                    selectedElement = evt.target.parentNode;
+                    initialiseDragging(evt);
+                }
+            }
+
+            function drag(evt) {
+                if (selectedElement) {
+                    evt.preventDefault();
+                    var coord = getMousePosition(evt);
+                    transform.setTranslate(coord.x - offset.x, coord.y - offset.y);
+                    setWires();
+                    setClipDistances();
+                }
+            }
+
+            function endDrag(evt) {
+                selectedElement = false;
+            }
+        }
+
+        function setWires() {
+            $('#batt-wire').setAttribute('transform', `translate(0,${105 + 35 * battCount})`);
+
+            let wireTransform = $('#electromagnet-core').transform.baseVal[0].matrix
+            let wireX = (144 - wireTransform.e) / .6;
+            let wireY = (100.8 - wireTransform.f) / .6;
+
+            let wire0 = $('#wire-0').getAttribute('d').split(',');
+            let wire1 = $('#wire-1').getAttribute('d').split(',');
+
+            wire0[1] = `${wireX} ${wireY + 41.9 + 58.3 * battCount} ${wireX - 80} ${wireY + 41.9 + 58.3 * battCount}`;
+            wire1[1] = `${wireX} ${wireY} ${wireX - 80} ${wireY}`;
+            $('#wire-0').setAttribute('d', wire0.join(','));
+            $('#wire-1').setAttribute('d', wire1.join(','));
+        }
+
+        function setSwitch() {
+            let switchElement = $('#switch-blade');
+            let rotateText = switchElement.getAttribute('transform');
+            let switchTransforms = rotateText.substring(7, rotateText.length - 1).split(',');
+            if (switchTransforms[0] === '0') {
+                // Off
+                switchElement.setAttribute('transform', `rotate(-20,${switchTransforms[1]},${switchTransforms[2]})`);
+                magnetOn = false;
+                $$('.paperclip').forEach(e => {
+                    detachClip(e);
+                });
+            } else {
+                // On
+                switchElement.setAttribute('transform', `rotate(0,${switchTransforms[1]},${switchTransforms[2]})`);
+                magnetOn = true;
+            }
+
+            setTimeout(setClipDistances, 10);
+        }
+
+        function getPositionBox(el) {
+            let elmBox = el.getBoundingClientRect();
+            let svgBox = document.getElementById('simulation').getBoundingClientRect();
+
+            let svgViewBox = document.getElementById('simulation').getAttribute('viewBox').split(' ');
+            let svgWidth = parseFloat(svgViewBox[2]);
+            let svgHeight = parseFloat(svgViewBox[3]);
+
+            let scale = svgWidth / svgBox.width;
+
+            return {
+                x: (elmBox.x - svgBox.x) * scale,
+                y: (elmBox.y - svgBox.y) * scale,
+                width: elmBox.width * scale,
+                height: elmBox.height * scale
+            };
+        }
+
+        function getDistance(el1, el2) {
+            let pos1 = getPositionBox(el1);
+            let pos2 = getPositionBox(el2);
+
+            let x1 = pos1.x + pos1.width / 2 - pos2.x - pos2.width / 2;
+            let x2 = x1 * x1;
+            let y1 = pos1.y + pos2.height / 2 - pos2.y - pos2.height / 2;
+            let y2 = y1 * y1;
+
+            return {
+                distance: Math.sqrt(x2 + y2),
+                dx: x1,
+                dy: y1
+            };
+        }
+
+        function moveElement(el, dx, dy) {
+            let currentPos = el.getAttribute('transform').replace(/[^0-9,\.-]/g, '').split(',');
+            let x1 = parseFloat(currentPos[0] || "0");
+            let y1 = parseFloat(currentPos[1] || "0");
+
+            el.setAttribute('transform', `translate(${x1 + dx},${y1 + dy})`);
+        }
+
+        function rotateClip(el, deg) {
+            let currentRot = el.getElementsByTagName('path')[0].getAttribute('transform').replace(/[^0-9,\.-]/g, '')
+                .split(',');
+            el.getElementsByTagName('path')[0].setAttribute('transform',
+                `rotate(${deg},${currentRot[1]},${currentRot[2]})`);
+        }
+
+
+        function magStrength(distance, attachedClips) {
+            distance /= 20;
+            attachedClips *= CLIP_WEIGHT;
+            return battCount * battCount * coilCount * coilCount * 5.026548246e-7 / (distance * distance) -
+                attachedClips;
+        }
+
+        function setClipDistances() {
+            let magTarget = $('#magnet-target');
+            clipDistances = [];
+            clipCount = 0;
+            $$('.paperclip').forEach(e => {
+                let clipId = parseInt(e.id.split('-')[1]);
+                clipDistances.push({
+                    id: clipId,
+                    distance: e.attached ? MIN_DISTANCE : getDistance(e, magTarget).distance
+                });
+                clipCount += e.attached ? 1 : 0;
+            });
+            clipDistances.sort((a, b) => {
+                return a.distance - b.distance
+            });
+
+            $('#clip-count').innerHTML = clipCount;
+
+            let attachedClips = 0;
+            $$('.paperclip').forEach(e => {
+                if (e.attached) {
+                    attachedClips++;
+                }
+            });
+
+            clipDistances.forEach(c => {
+                let clipElement = $('#clip-' + c.id);
+                let dist = c.distance;
+                if (dist < MIN_DISTANCE) {
+                    dist = MIN_DISTANCE;
+                }
+                let force = magStrength(dist, attachedClips);
+                if (force > CLIP_WEIGHT && !clipElement.attached) {
+                    attachClip(clipElement);
+                    attachedClips++;
+                } else if (force < 0) {
+                    detachClip(clipElement);
+                    attachedClips--;
+                } else if (clipElement.attached) {
+                    attachClip(clipElement);
+                }
+            });
+        }
+
+        function attachClip(el) {
+            if (magnetOn) {
+                if (!el.attached) {
+                    rotateClip(el, Math.random() * 60 - 30);
+                }
+                el.attached = true;
+                let mag = $('#magnet-target')
+                let dist = getDistance(el, mag);
+                moveElement(el, -dist.dx, -dist.dy);
+            }
+        }
+
+        function detachClip(el) {
+            if (el.attached) {
+                rotateClip(el, Math.random() * 10 + 85);
+                el.attached = false;
+                let pos = el.getAttribute('transform').replace(/[^0-9,\.-]/g, '').split(',');
+                pos = parseFloat(pos[0]) + Math.random() * 10 - 5;
+                if (pos < -170) {
+                    pos = -170;
+                }
+                if (pos > 70) {
+                    pos = 70;
+                }
+                el.setAttribute('transform', `translate(${pos},${Math.random() * 10})`);
+            }
+        }
+
+
+        function setBattCount(evt) {
+            battCount = parseInt(evt.target.value);
+            if (battCount === 2) {
+                $('#batt-1').setAttribute('opacity', '1');
+                $('#batt-0').setAttribute('opacity', '0');
+            } else if (battCount === 3) {
+                $('#batt-1').setAttribute('opacity', '1');
+                $('#batt-0').setAttribute('opacity', '1');
+            } else {
+                $('#batt-1').setAttribute('opacity', '0');
+                $('#batt-0').setAttribute('opacity', '0');
+            }
+
+            setWires();
+            setTimeout(setClipDistances, 10);
+        }
+
+        function setCoilCount(evt) {
+            setCoils(evt.target.value);
+            $('#coil-count-display').innerHTML = evt.target.value;
+
+            setWires();
+            setTimeout(setClipDistances, 10);
+        }
+    </script>
+</head>
+
+<body>
+    <table border="0">
+        <tr>
+            <td>
+                <h2>Electromagnet Simulator</h2>
+                <hr />
+                <div class="settings">
+                    <div class="input-value">
+                        <label for="batt-count">Batteries:</label>
+                        <select name="batt-count" id="batt-count">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                        </select>
+                    </div>
+                    <div class="input-value">
+                        <label for="batt-count">Coil Windings:</label>
+                        <input type="range" min="1" max="200" value="5" class="slider" id="coil-count">
+                        <span id="coil-count-display">5</span>
+                    </div>
+                    <div class="input-value">
+                        Paperclips Picked Up: <span id="clip-count">0</span>
+                    </div>
+                </div>
+                <hr />
+                <br>
+
+                <div id="question">
+
+                    <svg id="simulation" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                        viewBox="0 70 310 250" onload="makeDraggable(evt);">
+                        <defs>
+                            <linearGradient id="b">
+                                <stop offset="0" stop-color="#666" />
+                                <stop offset="1" stop-color="#ccc" />
+                            </linearGradient>
+                            <linearGradient id="a">
+                                <stop offset="0" stop-color="#333" />
+                                <stop offset="1" stop-color="gray" />
+                            </linearGradient>
+                            <linearGradient xlink:href="#a" id="d" x1="79.8" x2="105.2" y1="80" y2="80"
+                                gradientUnits="userSpaceOnUse" />
+                            <linearGradient xlink:href="#b" id="c" x1="301.3" x2="397.9" y1="595.3" y2="595.3"
+                                gradientTransform="matrix(.26 0 0 .26 .5 .4)" gradientUnits="userSpaceOnUse" />
+                            <linearGradient id="ab">
+                                <stop offset="0" stop-color="#e48b00" />
+                                <stop offset="1" stop-color="#9a5d00" />
+                            </linearGradient>
+                            <linearGradient id="aa">
+                                <stop offset="0" stop-color="#333" />
+                                <stop offset="1" stop-color="#4d4d4d" />
+                            </linearGradient>
+                            <linearGradient id="ac">
+                                <stop offset="0" stop-color="#666" />
+                                <stop offset="1" stop-color="#ccc" />
+                            </linearGradient>
+                            <linearGradient xlink:href="#aa" id="d" x1="14.9" x2=".5" y1="33" y2="33.1"
+                                gradientUnits="userSpaceOnUse" />
+                            <linearGradient xlink:href="#ab" id="e" x1=".4" x2="14.8" y1="13.1" y2="13.2"
+                                gradientUnits="userSpaceOnUse" />
+                            <linearGradient xlink:href="#ac" id="f" x1="0" x2="14.9" y1="0" y2="0"
+                                gradientUnits="userSpaceOnUse" />
+                            <linearGradient xlink:href="#ac" id="g" x1="10.6" x2="4.5" y1="-2.1" y2="-2.1"
+                                gradientUnits="userSpaceOnUse" />
+                            <linearGradient xlink:href="#ac" id="h" x1="-126.2" x2="-111.1" y1="-87.2" y2="-87.2"
+                                gradientUnits="userSpaceOnUse" />
+
+                            <linearGradient xlink:href="#ab" id="be" x1="46.6" x2="55.5" y1="6.4" y2="6.4"
+                                gradientUnits="userSpaceOnUse" />
+                            <linearGradient xlink:href="#ab" id="bf" x1="77.2" x2="84.8" y1="9.8" y2="9.8"
+                                gradientUnits="userSpaceOnUse" />
+                            <linearGradient xlink:href="#aa" id="bg" x1="46.9" x2="85.2" y1="11.7" y2="11.7"
+                                gradientUnits="userSpaceOnUse" />
+                            <linearGradient xlink:href="#ab" id="bc" x1="46.9" x2="85.2" y1="11.7" y2="11.7"
+                                gradientUnits="userSpaceOnUse" />
+                            <linearGradient xlink:href="#aa" id="bd" x1="86.5" x2="91.7" y1="9.1" y2="9"
+                                gradientUnits="userSpaceOnUse" />
+                        </defs>
+                        <g id="switch" transform="translate(0,80)" stroke="#000" stroke-width=".5"
+                            onclick="setSwitch();">
+                            <rect stroke="none" fill="#fff" x="40" y="-20" width="55" height="40" />
+                            <g id="switch-blade" transform="rotate(-20,52,8)">
+                                <path fill="url(#bc)" d="M49.2 4.4v3.8L87 8l-.1-3.6Z" />
+                                <path fill="url(#bd)" d="m86.4 3.3.1 5.8 5.2-.1-.1-5.6z" />
+                            </g>
+                            <path fill="url(#be)" d="m48.1 2.9-1 6.9h7.7l-1.2-6.9z" />
+                            <path fill="url(#bf)" d="m78.1 2.9-1 6.9h7.7l-1.2-6.9z" />
+                            <path fill="url(#bg)" d="m47.2 9.8.1 3.7h37.6l-.1-3.7Z" />
+                            <path fill="#422800" d="M51 7.3c-1.5 0-1.5-2 0-2 1.4 0 1.4 2 0 2z" />
+                        </g>
+
+                        <polygon points="35,260 265,260 310,320 0,320" fill="#dcc" />
+
+                        <path id="batt-wire" transform="translate(0,210)" fill="none" stroke="#0b0"
+                            stroke-linecap="round" d="M97 20.9H36c-2.5 0-3.9-1.7-3.9-3.9v-8.6" />
+
+                        <g id="batt-0" transform="translate(24,180) scale(1,1)" opacity="0" stroke="#000"
+                            stroke-linecap="round" stroke-linejoin="round" stroke-width=".5">
+                            <path fill="url(#d)" d="M.3 5v33.3c0 5.8 14.9 5.8 14.9 0V5c.1-5.6-15 0-15 0z" />
+                            <path fill="url(#e)" d="M.3 5v13.3c0 5.6 14.8 5.6 14.9 0V5z" />
+                            <path fill="url(#f)" d="M15.3 5c0 6.4-15 6.3-15 0 0-6.1 14.9-6.2 15 0z" />
+                            <path fill="url(#g)" d="M4.8 3v2c0 2 6 2 6 0V3z" />
+                            <path fill="url(#h)" d="M10.8 3c0 2.2-6.1 2.4-6 0 0-2.4 6-2.3 6 0z" />
+                        </g>
+                        <g id="batt-1" transform="translate(24,145) scale(1,1)" opacity="0" stroke="#000"
+                            stroke-linecap="round" stroke-linejoin="round" stroke-width=".5">
+                            <path fill="url(#d)" d="M.3 5v33.3c0 5.8 14.9 5.8 14.9 0V5c.1-5.6-15 0-15 0z" />
+                            <path fill="url(#e)" d="M.3 5v13.3c0 5.6 14.8 5.6 14.9 0V5z" />
+                            <path fill="url(#f)" d="M15.3 5c0 6.4-15 6.3-15 0 0-6.1 14.9-6.2 15 0z" />
+                            <path fill="url(#g)" d="M4.8 3v2c0 2 6 2 6 0V3z" />
+                            <path fill="url(#h)" d="M10.8 3c0 2.2-6.1 2.4-6 0 0-2.4 6-2.3 6 0z" />
+                        </g>
+                        <g id="batt-2" transform="translate(24,110) scale(1,1)" stroke="#000" stroke-linecap="round"
+                            stroke-linejoin="round" stroke-width=".5">
+                            <path fill="url(#d)" d="M.3 5v33.3c0 5.8 14.9 5.8 14.9 0V5c.1-5.6-15 0-15 0z" />
+                            <path fill="url(#e)" d="M.3 5v13.3c0 5.6 14.8 5.6 14.9 0V5z" />
+                            <path fill="url(#f)" d="M15.3 5c0 6.4-15 6.3-15 0 0-6.1 14.9-6.2 15 0z" />
+                            <path fill="url(#g)" d="M4.8 3v2c0 2 6 2 6 0V3z" />
+                            <path fill="url(#h)" d="M10.8 3c0 2.2-6.1 2.4-6 0 0-2.4 6-2.3 6 0z" />
+                        </g>
+
+                        <path transform="translate(0,80)" fill="none" stroke="#0b0" stroke-linecap="round"
+                            d="M81 6.4v11c0 2.4 2 3.6 4.2 3.6l11.7-.1M51 6.4v11c0 2.4-1.6 3.6-3.8 3.6l-11.3-.1c-2.4 0-3.8 1.6-3.8 3.8v8.7" />
+
+                        <g id="clip-x"></g>
+
+                        <g transform="translate(150,50) scale(0.6)" id="electromagnet-core" class="draggable-group"
+                            stroke-linecap="round" stroke-width="1.67">
+                            <circle id="magnet-target" fill="#f00" stroke="none" cx="94" cy="231.5" r="3" />
+
+                            <path fill="none" stroke="#0b0" d="M77.5 160 C78 152.5 108.5 155 107.5 163" />
+                            <path fill="none" stroke="#0b0" d="M77.5 165 C78 157.5 108.5 160 107.5 168" />
+
+                            <path fill="url(#c)" stroke="#000" stroke-linejoin="round" stroke-width="1"
+                                d="M80 80v149.2a12.4 5 0 0 0 12.5 5 12.4 5 0 0 0 12.4-5V80Z" />
+                            <path fill="url(#d)" stroke="#000" stroke-linejoin="round" stroke-width="1"
+                                d="M105 80a12.5 5 0 0 1-12.5 5A12.5 5 0 0 1 80 80a12.5 5 0 0 1 12.5-5 12.5 5 0 0 1 12.5 5Z" />
+
+                            <path fill="none" stroke="#0b0" d="M77.5 165 C78 172.5 108.5 171 107.5 163" />
+                            <path fill="none" stroke="#0b0" d="M77.5 170 C78 177.5 108.5 176 107.5 168" />
+
+                            <path id="wire-0" fill="none" stroke="#0b0" d="M77.5 170 C77 163,-8 301.5 -88 301.5" />
+                            <path id="wire-1" fill="none" stroke="#0b0" d="M77.5 160 C77 190,-8 84.7 -88 84.7" />
+                        </g>
+
+                    </svg>
+                </div>
+
+                <script>
+                    let clipElements = '';
+                    for (let i = 0; i < 40; i += 2) {
+                        clipElements +=
+                            `<g id="clip-${i}" class="paperclip" transform="translate(${i * -3 + 30},${Math.random() * 10})"><path transform="rotate(${85 + Math.random() * 10},203.7,287.5)" fill="none" stroke="#525252" stroke-linecap="round" d="M200 300v-12c0-6 7.3-6 7.3-.1v14.5c0 5-6 4.8-6 0v-11.6c0-4.3 5-4.3 5-.1v9" /></g>`
+                        clipElements +=
+                            `<g id="clip-${i + 1}" class="paperclip" transform="translate(${i * -3 + 30},${Math.random() * 10})"><path transform="rotate(${85 + Math.random() * 10},203.7,302.5)" fill="none" stroke="#525252" stroke-linecap="round" d="M185 300v-12c0-6 7.3-6 7.3-.1v14.5c0 5-6 4.8-6 0v-11.6c0-4.3 5-4.3 5-.1v9" /></g>`
+                    }
+                    $('#simulation').innerHTML = $('#simulation').innerHTML.replace(/<g id="clip-x"><\/g>/g,
+                        clipElements);
+
+                    function setCoils(coils) {
+                        coilCount = coils;
+                        if (coils > 75) {
+                            coils = 75;
+                        }
+                        let mult = 140 / coils;
+                        if (mult > 6) {
+                            mult = 6;
+                        }
+                        coils = Math.floor(coils);
+                        if (coils < 1) {
+                            coils = 1;
+                        }
+                        let startY = 155 - mult * Math.floor(coils / 2); // 165
+
+                        let backHalfs = '';
+                        let frontHalfs = '';
+                        for (i = 0; i < coils; i++) {
+                            backHalfs +=
+                                `<path fill="none" stroke="#0b0" d="M77.5 ${startY + i * mult - mult} c0.5 -7.5 31 -5 30 ${mult - 2 * mult / 5}"/>`;
+                            frontHalfs +=
+                                `<path fill="none" stroke="#0b0" d="M77.5 ${startY + i * mult} c0.5 7.5 31 6 30 ${-2 * mult / 5}"/>`;
+                        }
+
+                        let wireX = (144 - $('#electromagnet-core').transform.baseVal[0].matrix.e) /
+                            .6;
+                        let wireY = (101 - $('#electromagnet-core').transform.baseVal[0].matrix.f) /
+                            .6;
+
+                        let wires =
+                            `<path id="wire-0" fill="none" stroke="#0b0" d="M77.5 ${startY + coils * mult - mult} C77 ${startY + coils * mult - mult - 8},${wireX} ${wireY + 41.9 + 58.3 * battCount} ${wireX - 80} ${wireY + 41.9 + 58.3 * battCount}"/><path id="wire-1" fill="none" stroke="#0b0" d="M77.5 ${startY - mult} C77 ${startY - mult + 8},${wireX} ${wireY} ${wireX - 80} ${wireY}"/>`;
+
+                        let eCore =
+                            `<path fill="url(#c)" stroke="#000" stroke-linejoin="round" stroke-width="1" d="M80 80v149.2a12.4 5 0 0 0 12.5 5 12.4 5 0 0 0 12.4-5V80Z"/><path fill="url(#d)" stroke="#000" stroke-linejoin="round" stroke-width=".5" d="M105 80a12.5 5 0 0 1-12.5 5A12.5 5 0 0 1 80 80a12.5 5 0 0 1 12.5-5 12.5 5 0 0 1 12.5 5Z"/>`;
+
+                        $('#electromagnet-core').innerHTML =
+                            '<circle id="magnet-target" fill="#f00" stroke="none" cx="94" cy="231.5" r="3"/>' +
+                            backHalfs + eCore + frontHalfs + wires;
+                    }
+
+                    setCoils(5);
+                    setWires();
+
+                    $('#batt-count').addEventListener('change', setBattCount);
+                    $('#coil-count').addEventListener('input', setCoilCount);
+                </script>
+            </td>
+        </tr>
+    </table>
+</body>
+
+</html>
