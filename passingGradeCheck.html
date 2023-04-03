@@ -1,0 +1,24 @@
+<html>
+    <head>
+        <script>
+            async function getPageData(url) {
+    const rpt = await fetch(url);
+    let data = await rpt.json();
+                return data;
+            }
+        </script>
+    </head>
+    <body>
+        Here it is:
+        <div id="result"></div>
+        <script>
+            //const data = await getPageData('://sk.instructure.com/api/v1/courses/81262/users');
+            //try {
+                            document.getElementById('result').innerHTML = 'Party!';//JSON.stringify(data) + ' and stuff.';
+
+            //} catch(e) {
+                //document.getElementById('result').innerHTML = e;
+            //}
+        </script>
+    </body>
+</html>
