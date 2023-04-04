@@ -17,7 +17,29 @@
             }
 
             if (timerControl.direction !== 1) {
-                timerControl.start = (getParameter('t') ? parseFloat(getParameter('t')) : 5 * 60) * 1000;
+                let setTime = getParameter('t').replace(/[^0-9hms]/g, '');
+                let hasHMS = setTime.replace(/[^hms]/g, '');
+                if (hasHMS) {
+                    let _h = setTime.replace(/^.*?([0-9]+)h.*?$/g, '$1');
+                    if (_h == setTime) {
+                        _h = 0;
+                    }
+                    let _m = setTime.replace(/^.*?([0-9]+)m.*?$/g, '$1');
+                    if (_m == setTime) {
+                        _m = 0;
+                    }
+                    let _s = setTime.replace(/^.*?([0-9]+)s.*?$/g, '$1');
+                    if (_s == setTime) {
+                        _s = 0;
+                    }
+                    setTime = parseInt(_h) * 3600 + parseInt(_m) * 60 + parseInt(_s);
+                    if (setTime < 1) {
+                        setTime = 300;
+                    }
+                } else {
+                    setTime = setTime ? parseFloat(setTime) : 300;
+                }
+                timerControl.start = setTime * 1000;
             }
 
             if (timerControl.start === 0) {
