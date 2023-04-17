@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <title></title>
+        <meta name="description" content="" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <style>
+            body {
+                overflow: hidden;
+            }
+
+            #DocCam {
+                position: absolute;
+                top: 18vh;
+                left: 0;
+                transform: rotate(90deg) scale(1.35);
+                height: 59vh;
+            }
+
+            #FaceCam {
+                position: absolute;
+                z-index: 10;
+                bottom: 2vh;
+                left: 2vw;
+                height: 13vh;
+                border: 4px solid black;
+            }
+        </style>
+    </head>
+    <body>
+        <video id="DocCam"></video>
+        <video id="FaceCam"></video>
+        <script>
+            function openFaceCam() {
+                navigator.mediaDevices.getUserMedia({
+                    video: {deviceId: {
+                        exact: '4ed5964c29aec1380b7ed3e90d9700ad9c95ef0352c126f19e1ea08ae2f2fc2b',
+                    },}
+                }).then(function (vidStream) {
+                    let video = document.getElementById("FaceCam");
+                    video.srcObject = vidStream;
+                    video.onloadedmetadata = function (e) { video.play(); };
+                }).catch(function (e) {
+                    console.log(e.name + ": " + e.message);
+                });
+            }
+
+            function openDocCam() {
+                navigator.mediaDevices.getUserMedia({
+                    video: {deviceId: {
+                        exact: 'c45fd5a06dcb7d2da87d5e488a4c07a571d3ba27bf5bbbdafa4d75151046b9be',
+                    },}
+                }).then(function (vidStream) {
+                    let video = document.getElementById("DocCam");
+                    video.srcObject = vidStream;
+                    video.onloadedmetadata = function (e) { video.play(); };
+                }).catch(function (e) {
+                    console.log(e.name + ": " + e.message);
+                });
+            }
+
+            openDocCam();
+            openFaceCam();
+        </script>
+    </body>
+</html>

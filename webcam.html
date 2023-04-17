@@ -18,6 +18,10 @@
                 font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             }
 
+            h1 {
+                user-select: none; /* Standard syntax */
+            }
+
             body {
                 background-image: url('images/photoPageBackground.png');
                 background-size: cover;
@@ -25,20 +29,25 @@
             }
 
             #my_camera {
-                width: 320px;
-                height: 240px;
+                height: 400px;
                 border: 1px solid black;
                 margin: 0 auto;
             }
 
-            #take_pic {
-                margin: 10px auto;
-                display: block;
-                height: 50px;
-                width: 50px;
+            .cam_container {
+                display: flex;
+                justify-content: center;
             }
 
-            #take_pic:hover {
+            #take_pic, #take_pic_bw {
+                margin: 10px 20px;
+                display: inline-block;
+                height: 50px;
+                width: 50px;
+                user-select: none; /* Standard syntax */
+            }
+
+            #take_pic:hover, #take_pic_bw:hover {
                 transform: scale(1.2);
                 transition: all 0.1s ease-in-out;
             }
@@ -52,65 +61,116 @@
                 line-height: 30px;
                 width: 600px;
                 margin: 0 auto;
+                user-select: none; /* Standard syntax */
             }
 
             .pic {
                 border: 1px solid black;
-                margin: 3px;
+                margin: 15px;
                 height: 100px;
                 display: inline-block;
+                transition: all 0.35s;
+                user-select: none; /* Standard syntax */
+            }
+
+            .pic:hover {
+                transform: scale(3);
+                border: none;
             }
         </style>
         
         <h1 style="font-size: 20px;text-align: center;margin-bottom: 25px;">Webcam Capture</h1>
         
-        <div id="my_camera"></div>
-        <svg id="take_pic" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0 0 120.602 120.756" onclick="take_snapshot()">
-            <defs>
-              <linearGradient id="a">
-                <stop offset="0" stop-color="#000" stop-opacity="1"/>
-                <stop offset="1" stop-color="#000" stop-opacity="0"/>
-              </linearGradient>
-              <linearGradient xlink:href="#a" id="b" x1="57.38" x2="118.203" y1="54.593" y2="116.072" gradientTransform="scale(3.78)" gradientUnits="userSpaceOnUse"/>
-            </defs>
-            <g fill-opacity="1" transform="translate(-17.075 -17.229)">
-              <ellipse cx="77.376" cy="77.607" fill="red" fill-rule="evenodd" opacity="1" rx="60.301" ry="60.378"/>
-              <path fill="url(#b)" d="M439.938 188.367 216.87 206.336l-73.736 180.932L272.94 520.502a227.91 228.2 0 0 0 19.504 1.016 227.91 228.2 0 0 0 227.91-228.2 227.91 228.2 0 0 0-2.084-30.105z" transform="scale(.265)"/>
-              <path fill="#fff" d="M65.839 39.995c-1.408 0-3.044.99-3.538 2.308l-2.308 6.153-17.229.154c-3.154.028-6.603 3.614-6.614 6.769l-.154 43.84c-.012 3.482 4.056 7.23 7.538 7.23h69.53c3.482 0 7.55-3.748 7.538-7.23l-.154-43.225c-.012-3.59-4.102-7.572-7.691-7.538l-15.999.154-2.922-6.615c-.512-1.158-1.964-2-3.23-2zm12.46 18.122c11.023 0 20.03 8.915 20.03 19.875s-9.007 19.873-20.03 19.873c-11.024 0-20.028-8.913-20.028-19.873S67.275 58.117 78.3 58.117zm0 4.58c-8.57 0-15.45 6.832-15.45 15.295 0 8.464 6.88 15.295 15.45 15.295s15.45-6.831 15.45-15.295c0-8.463-6.88-15.295-15.45-15.295z"/>
-            </g>
-        </svg>
+        <div class="cam_container">
+            <video id="my_camera"></video>
+        </div>
+
+        <div class="cam_container">
+            <svg id="take_pic" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0 0 120.602 120.756" onclick="take_snapshot(false)">
+                <defs>
+                <linearGradient id="a">
+                    <stop offset="0" stop-color="#000" stop-opacity="1"/>
+                    <stop offset="1" stop-color="#000" stop-opacity="0"/>
+                </linearGradient>
+                <linearGradient xlink:href="#a" id="b" x1="57.38" x2="118.203" y1="54.593" y2="116.072" gradientTransform="scale(3.78)" gradientUnits="userSpaceOnUse"/>
+                </defs>
+                <g fill-opacity="1" transform="translate(-17.075 -17.229)">
+                <ellipse cx="77.376" cy="77.607" fill="red" fill-rule="evenodd" opacity="1" rx="60.301" ry="60.378"/>
+                <path fill="url(#b)" d="M439.938 188.367 216.87 206.336l-73.736 180.932L272.94 520.502a227.91 228.2 0 0 0 19.504 1.016 227.91 228.2 0 0 0 227.91-228.2 227.91 228.2 0 0 0-2.084-30.105z" transform="scale(.265)"/>
+                <path fill="#fff" d="M65.839 39.995c-1.408 0-3.044.99-3.538 2.308l-2.308 6.153-17.229.154c-3.154.028-6.603 3.614-6.614 6.769l-.154 43.84c-.012 3.482 4.056 7.23 7.538 7.23h69.53c3.482 0 7.55-3.748 7.538-7.23l-.154-43.225c-.012-3.59-4.102-7.572-7.691-7.538l-15.999.154-2.922-6.615c-.512-1.158-1.964-2-3.23-2zm12.46 18.122c11.023 0 20.03 8.915 20.03 19.875s-9.007 19.873-20.03 19.873c-11.024 0-20.028-8.913-20.028-19.873S67.275 58.117 78.3 58.117zm0 4.58c-8.57 0-15.45 6.832-15.45 15.295 0 8.464 6.88 15.295 15.45 15.295s15.45-6.831 15.45-15.295c0-8.463-6.88-15.295-15.45-15.295z"/>
+                </g>
+            </svg>
+
+            <svg id="take_pic_bw" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0 0 120.602 120.756" onclick="take_snapshot(true)">
+                <defs>
+                <linearGradient id="a">
+                    <stop offset="0" stop-color="#000" stop-opacity="1"/>
+                    <stop offset="1" stop-color="#000" stop-opacity="0"/>
+                </linearGradient>
+                <linearGradient xlink:href="#a" id="b" x1="57.38" x2="118.203" y1="54.593" y2="116.072" gradientTransform="scale(3.78)" gradientUnits="userSpaceOnUse"/>
+                </defs>
+                <g fill-opacity="1" transform="translate(-17.075 -17.229)">
+                <ellipse cx="77.376" cy="77.607" fill="#999" fill-rule="evenodd" opacity="1" rx="60.301" ry="60.378"/>
+                <path fill="url(#b)" d="M439.938 188.367 216.87 206.336l-73.736 180.932L272.94 520.502a227.91 228.2 0 0 0 19.504 1.016 227.91 228.2 0 0 0 227.91-228.2 227.91 228.2 0 0 0-2.084-30.105z" transform="scale(.265)"/>
+                <path fill="#fff" d="M65.839 39.995c-1.408 0-3.044.99-3.538 2.308l-2.308 6.153-17.229.154c-3.154.028-6.603 3.614-6.614 6.769l-.154 43.84c-.012 3.482 4.056 7.23 7.538 7.23h69.53c3.482 0 7.55-3.748 7.538-7.23l-.154-43.225c-.012-3.59-4.102-7.572-7.691-7.538l-15.999.154-2.922-6.615c-.512-1.158-1.964-2-3.23-2zm12.46 18.122c11.023 0 20.03 8.915 20.03 19.875s-9.007 19.873-20.03 19.873c-11.024 0-20.028-8.913-20.028-19.873S67.275 58.117 78.3 58.117zm0 4.58c-8.57 0-15.45 6.832-15.45 15.295 0 8.464 6.88 15.295 15.45 15.295s15.45-6.831 15.45-15.295c0-8.463-6.88-15.295-15.45-15.295z"/>
+                </g>
+            </svg>
+        </div>
 
         <p>Right-click a picture below and choose &quot;Save Image As...&quot; to save it</p>
         <div id="results"></div>
-        
-        <!-- Webcam.min.js -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/webcamjs/1.0.26/webcam.min.js" integrity="sha512-dQIiHSl2hr3NWKKLycPndtpbh5iaHLo6MwrXm7F0FM5e+kL2U16oE9uIwPHUl6fQBeCthiEuV/rzP3MiAB8Vfw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    
+           
         <!-- Configure a few settings and attach camera -->
-        <script language="JavaScript">
-            Webcam.set({
-                width: 640,
-                height: 360,
-                image_format: 'jpeg',
-                jpeg_quality: 90,
-                
-            });
-            Webcam.attach( '#my_camera' );
-        </script>
-        <!-- A button for taking snaps -->
-        
-        <!-- Code to handle taking the snapshot and displaying it locally -->
-        <script language="JavaScript">
-    
-            function take_snapshot() {
-                
-                // take snapshot and get image data
-                Webcam.snap( function(data_uri) {
-                    // display results in page
-                    document.getElementById('results').innerHTML += 
-                        '<img src="'+data_uri+'" class="pic"/> ';
-                } );
+        <script>
+
+            let video;
+
+            let canvas = document.createElement('canvas');
+            canvas.width = 640;
+            canvas.height = 480;
+            let ctx = canvas.getContext('2d');
+
+            function openFaceCam() {
+                navigator.mediaDevices.getUserMedia({
+                    video: true,
+                }).then(function (vidStream) {
+                    video = document.getElementById("my_camera");
+                    video.srcObject = vidStream;
+                    video.onloadedmetadata = function (e) { video.play(); };
+                }).catch(function (e) {
+                    console.log(e.name + ": " + e.message);
+                });
             }
-        </script>
+
+            function take_snapshot(desaturate) {
+                //draw image to canvas. scale to target dimensions
+                ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+                if (desaturate) {
+                    let imgPixels = ctx.getImageData(0, 0, canvas.width, canvas.height);
+
+                    for (let y = 0; y < imgPixels.height; y++) {
+                        for (let x = 0; x < imgPixels.width; x++) {
+                            let i = (y * 4) * imgPixels.width + x * 4;
+                            let avg = imgPixels.data[i] * 0.299 + imgPixels.data[i + 1] * 0.587 + imgPixels.data[i + 2] * 0.114;
+                            imgPixels.data[i] = avg;
+                            imgPixels.data[i + 1] = avg;
+                            imgPixels.data[i + 2] = avg;
+                        }
+                    }
+
+                    ctx.putImageData(imgPixels, 0, 0, 0, 0, imgPixels.width, imgPixels.height);
+
+                }
+
+                //convert to desired file format
+                let data_uri = canvas.toDataURL('image/jpeg'); // can also use 'image/png'
+
+                // display results in page
+                document.getElementById('results').innerHTML += '<img src="'+data_uri+'" class="pic"/> ';
+            }
+
+            openFaceCam();
+        </script>        
     </body>
 </html>
