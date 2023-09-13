@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <title>Attendance Summary</title>
+        <style>
+          body {
+            font-family: Arial, Helvetica, sans-serif;
+          }
+        </style>
+    </head>
+    <body>
+        <h1>Attendance Summary</h1>
+        <label for="classPeriod">Class Period:</label>
+        <select id="classPeriod" onchange="populateStudentSummary()">
+            <option value="">Select a class period...</option>
+        </select>
+        <label for="studentID">Student ID:</label>
+        <select id="studentID" no-onchange="displayStudentData()">
+            <option value="">Select a student ID...</option>
+        </select>
+        <hr>
+		<!--
+        <table id="studentData">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Section ID</th>
+                    <th>Period</th>
+                    <th>Handle</th>
+                    <th>Student ID</th>
+                    <th>Late</th>
+                    <th>Cut</th>
+                    <th>Chat</th>
+                    <th>Words</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+-->
+		<table id="studentSummary">
+			<thead>
+			  <tr>
+				<th data-column="1" data-type="string">Student ID</th>
+				<th data-column="2" data-type="numeric">Days (sum)</th>
+				<th data-column="3" data-type="numeric">Late (avg)</th>
+				<th data-column="4" data-type="numeric">Cut (avg)</th>
+				<th data-column="5" data-type="numeric">Chat (sum)</th>
+				<th data-column="6" data-type="numeric">Words (sum)</th>
+			  </tr>
+			</thead>
+			<tbody>
+			  <!-- Student summary data will be dynamically populated here -->
+			</tbody>
+		  </table>
+<hr> 
+        <button onclick="searchFiles()">Search Files</button>
+        <script>
+			/*
+            let dataByPeriod = {};
+
+            async function searchFiles() {
+                // Ask the user to select a directory
+                const directoryHandle = await window.showDirectoryPicker();
+
+                // Prompt the user for the prefix and pattern to search for
+                const prefix = "attendance_"; // prompt("Enter file name prefix:");
+                //const pattern = prompt("Enter regular expression pattern:");
+
+                // Get all files in the directory
+                for await (const entry of directoryHandle.values()) {
+                    if (entry.kind === "file" && entry.name.startsWith(prefix)) {
+                        // Read the contents of the file
+                        const file = await entry.getFile();
+                        const contents = await file.text();
+
+                        // Split the contents into rows and parse the data
+                        const rows = contents.trim().split("\n");
+                        const data = rows.map((row) => row.split("\t"));
+
+                        // Group the data by class period and student ID
+                        data.forEach((row) => {
+                            const period = row[2];
+                            const id = row[4];
+                            if (!dataByPeriod[period]) {
+                                dataByPeriod[period] = {};
+                            }
+                            if (!dataByPeriod[period][id]) {
+                                dataByPeriod[period][id] = [];
+                            }
+                            dataByPeriod[period][id].push(row);
+                        });
+                    }
+                }
+
+                // Populate the class period dropdown
+                const classPeriodDropdown = document.getElementById("classPeriod");
+                for (const period in dataByPeriod) {
+                    const option = document.createElement("option");
+                    option.value = period;
+                    option.textContent = period;
+                    classPeriodDropdown.appendChild(option);
+                }
+            }
+
+            function populateStudentDropdown() {
+                // Clear the student ID dropdown
+                const studentIDDropdown = document.getElementById("studentID");
+                studentIDDropdown.innerHTML = '<option value="">Select a student ID...</option>';
+
+                // Populate the student ID dropdown with IDs from the selected class period
+                const period = document.getElementById("classPeriod").value;
+                if (period) {
+                    for (const id in dataByPeriod[period]) {
+                        const option = document.createElement("option");
+                        option.value = id;
+                        option.textContent = id;
+                        studentIDDropdown.appendChild(option);
+                    }
+                }
+            }
+
+            function displayStudentData() {
+                // Clear the student data table
+                const studentDataTable = document.getElementById("studentData");
+                const tbody = studentDataTable.querySelector("tbody");
+                tbody.innerHTML = "";
+
+                // Get the selected student ID
+                const studentID = document.getElementById("studentID").value;
+
+                // Display the selected student's data in the table
+                const period = document.getElementById("classPeriod").value;
+                const data = dataByPeriod[period][studentID];
+                data.forEach((row) => {
+                    const tr = document.createElement("tr");
+                    row.forEach((value) => {
+                        const td = document.createElement("td");
+                        td.textContent = value;
+                        tr.appendChild(td);
+                    });
+                    tbody.appendChild(tr);
+                });
+            }
+
+			*/
+
+
+			let dataByPeriod = {};
+
+let studentIDs = [755445,699751,704520,706332,700709,704273,705207,705422,714982,745762,703051,704666,703900,703810,708009,730845,703108,712158,741045,749000,700872,705588,704665,705638,705069,704449,704293,749072,703322,704728,704826,754390,704038,692140,703467,700709,704243,701902,701667,705207,750510,703971,700923,745762,704344,698753,703051,712964,709991,730845,708017,703109,704982,712158,745384,707578,703428,705466,704183,704975,755445,707546,705966,701677,706332,732881,750510,745762,707172,698753,705818,703900,708009,702529,708774,701816,718521,741007,718074,741833,717729,708458,718535,704173,705405,751288,714481,717316,715633,718604,727619,702410,703902,711322,714899,728488,743062,710660,718268,712152,704738,712777,706978,712691,728914,710306,747717,711957,710066,720097,711521,708013,710530,714358,710614,714059,714067,709313,708408,755046,710495,749593,726899,710299,716289,720356,719564,720497,719401,720552,719602,755314,726784,712776,718137,746015,718577,719341,719350,715845,717571,719511,720263,730392,695198,729774];
+let studentNames = ["Baughman, Addison K.","Bejar, Kayden D.","Drofyak, Benjamin P.","Gaspar, Jasmine","Gonzalez Ramirez, Anahi E.","Jimenez Penuelas, Yanet S.","Jones, Caleb J.","Kabua, Miko S.","Lane, Carter M.","Maness, Evelyn J.","McCarthy, Ava J.","Mora Cendejas, Cristian","Morales Garcia, Alison","Peralta Reyes, Letty","Ramos, Isaiah R.","Ransom, Hazel Maria G.","Sanchez Perez, Francisco J.","Statsenko, Natela V.","Stone, Ashlynn G.","Vega-Lopez, Valeria","Andrade Sanchez, Melanie A.","Baelo, Otoro T.","Bermudez Gutierrez, Yareli L.","Bickle, Alice A.","Biton, Mahya Nicole T.","Boardman, River","Bolliger, Bryan J.","Campbell, Josephine R.","Cisneros Garcia, Janet","Cordiner, Sydney A.","Davis, Noah G.","Dunham, Talin O.","Edmison, Myrna M.","Ernst, Ethan J.","Esquivel Perez, Diego K.","Gonzalez Ramirez, Anahi E.","Guevara Bravo, Uziel","Hernandez Mendoza, Allison J.","James Mcharo, Amiah R.","Jones, Caleb J.","Kim, Ra Chanh Da","Lopez Guzman, Jacqueline","Lua Espinosa, Christian J.","Maness, Evelyn J.","Marroquin, Kaitlyn","Mason, Alysondra J.","McCarthy, Ava J.","McCloy, Rory","Nowman Wilmes, Evan R.","Ransom, Hazel Maria G.","Rodriguez-Tegroen, Kingston H.","Sanchez Perez, Victor M.","Sosa Quezada, Artemio JR.","Statsenko, Natela V.","Stewart, Madison R.","Tait, Aidan R.","Valencia Carranza, Luis E.","Vigue, Lukas D.","Williamson, Lily R.","Ard, Leland T.","Baughman, Addison K.","Cervantes, Julissa V.","Fipps, Bryon J.","Garcia Montanez, Carlos D.","Gaspar, Jasmine","Hanson, Violet B.","Kim, Ra Chanh Da","Maness, Evelyn J.","Martinez Reyes, Xitlaly","Mason, Alysondra J.","Moore, Kyle J.","Morales Garcia, Alison","Ramos, Isaiah R.","Swank, Michael J.","Thornton, Callyn M.","Villanueva-Mattfield, Ramona E.","Bolton, Aiden L.","Church, Psymon J.","Debolt, Noah E.","Gowing, Natalie C.","Greenway, Suzanne M.","Macnamara Loflin, James S.","Oman, Liam W.","Osorio-Gekeler, Lexon K.","Padua, Amaya","Prescott, Haven","Salinas, Ariahna S.","Sater, Alrek C.","Serini, Danielle M.","Severson, Benjamin K.","Sharipoff, Sophia A.","Waldon, Kyhara","Wilkie, Nathan J.","Al Bustami, Alanood M.","Aldava, David J.","Auau, Brayden J.","Bennett, Chad M.","Berlin, Seth W.","Bossy, Kayton C.","Carrillo, Phillip A.","Chalmers, Kara L.","Chaniel, Dana A.","Cochran, Aiden M.","Fipps, Matthew J.","Flores Tinoco, Adilene M.","Galvea, Kira A.","Hall, Sofeya L.","Leon-Arechiga, Trinidad J.","Marroquin, Daniel","Meyer, Isabel J.","Moreno-Ascencio, Cristobal A.","Nunez Armenta, Zulem N.","Peterson, Liam H.","Pineda Chavez, Cassandra N.","Rojas, Alan E.","Romero Ramirez, Rene G.","Russell, Kaylee","Sandoval, Giovanni A.","Shrader, Damien U.","Slagter, Eva Marie M.","Tolento Maciel, Alexa D.","Trapala, Violet N.","Tyler-Savarro, AuRailee Renay E.","Yoder, Alex M.","Arredondo Ortega, Daniel","Balderas-Vasquez, Christopher","Bickle, Zoey L.","Brisco, Ayvah R.","Capwell, Jaelynn S.","Cervantes, Uziel I.","Chavez, Giovanni E.","Evans, Jack","Ewers, Darian G.","Flores, Brianna M.","Gentzler, Alyssia N.","Hoxsie, Brody L.","Jakeo - Heine, Rianna D.","Lipai, Kaleb J.","Lipai, Kyron J.","Pastore, Hayden J.","Poff, Ethan Z.","Polishchuk, Nelly V.","Suriano, Oliver J.","Valdivia Perez, Valentina","Villa-Mendoza, Antonio J.","Wells, Tucker D."]; 
+
+async function searchFiles() {
+  // Ask the user to select a directory
+  const directoryHandle = await window.showDirectoryPicker();
+
+  // Prompt the user for the prefix and pattern to search for
+  const prefix = "attendance_"; // prompt("Enter file name prefix:");
+  //const pattern = prompt("Enter regular expression pattern:");
+
+  // Get all files in the directory
+  for await (const entry of directoryHandle.values()) {
+    if (entry.kind === "file" && entry.name.startsWith(prefix)) {
+      // Read the contents of the file
+      const file = await entry.getFile();
+      const contents = await file.text();
+
+      // Split the contents into rows and parse the data
+      const rows = contents.trim().split("\n");
+      const data = rows.map((row) => row.split("\t"));
+
+      // Group the data by class period and student ID
+      data.forEach((row) => {
+        const period = row[2];
+        const id = row[4];
+        if (!dataByPeriod[period]) {
+          dataByPeriod[period] = {};
+        }
+        if (!dataByPeriod[period][id]) {
+          dataByPeriod[period][id] = [];
+        }
+        dataByPeriod[period][id].push(row);
+      });
+    }
+  }
+
+  // Populate the class period dropdown
+  const classPeriodDropdown = document.getElementById("classPeriod");
+  for (const period in dataByPeriod) {
+    const option = document.createElement("option");
+    option.value = period;
+    option.textContent = period;
+    classPeriodDropdown.appendChild(option);
+  }
+}
+
+function populateStudentSummary() {
+  // Clear the student summary table
+  const studentSummaryTable = document.getElementById("studentSummary");
+  const tbody = studentSummaryTable.querySelector("tbody");
+  tbody.innerHTML = "";
+
+  // Get the selected class period
+  const period = document.getElementById("classPeriod").value;
+
+  // Calculate the summary data for each student
+  const summaryByStudent = [];
+  for (const id in dataByPeriod[period]) {
+    const studentData = dataByPeriod[period][id];
+    const summary = {
+      name: studentNames[studentIDs.indexOf(parseInt(id))],
+      id: id,
+      late: 0,
+      cut: 0,
+      chat: 0,
+      words: 0,
+      count: studentData.length,
+    };
+    studentData.forEach((row) => {
+      summary.late += parseInt(row[5]);
+      summary.cut += parseInt(row[6]);
+      summary.chat += parseInt(row[7]);
+      summary.words += parseInt(row[8]);
+    });
+    summary.late /= summary.count;
+    summary.cut /= summary.count;
+    summaryByStudent.push(summary);
+  }
+
+  summaryByStudent.sort((a,b) => {return a.name > b.name ? 1 : -1});
+
+  // Display the summary data in the table
+  summaryByStudent.forEach((summary, i) => {
+    const tr = document.createElement("tr");
+    const nameTd = document.createElement("td");
+    nameTd.textContent = `(${summary.id}) ${summary.name}`;
+    tr.appendChild(nameTd);
+    const countTd = document.createElement("td");
+    countTd.textContent = summary.count;
+    tr.appendChild(countTd);
+    const lateTd = document.createElement("td");
+    lateTd.textContent = summary.late.toFixed(2);
+    tr.appendChild(lateTd);
+    const cutTd = document.createElement("td");
+    cutTd.textContent = summary.cut.toFixed(2);
+    tr.appendChild(cutTd);
+    const chatTd = document.createElement("td");
+    chatTd.textContent = summary.chat;
+    tr.appendChild(chatTd);
+    const wordsTd = document.createElement("td");
+    wordsTd.textContent = summary.words;
+    tr.appendChild(wordsTd);
+    tr.style.backgroundColor = i % 2 === 0 ? '#fff' : '#eee';
+    tbody.appendChild(tr);
+  })
+}
+
+const table = document.getElementById("studentSummary");
+const headers = table.querySelectorAll("th");
+
+headers.forEach((header) => {
+  header.addEventListener("click", () => {
+    const column = header.getAttribute("data-column");
+    const order = header.getAttribute("data-order");
+	const type = header.getAttribute("data-type");
+    const rows = Array.from(table.querySelectorAll("tbody tr"));
+
+    // Sort the rows based on the clicked column and order
+    const sortedRows = rows.sort((a, b) => {
+		const aCol = a.querySelector(`td:nth-child(${column})`).textContent.trim();
+      	const bCol = b.querySelector(`td:nth-child(${column})`).textContent.trim();
+
+		const aVal = type === "numeric" ? parseFloat(aCol) : aCol;
+		const bVal = type === "numeric" ? parseFloat(bCol) : bCol;
+
+		if (type === "numeric") {
+			return order === "asc" ? aVal - bVal : bVal - aVal;
+		} else {
+			return order === "asc" ? aCol.localeCompare(bCol) : bCol.localeCompare(aCol);
+		}
+    });
+
+    // Remove the old rows and add the sorted rows
+    table.querySelectorAll("tbody tr").forEach((row) => row.remove());
+    table.querySelector("tbody").append(...sortedRows);
+
+    // Update the header's data-order attribute
+    header.setAttribute("data-order", order === "asc" ? "desc" : "asc");
+
+	    // Update the header's data-order attribute
+		header.setAttribute("data-order", order === "asc" ? "desc" : "asc");
+  });
+});
+
+        </script>
+    </body>
+</html>

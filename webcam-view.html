@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Webcam Video Recorder</title>
+</head>
+<body>
+    <h1>Webcam Video Recorder</h1>
+    <video id="webcam" autoplay></video>
+    <canvas id="canvas"></canvas>
+    <button id="startRecord">Start Recording</button>
+    <button id="stopRecord" disabled>Stop Recording</button>
+    <button id="flipVertical">Flip Vertical</button>
+    <button id="flipHorizontal">Flip Horizontal</button>
+    <button id="download" disabled>Download</button>
+    
+    <!-- Video list -->
+    <div>
+        <h2>Recorded Videos</h2>
+        <select id="videoList"></select>
+        <button id="playVideo" disabled>Play Video</button>
+        <input type="text" id="videoName" placeholder="Video Name">
+        <button id="saveVideo" disabled>Save Video</button>
+    </div>
+    <script>
+        const videoElement = document.getElementById('webcam');
+        const canvasElement = document.getElementById('canvas');
+        const startRecordButton = document.getElementById('startRecord');
+        const stopRecordButton = document.getElementById('stopRecord');
+        const flipVerticalButton = document.getElementById('flipVertical');
+        const flipHorizontalButton = document.getElementById('flipHorizontal');
+        const downloadButton = document.getElementById('download');
+        const videoList = document.getElementById('videoList');
+        const playVideoButton = document.getElementById('playVideo');
+        const videoNameInput = document.getElementById('videoName');
+        const saveVideoButton = document.getElementById('saveVideo');
+
+        let mediaRecorder;
+        let recordedChunks = [];
+        let flipped = false;
+        let recordedVideos = []; // To store recorded videos
+
+        // Function to initialize the webcam
+        async function initWebcam() {
+            const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+            videoElement.srcObject = stream;
+        }
+
+        // Function to start recording
+        function startRecording() {
+            mediaRecorder = new MediaRecorder(videoElement.srcObject);
+            mediaRecorder.ondataavailable = handleDataAvailable;
+            mediaRecorder.start();
+            startRecordButton.disabled = true;
+            stopRecordButton.disabled = false;
+        }
+
+        // Function to stop recording
+        function stopRecording() {
+            mediaRecorder.stop();
+            startRecordButton.disabled = false;
+            stopRecordButton.disabled = true;
+        }
+
+        // Function to handle recorded data with flipping
+        function handleDataAvailable(event) {
+            if (flipped) {
+                if (event.data.size > 0) {
+                    recordedChunks.push(event.data);
+                }
+            } else {
+                if (event.data.size > 0) {
+                    const reader = new FileReader();
+                    reader.onload = function() {
+                        const videoBlob = new Blob([new Uint8Array(reader.result)], { type: 'video/webm' });
+                        recordedChunks.push(videoBlob);
+                    };
+                    reader.readAsArrayBuffer(event.data);
+                }
+            }
+        }
+
+        // Function to flip the video vertically
+        function flipVideoVertical() {
+            flipped = !flipped;
+            drawVideo();
+        }
+
+        // Function to flip the video horizontally
+        function flipVideoHorizontal() {
+            flipped = !flipped;
+            drawVideo();
+        }
+
+        // Function to draw the video on the canvas
+        function drawVideo() {
+            const ctx = canvasElement.getContext('2d');
+            ctx.save();
+            ctx.clearRect(0, 0, canvasElement.width, canvasElement.height);
+
+            if (flipped) {
+                ctx.scale(-1, 1);
+                ctx.drawImage(videoElement, -videoElement.width, 0, videoElement.width, videoElement.height);
+            } else {
+                ctx.drawImage(videoElement, 0, 0, videoElement.width, videoElement.height);
+            }
+
+            ctx.restore();
+            requestAnimationFrame(drawVideo);
+        }
+
+        // Function to update the video list
+        function updateVideoList() {
+            videoList.innerHTML = '';
+            recordedVideos.forEach((video, index) => {
+                const option = document.createElement('option');
+                option.value = index;
+                option.text = video.name;
+                videoList.appendChild(option);
+            });
+        }
+
+        // Event listeners
+        startRecordButton.addEventListener('click', startRecording);
+        stopRecordButton.addEventListener('click', stopRecording);
+        flipVerticalButton.addEventListener('click', flipVideoVertical);
+        flipHorizontalButton.addEventListener('click', flipVideoHorizontal);
+
+        // Play recorded video
+        playVideoButton.addEventListener('click', () => {
+            const selectedIndex = videoList.value;
+            if (selectedIndex >= 0) {
+                const selectedVideo = recordedVideos[selectedIndex];
+                const videoBlob = new Blob([selectedVideo.data], { type: 'video/webm' });
+                const videoUrl = URL.createObjectURL(videoBlob);
+                const videoPlayer = document.createElement('video');
+                videoPlayer.src = videoUrl;
+                videoPlayer.controls = true;
+                document.body.appendChild(videoPlayer);
+            }
+        });
+
+        // Save recorded video
+        saveVideoButton.addEventListener('click', () => {
+            const videoName = videoNameInput.value.trim();
+            if (videoName && recordedChunks.length > 0) {
+                const videoBlob = new Blob(recordedChunks, { type: 'video/webm' });
+                recordedVideos.push({ name: videoName, data: videoBlob });
+                updateVideoList();
+                videoNameInput.value = '';
+                recordedChunks = [];
+            }
+        });
+
+        // Initialize the webcam
+        initWebcam();
+
+
+        // Function to save recorded video in IndexedDB
+        function saveVideoInIndexedDB(videoName, videoBlob) {
+            const request = indexedDB.open('RecordedVideosDB', 1);
+
+            request.onupgradeneeded = function(event) {
+                const db = event.target.result;
+                const objectStore = db.createObjectStore('videos', { keyPath: 'name' });
+                objectStore.createIndex('name', 'name', { unique: true });
+            };
+
+            request.onsuccess = function(event) {
+                const db = event.target.result;
+                const transaction = db.transaction(['videos'], 'readwrite');
+                const objectStore = transaction.objectStore('videos');
+
+                const request = objectStore.add({ name: videoName, data: videoBlob });
+
+                request.onsuccess = function() {
+                    console.log('Video saved in IndexedDB');
+                };
+
+                transaction.oncomplete = function() {
+                    db.close();
+                };
+            };
+        }
+
+        // Function to retrieve recorded videos from IndexedDB
+        function loadRecordedVideos() {
+            const request = indexedDB.open('RecordedVideosDB', 1);
+
+            request.onsuccess = function(event) {
+                const db = event.target.result;
+                const transaction = db.transaction(['videos'], 'readonly');
+                const objectStore = transaction.objectStore('videos');
+
+                objectStore.openCursor().onsuccess = function(event) {
+                    const cursor = event.target.result;
+                    if (cursor) {
+                        recordedVideos.push(cursor.value);
+                        cursor.continue();
+                    } else {
+                        updateVideoList();
+                        db.close();
+                    }
+                };
+            };
+        }
+
+        // Call loadRecordedVideos on app startup
+        loadRecordedVideos();
+
+    </script>
+</body>
+</html>

@@ -13,33 +13,43 @@
 
             #DocCam {
                 position: absolute;
-                top: 18vh;
+                top: 0;
                 left: 0;
-                transform: rotate(90deg) scale(1.35);
-                height: 59vh;
+                /* transform: rotate(90deg) scale(1.35); */
+                filter: contrast(1.3); /* brightness(1.1) saturate(0.8); */
+                width: 100%;
             }
 
             #FaceCam {
                 position: absolute;
                 z-index: 10;
-                bottom: 2vh;
-                left: 2vw;
-                height: 13vh;
+                bottom: 9vh;
+                left: 3vw;
+                height: 19vh;
                 border: 4px solid black;
+            }
+
+            #PiperMake {
+                position: absolute;
+                top: 0;
+                left: 0;
+                height: 100%;
+                width: calc(72vw + 1px);
+                border: none;
             }
         </style>
     </head>
     <body>
         <video id="DocCam"></video>
-        <video id="FaceCam"></video>
+        <!--<video id="FaceCam"></video>-->
         <script>
-            function openFaceCam() {
+            function openCam(camID, target) {
                 navigator.mediaDevices.getUserMedia({
                     video: {deviceId: {
-                        exact: '4ed5964c29aec1380b7ed3e90d9700ad9c95ef0352c126f19e1ea08ae2f2fc2b',
+                        exact: camID,
                     },}
                 }).then(function (vidStream) {
-                    let video = document.getElementById("FaceCam");
+                    let video = document.getElementById(target);
                     video.srcObject = vidStream;
                     video.onloadedmetadata = function (e) { video.play(); };
                 }).catch(function (e) {
@@ -47,22 +57,20 @@
                 });
             }
 
-            function openDocCam() {
-                navigator.mediaDevices.getUserMedia({
-                    video: {deviceId: {
-                        exact: 'c45fd5a06dcb7d2da87d5e488a4c07a571d3ba27bf5bbbdafa4d75151046b9be',
-                    },}
-                }).then(function (vidStream) {
-                    let video = document.getElementById("DocCam");
-                    video.srcObject = vidStream;
-                    video.onloadedmetadata = function (e) { video.play(); };
-                }).catch(function (e) {
-                    console.log(e.name + ": " + e.message);
+            async function startCams() {
+                const camList = await navigator.mediaDevices.enumerateDevices();
+
+                camList.forEach((d) => {
+                    if (d.label.indexOf('IPEVO') > -1) {
+                        openCam(d.deviceId, 'DocCam');
+                    } else if (d.label.indexOf('FaceTime HD') > -1) {
+                        //openCam(d.deviceId, 'FaceCam');
+                    }
                 });
             }
 
-            openDocCam();
-            openFaceCam();
+            startCams();
+
         </script>
     </body>
 </html>
