@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grid Table with Button-like Cells</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+        }
+
+        div.container {
+            width: 50%;
+            min-width: 800px;
+            margin: 30px 0;
+        }
+
+        table {
+            border-collapse: collapse;
+            margin: 0 auto;
+        }
+
+        th,
+        td {
+            width: 50px;
+            height: 20px;
+            text-align: center;
+            vertical-align: middle;
+            border: 1px solid #ccc;
+            font-weight: bold;
+        }
+
+        th {
+            background-color: #e0e0e0;
+        }
+
+        th.row-title {
+            width: 100px;
+        }
+
+        td {
+            background-color: transparent;
+            user-select: none;
+            cursor: pointer;
+            text-transform: capitalize;
+            font-size: 10px;
+        }
+
+        td:focus {
+            outline: none;
+        }
+
+        td.empty {
+            background-color: transparent;
+        }
+
+        td.mild {
+            background-color: #aaeeaa;
+        }
+
+        td.moderate {
+            background-color: #eeeeaa;
+        }
+
+        td.severe {
+            background-color: #eeaaaa;
+        }
+    </style>
+
+    <!-- Include stylesheet -->
+    <link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet" />
+
+    <!-- Include the Quill library -->
+    <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
+
+</head>
+
+
+<body>
+
+    <div class="container">
+        <h3>Question 1 - Describe your favorite color:</h3>
+        <div id="question-1" class="savable-rich-text">
+            <p>Type here...</p>
+        </div>
+        <hr />
+    </div>
+
+    <div class="container">
+        <h3>Question 2 - Describe another thing:</h3>
+        <div id="question-2" class="savable-rich-text">
+            <p>Another rich-text question...</p>
+        </div>
+        <hr />
+    </div>
+
+    <div class="container">
+        <h3>Question 3 - Where is it ouchy?</h3>
+        <table id="grid-1" class="savable-grid"></table>
+        <hr />
+    </div>
+
+    <div class="container">
+        <h3>Question 4 - Another grid question:</h3>
+        <table id="grid-2" class="savable-grid"></table>
+        <hr />
+    </div>
+
+
+
+    <script>
+
+        // Registry for savable element types
+        const serializers = {
+            'savable-grid': {
+                serialize: (element) => {
+                    return Array.from(element.rows)
+                        .slice(1) // Skip the first row (header row)
+                        .map(row =>
+                            Array.from(row.cells).filter(cell => cell.tagName === 'TD') // Only include <td> cells
+                                .map(cell => cell.dataset.state || 'empty')
+                        );
+                },
+                deserialize: (element, data) => {
+                    element.innerHTML = ''; // Clear and rebuild the grid
+                    createTable(element, data);
+                },
+                onChange: () => savePage()
+            },
+            'savable-rich-text': {
+                serialize: (element) => {
+                    const editor = element.quillInstance;
+                    return editor.getContents();
+                },
+                deserialize: (element, data) => {
+                    const editor = element.quillInstance;
+                    editor.setContents(data);
+                },
+                onChange: () => savePage()
+            }
+        };
+
+        // Generic save/load
+        function savePage(returnData) {
+            const data = {};
+            Object.keys(serializers).forEach(type => {
+                const elements = document.querySelectorAll(`.${type}`);
+                elements.forEach(element => {
+                    const id = element.id;
+                    if (id) {
+                        data[id] = {
+                            type,
+                            content: serializers[type].serialize(element)
+                        };
+                    }
+                });
+            });
+
+            if (returnData) {
+                return data;
+            } else {
+                saveToIndexedDB('PageDB-test-1', 'pageState-test-1', { id: 'page', data })
+                    .then(() => console.log('Page saved successfully!'))
+                    .catch(err => console.error('Error saving page:', err));
+            }
+        }
+
+        function loadPage() {
+            loadFromIndexedDB('PageDB', 'pageState', 'page')
+                .then((result) => {
+                    if (result && result.data) {
+                        Object.entries(result.data).forEach(([id, { type, content }]) => {
+                            const element = document.getElementById(id);
+                            if (element && serializers[type]) {
+                                serializers[type].deserialize(element, content);
+                            }
+                        });
+                    }
+                })
+                .catch(err => console.error('Error loading page:', err));
+        }
+
+        // Grid table creation
+        function createTable(table, data = Array.from({ length: 9 }, () => Array(9).fill('empty'))) {
+            const headerRow = document.createElement('tr');
+            const topLeftCell = document.createElement('th');
+            topLeftCell.textContent = 'Age:';
+            headerRow.appendChild(topLeftCell);
+
+            for (let col = 1; col <= 9; col++) {
+                const th = document.createElement('th');
+                th.textContent = `${(col - 1) * 10}-${((col - 1) * 10) + 9}`;
+                headerRow.appendChild(th);
+            }
+            table.appendChild(headerRow);
+
+            data.forEach((rowData, rowIndex) => {
+                const row = document.createElement('tr');
+                const rowHeader = document.createElement('th');
+                rowHeader.textContent = `Row ${rowIndex + 1}`;
+                row.appendChild(rowHeader);
+
+                rowData.forEach((state, colIndex) => {
+                    const cell = document.createElement('td');
+                    cell.className = state;
+                    cell.dataset.state = state;
+                    cell.textContent = state === 'empty' ? '' : state;
+                    cell.dataset.row = rowIndex;
+                    cell.dataset.col = colIndex;
+                    cell.tabIndex = 0;
+
+                    cell.addEventListener('click', () => {
+                        cycleState(cell);
+                        serializers['savable-grid'].onChange();
+                    });
+
+                    row.appendChild(cell);
+                });
+                table.appendChild(row);
+            });
+        }
+
+        // Cell state cycling
+        function cycleState(cell) {
+            const states = ['empty', 'mild', 'moderate', 'severe'];
+            const currentState = cell.dataset.state;
+            const nextState = states[(states.indexOf(currentState) + 1) % states.length];
+            cell.dataset.state = nextState;
+            cell.className = nextState;
+            cell.textContent = nextState === 'empty' ? '' : nextState;
+        }
+
+        // IndexedDB Helpers
+        function ensureObjectStore(dbName, storeName) {
+            return new Promise((resolve, reject) => {
+                const request = indexedDB.open(dbName, 1); // Use version 1 or increment for schema changes
+
+                request.onupgradeneeded = (event) => {
+                    const db = event.target.result;
+                    if (!db.objectStoreNames.contains(storeName)) {
+                        db.createObjectStore(storeName, { keyPath: 'id' });
+                        console.log(`Object store "${storeName}" created.`);
+                    }
+                };
+
+                request.onsuccess = (event) => {
+                    resolve(event.target.result);
+                };
+
+                request.onerror = () => reject(request.error);
+            });
+        }
+
+        function saveToIndexedDB(dbName, storeName, object) {
+            return ensureObjectStore(dbName, storeName).then((db) => {
+                const transaction = db.transaction(storeName, 'readwrite');
+                const store = transaction.objectStore(storeName);
+                store.put(object);
+
+                return new Promise((resolve, reject) => {
+                    transaction.oncomplete = () => resolve();
+                    transaction.onerror = () => reject(transaction.error);
+                });
+            });
+        }
+
+        function loadFromIndexedDB(dbName, storeName, key) {
+            return ensureObjectStore(dbName, storeName).then((db) => {
+                const transaction = db.transaction(storeName, 'readonly');
+                const store = transaction.objectStore(storeName);
+
+                return new Promise((resolve, reject) => {
+                    const getRequest = store.get(key);
+
+                    getRequest.onsuccess = () => resolve(getRequest.result);
+                    getRequest.onerror = () => reject(getRequest.error);
+                });
+            });
+        }
+
+        // Initialize on page load
+        window.onload = function () {
+            // Initialize Quill editors
+            document.querySelectorAll('.savable-rich-text').forEach((element) => {
+                element.quillInstance = new Quill(`#${element.id}`, { theme: 'snow' });
+                element.quillInstance.on('text-change', serializers['savable-rich-text'].onChange);
+            });
+
+            // Initialize grids
+            document.querySelectorAll('.savable-grid').forEach((grid) => {
+                createTable(grid);
+            });
+
+            loadPage();
+        };
+    </script>
+</body>
+
+</html>
