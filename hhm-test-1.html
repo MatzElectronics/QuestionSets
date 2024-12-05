@@ -173,7 +173,7 @@
         }
 
         function loadPage() {
-            loadFromIndexedDB('PageDB', 'pageState', 'page')
+            loadFromIndexedDB('PageDB-test-1', 'pageState-test-1', 'page')
                 .then((result) => {
                     if (result && result.data) {
                         Object.entries(result.data).forEach(([id, { type, content }]) => {
