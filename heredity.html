@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -27,10 +28,7 @@
         }
 
         h1 {
-            margin: 0px 40px 0px 40px;
-            color: #ddd;
-            font-size: 1.8em;
-            text-align: center;
+            font-size: 1.5em;
         }
 
         button {
@@ -315,82 +313,83 @@
 </head>
 
 <body>
-    <table class="main-table" border="0">
-        <tr>
-            <td>
-                <h3>Dragon Trait Frequency Simulator</h3>
-                <div id="question">Click the genes on the Chromosomes to make changes. Click a button below to choose how many offspring to produce.</div><br>
-                <hr>
-                <table style="border:0">
-                    <tr>
-                        <td style="text-align: center;">
-                            <h4>Female Dragon</h4>
-                            <p id="dragon-container-1"></p>
-                        </td>
-                        <td>
-                            <p id="chromosome-container-1"></p>
-                        </td>
-                        <td style="text-align: center;">
-                            <h4>Male Dragon</h4>
-                            <p id="dragon-container-2"></p>
-                        </td>
-                        <td>
-                            <p id="chromosome-container-2"></p>
-                        </td>
-                    </tr>
-                </table>
-                <hr>
-                <p style="text-align: center;">
-                <button onclick="pSquareProblem();">Randomize Dragons</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <button onclick="makeDragons(10);">Breed 10 dragons</button>
-                <button onclick="makeDragons(25);">Breed 25 dragons</button>
-                <button onclick="makeDragons(50);">Breed 50 dragons</button>
-                <button onclick="makeDragons(100);">Breed 100 dragons</button>
-                <span id="progress-bar"></span>
-                <!--<button id="check" onclick="checkAnswer()">check answer</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <button id="skip" onclick="skipAnswer()">skip</button>-->
-                </p>
-                <!--
-                <div id="tryagain" style="font-size:12px;color:#aa0000;">&nbsp;</div>
-                <hr>
+    <main>
+        <table class="main-table" border="0">
+            <tr>
+                <td>
+                    <h1>Dragon Trait Frequency Simulator</h1>
+                    <div id="question">Click the genes on the Chromosomes to make changes. Click a button below to choose how many offspring to produce.</div><br>
+                    <hr>
+                    <table style="border:0">
+                        <tr>
+                            <td style="text-align: center;">
+                                <h4>Female Dragon</h4>
+                                <p id="dragon-container-1"></p>
+                            </td>
+                            <td>
+                                <p id="chromosome-container-1"></p>
+                            </td>
+                            <td style="text-align: center;">
+                                <h4>Male Dragon</h4>
+                                <p id="dragon-container-2"></p>
+                            </td>
+                            <td>
+                                <p id="chromosome-container-2"></p>
+                            </td>
+                        </tr>
+                    </table>
+                    <hr>
+                    <p style="text-align: center;">
+                    <button onclick="pSquareProblem();">Randomize Dragons</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <button onclick="makeDragons(10);">Breed 10 dragons</button>
+                    <button onclick="makeDragons(25);">Breed 25 dragons</button>
+                    <button onclick="makeDragons(50);">Breed 50 dragons</button>
+                    <button onclick="makeDragons(100);">Breed 100 dragons</button>
+                    <span id="progress-bar"></span>
+                    <!--<button id="check" onclick="checkAnswer()">check answer</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <button id="skip" onclick="skipAnswer()">skip</button>-->
+                    </p>
+                    <!--
+                    <div id="tryagain" style="font-size:12px;color:#aa0000;">&nbsp;</div>
+                    <hr>
 
-                <h2 style="margin-bottom: 0px;">
-                    Score: <span id="score">0
-                    </span> - <span id="codeZ">
-                    </span>
-                </h2>
-                -->
-            </td>
-        </tr>
-    </table>
+                    <h2 style="margin-bottom: 0px;">
+                        Score: <span id="score">0
+                        </span> - <span id="codeZ">
+                        </span>
+                    </h2>
+                    -->
+                </td>
+            </tr>
+        </table>
 
-    <table class="main-table" style="margin-top:40px;" border="0">
-        <tr>
-            <td>
-                <h3>Offspring</h3>
-                <p>Click a highlight button to show the genotypes and phenotypes for a specific trait.</p>
-                <hr>
-                <p style="text-align: center;">
-                    Highlight: 
-                    <button onclick="showSingleGene('h');">Horns</button>
-                    <button onclick="showSingleGene('s');">Spots</button>
-                    <button onclick="showSingleGene('w');">Wings</button>
-                    <button onclick="showSingleGene('t');">Claws</button>
-                    <button onclick="showSingleGene('c');">Color</button>
-                    <button onclick="showSingleGene('p');">Spikes</button>
-                    <button onclick="showSingleGene('x');">Sex</button>
-                </p>
-                <div id="baby-counts"></div>
-                <hr>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <h4><div id="dragon-babies"></div></h4>
-            </td>
-        </tr>
-    </table>
-
+        <table class="main-table" style="margin-top:40px;" border="0">
+            <tr>
+                <td>
+                    <h1>Offspring</h1>
+                    <p>Click a highlight button to show the genotypes and phenotypes for a specific trait.</p>
+                    <hr>
+                    <p style="text-align: center;">
+                        Highlight: 
+                        <button onclick="showSingleGene('h');">Horns</button>
+                        <button onclick="showSingleGene('s');">Spots</button>
+                        <button onclick="showSingleGene('w');">Wings</button>
+                        <button onclick="showSingleGene('t');">Claws</button>
+                        <button onclick="showSingleGene('c');">Color</button>
+                        <button onclick="showSingleGene('p');">Spikes</button>
+                        <button onclick="showSingleGene('x');">Sex</button>
+                    </p>
+                    <div id="baby-counts"></div>
+                    <hr>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <h4><div id="dragon-babies"></div></h4>
+                </td>
+            </tr>
+        </table>
+    </main>
     <script>
         setScoreFromCookie('Punnett Squares', (checkScoreCookie) => {});
         skipAnswer();

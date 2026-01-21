@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -8,6 +9,8 @@
 
         body {
             margin: 0;
+            min-height: 100vh;
+            font-family: 'Roboto', sans-serif;
         }
 
         button {
@@ -56,14 +59,21 @@
         table {
             border-collapse: collapse;
         }
+
+        h1 {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 1.25em;
+        }
     </style>
 </head>
 
 <body>
-    <table style="width:100vw;height:100vh;">
+    <table role="main" style="width:100vw;height:100vh;">
         <tr>
             <td style="width:75px; text-align:center;" id="palette">
-
+                <h1>Skeleton Comparison</h1>
                 <p>Current<br>Color:</p>
                 <div id="cc"></div>
                 <p>&nbsp;</p>

@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -18,6 +19,7 @@
             padding: 50px;
             background: url('polyBkgYellow.svg');
             background-size: cover;
+            min-height: 100vh;
         }
 
         .infoText {
@@ -92,6 +94,14 @@
             font-size: 20px;
             font-weight: 700;
         }
+
+        h1 {
+            font-size: 1.5em;
+        }
+
+        h2 {
+            font-size: 1.25em;
+        }
     </style>
 
     <script src="common_utils.js"></script>
@@ -99,8 +109,8 @@
 </head>
 
 <body>
-    <div id="qField">
-        <h3>Measurement Practice - Ruler</h3>
+    <main id="qField">
+        <h1>Measurement Practice - Ruler</h1>
         <hr>
 
         <div id="result" class="toy_image">
@@ -167,173 +177,172 @@
                 <text x="480" y="42" class="rulerText">15</text>
             </svg>
         </div>
+    </main>
 
 
+    <script>
+        var currentProblem = {};
+        var divRot = 0;
 
-        <script>
-            var currentProblem = {};
-            var divRot = 0;
+        setScoreFromCookie('Ruler', console.log);
 
-            setScoreFromCookie('Ruler', console.log);
+        function generateToy() {
+            var p = [
+                [80, 90],
+                [30, 60],
+                [30, 120],
+                [80, 150],
+                [130, 120],
+                [130, 60],
+                [80, 30]
+            ]
 
-            function generateToy() {
-                var p = [
-                    [80, 90],
-                    [30, 60],
-                    [30, 120],
-                    [80, 150],
-                    [130, 120],
-                    [130, 60],
-                    [80, 30]
-                ]
+            var o = 1 * Math.random() + 1;
+            var mmp = [600, 600, 0];
+            for (var idx = 0; idx < p.length; idx++) {
 
-                var o = 1 * Math.random() + 1;
-                var mmp = [600, 600, 0];
-                for (var idx = 0; idx < p.length; idx++) {
-
-                    var s = Math.random() * 30;
-                    var t = 2 * 3.141592 * Math.random();
-                    p[idx][0] += s * Math.sin(t);
-                    p[idx][1] += s * Math.cos(t);
-                    p[idx][0] = Math.round(o * p[idx][0]);
-                    p[idx][1] = Math.round(o * p[idx][1]);
-                    if (p[idx][0] < mmp[0]) mmp[0] = p[idx][0];
-                    if (p[idx][1] < mmp[1]) mmp[1] = p[idx][1];
-                    if (p[idx][1] > mmp[2]) mmp[2] = p[idx][1];
-                }
-
-                for (idx = 0; idx < p.length; idx++) {
-                    p[idx][0] -= mmp[0];
-                    p[idx][1] -= mmp[1];
-                    p[idx][1] = mmp[2] - mmp[1] - p[idx][1];
-                }
-
-                mmp = [0, 0];
-                for (idx = 0; idx < p.length; idx++) {
-                    if (p[idx][0] > mmp[0]) mmp[0] = p[idx][0];
-                    if (p[idx][1] > mmp[1]) mmp[1] = p[idx][1];
-                }
-
-                var elm = null;
-
-                for (idx = 0; idx < 5; idx++) {
-                    elm = $('#t' + idx);
-                    elm.setAttribute('d', 'M' + p[0].join(',') + ' L' + p[idx + 1].join(',') + ' ' + p[idx + 2].join(
-                        ','));
-                }
-                elm = $('#t5');
-                elm.setAttribute('d', 'M' + p[0].join(',') + ' L' + p[6].join(',') + ' ' + p[1].join(','));
-
-                $('#theObject').setAttribute('height', mmp[1]);
-                $('#theObject').setAttribute('width', mmp[0]);
-                $('#theObject').setAttribute('viewBox', "0 0 " + mmp[0] + " " + mmp[1]);
-
-                $('#result').style.width = (mmp[0] + 30);
-
-                var rr = Math.random();
-                currentProblem.unit = (rr >= 0.5 ? 'mm' : 'cm');
-                currentProblem.height = (mmp[1] * 15 / 48);
-                currentProblem.width = (mmp[0] * 15 / 48);
-
-                $('#toyUnits').innerHTML = currentProblem.unit;
+                var s = Math.random() * 30;
+                var t = 2 * 3.141592 * Math.random();
+                p[idx][0] += s * Math.sin(t);
+                p[idx][1] += s * Math.cos(t);
+                p[idx][0] = Math.round(o * p[idx][0]);
+                p[idx][1] = Math.round(o * p[idx][1]);
+                if (p[idx][0] < mmp[0]) mmp[0] = p[idx][0];
+                if (p[idx][1] < mmp[1]) mmp[1] = p[idx][1];
+                if (p[idx][1] > mmp[2]) mmp[2] = p[idx][1];
             }
 
-            function checkAnswer() {
-                //console.log(currentProblem);
-                var aw = parseFloat($('#guessWidth').value) * (currentProblem.unit === 'cm' ? 10 : 1);
-                var ah = parseFloat($('#guessHeight').value) * (currentProblem.unit === 'cm' ? 10 : 1);
-
-                var z = getScore();
-
-                var awDiff = Math.abs(aw - currentProblem.width);
-                var ahDiff = Math.abs(ah - currentProblem.height);
-
-                if (awDiff < 1 && ahDiff < 1) {
-                    z++;
-
-                    setScore(z, 'Ruler');
-                    generateToy();
-
-                    $('#tryagain').innerHTML = 'Correct!';
-                    $('#guessWidth').value = '';
-                    $('#guessHeight').value = '';
-                } else {
-                    $('#tryagain').innerHTML = 'Incorrect, try again.';
-                }
-
-                if (awDiff >= 1) {
-                    $('#guessWidth').value = '';
-                }
-                if (ahDiff >= 1) {
-                    $('#guessHeight').value = '';
-                }
+            for (idx = 0; idx < p.length; idx++) {
+                p[idx][0] -= mmp[0];
+                p[idx][1] -= mmp[1];
+                p[idx][1] = mmp[2] - mmp[1] - p[idx][1];
             }
 
-            function skipAnswer() {
+            mmp = [0, 0];
+            for (idx = 0; idx < p.length; idx++) {
+                if (p[idx][0] > mmp[0]) mmp[0] = p[idx][0];
+                if (p[idx][1] > mmp[1]) mmp[1] = p[idx][1];
+            }
+
+            var elm = null;
+
+            for (idx = 0; idx < 5; idx++) {
+                elm = $('#t' + idx);
+                elm.setAttribute('d', 'M' + p[0].join(',') + ' L' + p[idx + 1].join(',') + ' ' + p[idx + 2].join(
+                    ','));
+            }
+            elm = $('#t5');
+            elm.setAttribute('d', 'M' + p[0].join(',') + ' L' + p[6].join(',') + ' ' + p[1].join(','));
+
+            $('#theObject').setAttribute('height', mmp[1]);
+            $('#theObject').setAttribute('width', mmp[0]);
+            $('#theObject').setAttribute('viewBox', "0 0 " + mmp[0] + " " + mmp[1]);
+
+            $('#result').style.width = (mmp[0] + 30);
+
+            var rr = Math.random();
+            currentProblem.unit = (rr >= 0.5 ? 'mm' : 'cm');
+            currentProblem.height = (mmp[1] * 15 / 48);
+            currentProblem.width = (mmp[0] * 15 / 48);
+
+            $('#toyUnits').innerHTML = currentProblem.unit;
+        }
+
+        function checkAnswer() {
+            //console.log(currentProblem);
+            var aw = parseFloat($('#guessWidth').value) * (currentProblem.unit === 'cm' ? 10 : 1);
+            var ah = parseFloat($('#guessHeight').value) * (currentProblem.unit === 'cm' ? 10 : 1);
+
+            var z = getScore();
+
+            var awDiff = Math.abs(aw - currentProblem.width);
+            var ahDiff = Math.abs(ah - currentProblem.height);
+
+            if (awDiff < 1 && ahDiff < 1) {
+                z++;
+
+                setScore(z, 'Ruler');
+                generateToy();
+
+                $('#tryagain').innerHTML = 'Correct!';
                 $('#guessWidth').value = '';
                 $('#guessHeight').value = '';
-                generateToy();
-                $('#tryagain').innerHTML = '&nbsp;';
+            } else {
+                $('#tryagain').innerHTML = 'Incorrect, try again.';
             }
 
+            if (awDiff >= 1) {
+                $('#guessWidth').value = '';
+            }
+            if (ahDiff >= 1) {
+                $('#guessHeight').value = '';
+            }
+        }
+
+        function skipAnswer() {
+            $('#guessWidth').value = '';
+            $('#guessHeight').value = '';
             generateToy();
+            $('#tryagain').innerHTML = '&nbsp;';
+        }
 
-            dragElement($('#theRuler'));
+        generateToy();
 
-            function dragElement(elmnt) {
-                var pos1 = 0,
-                    pos2 = 0,
-                    pos3 = 0,
-                    pos4 = 0;
-                if (document.getElementById(elmnt.id)) {
-                    // if present, the header is where you move the DIV from:
-                    document.getElementById(elmnt.id).onmousedown = dragMouseDown;
-                } else {
-                    // otherwise, move the DIV from anywhere inside the DIV: 
-                    elmnt.onmousedown = dragMouseDown;
-                }
+        dragElement($('#theRuler'));
 
-                function dragMouseDown(e) {
-                    e = e || window.event;
-                    e.preventDefault();
-                    // get the mouse cursor position at startup:
-                    pos3 = e.clientX;
-                    pos4 = e.clientY;
-                    document.onmouseup = closeDragElement;
-                    // call a function whenever the cursor moves:
-                    document.onmousemove = elementDrag;
-                }
-
-                function elementDrag(e) {
-                    e = e || window.event;
-                    e.preventDefault();
-                    // calculate the new cursor position:
-                    pos1 = pos3 - e.clientX;
-                    pos2 = pos4 - e.clientY;
-                    pos3 = e.clientX;
-                    pos4 = e.clientY;
-                    // set the element's new position:
-                    elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
-                    elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
-                }
-
-                function closeDragElement() {
-                    // stop moving when mouse button is released:
-                    document.onmouseup = null;
-                    document.onmousemove = null;
-                }
+        function dragElement(elmnt) {
+            var pos1 = 0,
+                pos2 = 0,
+                pos3 = 0,
+                pos4 = 0;
+            if (document.getElementById(elmnt.id)) {
+                // if present, the header is where you move the DIV from:
+                document.getElementById(elmnt.id).onmousedown = dragMouseDown;
+            } else {
+                // otherwise, move the DIV from anywhere inside the DIV: 
+                elmnt.onmousedown = dragMouseDown;
             }
 
-            function rRuler(element) {
-                element.classList.remove("ruler_rotate" + divRot);
-                divRot += 90;
-                if (divRot > 270) {
-                    divRot -= 360;
-                }
-                element.classList.add("ruler_rotate" + divRot);
+            function dragMouseDown(e) {
+                e = e || window.event;
+                e.preventDefault();
+                // get the mouse cursor position at startup:
+                pos3 = e.clientX;
+                pos4 = e.clientY;
+                document.onmouseup = closeDragElement;
+                // call a function whenever the cursor moves:
+                document.onmousemove = elementDrag;
             }
-        </script>
-    </div>
+
+            function elementDrag(e) {
+                e = e || window.event;
+                e.preventDefault();
+                // calculate the new cursor position:
+                pos1 = pos3 - e.clientX;
+                pos2 = pos4 - e.clientY;
+                pos3 = e.clientX;
+                pos4 = e.clientY;
+                // set the element's new position:
+                elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
+                elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+            }
+
+            function closeDragElement() {
+                // stop moving when mouse button is released:
+                document.onmouseup = null;
+                document.onmousemove = null;
+            }
+        }
+
+        function rRuler(element) {
+            element.classList.remove("ruler_rotate" + divRot);
+            divRot += 90;
+            if (divRot > 270) {
+                divRot -= 360;
+            }
+            element.classList.add("ruler_rotate" + divRot);
+        }
+    </script>
 </body>
 
 </html>

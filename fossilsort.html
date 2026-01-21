@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -20,13 +21,6 @@
             padding: 20px;
             background: #fff;
             border-radius: 5px;
-        }
-
-        h1 {
-            margin: 0px 40px 0px 40px;
-            color: #ddd;
-            font-size: 1.8em;
-            text-align: center;
         }
 
         button {
@@ -119,7 +113,7 @@
         }
 
         .directions {
-            white-space: unset;
+            white-space: wrap;
         }
 
         .directions>p {
@@ -305,17 +299,17 @@
 </head>
 
 <body>
-    <table class="main-table">
+    <table role="main" class="main-table">
         <tr>
             <td>
-                <h3>Fossil Sample Sort - Relative Dating</h3>
+                <h1 style="font-size:1.5em">Fossil Sample Sort - Relative Dating</h1>
                 <hr>
                 
                 <table>
                     <tr>
-                        <td colspan="2" class="directions"><p>Arrange the fossil samples by clicking the up or down arrows next to the samples. Begin with Sample B at the bottom, because Sample B is the oldest.</p><br></td>
+                        <td colspan="2" class="directions">Arrange the fossil samples by clicking the up or down arrows next to the samples. Begin with Sample B at the bottom, because Sample B is the oldest.<br></td>
                         <td></td>
-                        <td class="directions"><p>Click the dots on the graph below to move them up or down.</p></td>
+                        <td class="directions">Click the dots on the graph below to move them up or down.</td>
                     </tr>
                     <tr>
                         <td colspan="2"><h4>Youngest</h4></td>
@@ -323,7 +317,7 @@
                     </tr>
                     <tr>
                         <td class="rock-layer-label" id="rock-layer-0">A</td>
-                        <td rowspan="9">
+                        <td rowspan="9" style="max-width:280px">
                             <div id="rock-layer-picture"></div>
                         </td>
                         <td><button class="arrow down" onclick="moveLayer(0, 'down');">&#9660;</button></td>

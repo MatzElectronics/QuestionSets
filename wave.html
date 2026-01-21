@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -15,6 +16,7 @@
             padding: 50px;
             background: url('polyBkgPurple.svg');
             background-size: cover;
+            min-height: 100vh;
         }
 
         .main-area {
@@ -53,10 +55,10 @@
         }
 
         h1 {
-            margin: 0px 40px 0px 40px;
-            color: #ddd;
-            font-size: 1.8em;
-            text-align: center;
+            font-size: 1.5em;
+        }
+        h2 {
+            font-size: 1.25em;
         }
 
         .rulerText {
@@ -267,8 +269,8 @@
 </head>
 
 <body>
-    <div class="main-area">
-        <h3>Wave Measurement and Calculation practice problems</h3>
+    <main class="main-area">
+        <h1>Wave Measurement and Calculation practice problems</h1>
         <div id="help-formulas">
             <b>Helpful formulas:</b><br><em>
             wavelength = speed &div; frequency<br>
@@ -299,7 +301,7 @@
         <h2>
             Score: <span id="score">0</span> - <span id="codeZ"></span>
         </h2>
-    </div>
+    </main>
 
     <div class="draggable ruler" id="the-ruler">
         <svg height="48" width="616">

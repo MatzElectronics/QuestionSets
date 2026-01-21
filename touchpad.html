@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -91,37 +92,43 @@
             color: white;
             font-size: 18px;
         }
+        h1 {
+            font-size: 1.5em;
+            margin: 10px 10px;
+        }
     </style>
 </head>
 
 <body>
-    <div class="target A">
-        <p>A</p>
-    </div>
-    <div class="target B">
-        <p>B</p>
-    </div>
-    <div class="target C">
-        <p>C</p>
-    </div>
+    <main>
+        <h1>Touchpad Practice</h1>
+        <div class="target A">
+            <p>A</p>
+        </div>
+        <div class="target B">
+            <p>B</p>
+        </div>
+        <div class="target C">
+            <p>C</p>
+        </div>
 
-    <div class="frame f1">
-        <p>(A)<br>Right-click to activate me.</p>
-    </div>
-    <div class="frame f2">
-        <p>(B)<br>Right-click to activate me.</p>
-    </div>
-    <div class="frame f3">
-        <p>(C)<br>Right-click to activate me.</p>
-    </div>
+        <div class="frame f1">
+            <p>(A)<br>Right-click to activate me.</p>
+        </div>
+        <div class="frame f2">
+            <p>(B)<br>Right-click to activate me.</p>
+        </div>
+        <div class="frame f3">
+            <p>(C)<br>Right-click to activate me.</p>
+        </div>
 
-    <div class="instructions">
-        <p>
-            Use your laptop&apos;s trackpad to move and resize the grey boxes to cover up the A, B, and C boxes.<br>
-            <b>Click here and take a screenshot when finished.</b>
-        </p>
-    </div>
-
+        <div class="instructions">
+            <p>
+                Use your laptop&apos;s trackpad to move and resize the grey boxes to cover up the A, B, and C boxes.<br>
+                <b>Click here and take a screenshot when finished.</b>
+            </p>
+        </div>
+    </main>
     <script>
         var node;
         var gestureStartScale = 0;

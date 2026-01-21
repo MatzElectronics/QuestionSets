@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -18,6 +19,7 @@
             padding: 50px;
             background: url('polyBkgRed.svg');
             background-size: cover;
+            min-height: 100vh;
         }
 
         .infoText {
@@ -31,14 +33,20 @@
             background: #fff;
             border-radius: 5px;
         }
+        h1 {
+            font-size: 1.5em;
+        }
+        h2 {
+            font-size: 1.25em;
+        }
     </style>
 
     <script src="common_utils.js"></script>
 </head>
 
 <body>
-    <div id="qField">
-        <h3>Measurement Practice - Stopwatch</h3>
+    <main id="qField">
+        <h1>Measurement Practice - Stopwatch</h1>
         <hr>
 
         <div id="result" class="car_image">
@@ -81,74 +89,75 @@
             </span> - <span id="codeZ">
             </span>
         </h2>
+    </main>
 
-        <script>
-            var endPos = 700;
-            var theAccel = 0.08;
-            var theInterval = 10;
-            var theTime = -5;
+    <script>
+        var endPos = 700;
+        var theAccel = 0.08;
+        var theInterval = 10;
+        var theTime = -5;
 
-            setScoreFromCookie('Stopwatch', (checkScoreCookie) => {});
+        setScoreFromCookie('Stopwatch', (checkScoreCookie) => {});
 
-            function setFinish() {
-                endPos = Math.floor(Math.random() * 250 + 500);
-                $('#finishLine').transform.baseVal.getItem(0).setTranslate(endPos, 0);
-                theAccel = Math.random() * 0.06 + 0.05;
-                theInterval = Math.random() * 30 + 10;
-                theTime = -5;
-            }
+        function setFinish() {
+            endPos = Math.floor(Math.random() * 250 + 500);
+            $('#finishLine').transform.baseVal.getItem(0).setTranslate(endPos, 0);
+            theAccel = Math.random() * 0.06 + 0.05;
+            theInterval = Math.random() * 30 + 10;
+            theTime = -5;
+        }
 
-            function startCar(ac, ep) {
-                var carPos = 0;
-                var accel = ac;
-                var accelAmt = ac;
-                var stamp = performance.now();
-                var mover = setInterval(function () {
-                    if (carPos) {
-                        $('#car').transform.baseVal.getItem(0).setTranslate(carPos, 0);
-                    }
-                    carPos += accelAmt;
-                    accelAmt += accel;
+        function startCar(ac, ep) {
+            var carPos = 0;
+            var accel = ac;
+            var accelAmt = ac;
+            var stamp = performance.now();
+            var mover = setInterval(function () {
+                if (carPos) {
+                    $('#car').transform.baseVal.getItem(0).setTranslate(carPos, 0);
+                }
+                carPos += accelAmt;
+                accelAmt += accel;
 
-                    if (carPos <= (ep - 92) && carPos > (ep - 192)) {
-                        theTime = (performance.now() - stamp) / 1000;
-                    }
-
-                    if (carPos > 700) {
-                        clearInterval(mover);
-                        setTimeout(function () {
-                            $('#car').transform.baseVal.getItem(0).setTranslate(0, 0);
-                        }, 1000);
-                    }
-                }, theInterval);
-            }
-
-            function checkAnswer() {
-                var aw = parseFloat($('#guessWidth').value);
-
-                var z = getScore();
-
-                var awDiff = Math.abs(aw - theTime);
-
-                if (awDiff < .26) {
-                    z++;
-
-                    setScore(z, 'Stopwatch');
-                    setFinish();
-
-                    $('#tryagain').innerHTML = 'Correct!';
-                    $('#guessWidth').value = '';
-                } else {
-                    $('#tryagain').innerHTML = 'Incorrect, try again.';
+                if (carPos <= (ep - 92) && carPos > (ep - 192)) {
+                    theTime = (performance.now() - stamp) / 1000;
                 }
 
-                if (awDiff >= 1) {
-                    $('#guessWidth').value = '';
+                if (carPos > 700) {
+                    clearInterval(mover);
+                    setTimeout(function () {
+                        $('#car').transform.baseVal.getItem(0).setTranslate(0, 0);
+                    }, 1000);
                 }
+            }, theInterval);
+        }
+
+        function checkAnswer() {
+            var aw = parseFloat($('#guessWidth').value);
+
+            var z = getScore();
+
+            var awDiff = Math.abs(aw - theTime);
+
+            if (awDiff < .26) {
+                z++;
+
+                setScore(z, 'Stopwatch');
+                setFinish();
+
+                $('#tryagain').innerHTML = 'Correct!';
+                $('#guessWidth').value = '';
+            } else {
+                $('#tryagain').innerHTML = 'Incorrect, try again.';
             }
 
-            setFinish();
-        </script>
+            if (awDiff >= 1) {
+                $('#guessWidth').value = '';
+            }
+        }
+
+        setFinish();
+    </script>
 </body>
 
 </html>
