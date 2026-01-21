@@ -367,14 +367,15 @@
 </head>
 
 <body>
-    Page Height: <input type="text" id="page-height" width="240"/><br>
-    Page Width: <input type="text" id="page-width" value="160"/><br>
-    Text Scale: <input type="text" id="text-scale" value="0.2"/><br>
-    Line Height: <input type="text" id="line-height" value="8"/><br>
+    Page Height: <input type="text" id="page-height" width="1056"/><br>
+    Page Width: <input type="text" id="page-width" value="816"/><br>
+    Text Scale: <input type="text" id="text-scale" value="1"/><br>
+    Line Height: <input type="text" id="line-height" value="25"/><br>
 
     <br>
     Input:<br>
-    <textarea id="input-value" onchange="buildSVG()" style="width:450px;height:100px;">The quick brown Fox jumped Over the Lazy dog!</textarea>
+    <textarea id="input-value" style="width:450px;height:100px;">The quick brown Fox jumped Over the Lazy dog!</textarea><br>
+    <button onclick="buildSVG()">Update</button>
     <br><br>
     Output:<br>
     <textarea id="output-value" style="width:450px;height:100px;"></textarea>
@@ -385,8 +386,19 @@
             </g>
         </svg>
     </div>
+    <button onclick="downloadToFile(document.getElementById('output-value').value, 'handwriting.svg', 'image/svg+xml');">Save SVG</button>
 
     <script>
+        const downloadToFile = (content, filename, contentType) => {
+            const a = document.createElement('a');
+            const file = new Blob([content], { type: contentType });
+
+            a.href = URL.createObjectURL(file);
+            a.download = filename;
+            a.click();
+
+            URL.revokeObjectURL(a.href);
+        };
 
         function roundPlaces(m, n) {
             return Math.round(m * Math.pow(10, n)) / Math.pow(10, n);
@@ -397,10 +409,10 @@
             let scale = parseFloat(document.getElementById('text-scale')?.value || '0.2');
             let posX = 20 * scale;
             let posY = 20 * scale;
-            let maxX = 145;
             let lineHeight = parseFloat(document.getElementById('line-height')?.value || '8');
             document.querySelector('svg').style.height = parseFloat(document.getElementById('page-height')?.value || '240') + 'px';
             document.querySelector('svg').style.width = parseFloat(document.getElementById('page-width')?.value || '160') + 'px';
+            let maxX = document.getElementById('page-width')?.value || '160' - (20 * scale);
 
             let startX = 20 * scale;
             let letterPath = '';
